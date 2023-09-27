@@ -1,14 +1,14 @@
 import React from 'react'
 import Package from './Package'
+import { Typography } from '@mui/material'
 
 export default function Category({ data }) {
-  console.log(data, 'data')
   return (
     <div>
-      <h1>{data.categoryName}</h1>
-      {data?.packages?.map((item) => {
+      <Typography variant='h5' m={1}>{data.categoryName}</Typography>
+      {data?.packages?.map((item, index) => {
         return (
-          <Package item={item}/>
+          <Package item={item} key={index} />
         )
 
       })}
