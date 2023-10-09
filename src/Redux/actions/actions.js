@@ -1,5 +1,5 @@
 // actions.js
-import axios from 'axios';
+// import axios from 'axios';
 import * as type from './actionTypes'
 
 export const fetchPosts = () => {
@@ -167,9 +167,6 @@ export const fetchPosts = () => {
     // Add more categories with packages and variants as necessary
   ];
 
-  // Now, dataWithVariants contains all categories, packages, and variants
-
-
   return async (dispatch) => {
     try {
       // const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
@@ -180,7 +177,6 @@ export const fetchPosts = () => {
           count: 0,
         })),
       }));
-      console.log(dataWithCount, 'data with count')
       dispatch({ type: type.FETCH_DATA, payload: dataWithCount });
     } catch (error) {
       dispatch({ type: type.FETCH_ERROR, payload: error.message });
@@ -211,5 +207,64 @@ export const openRepeat = (data) => {
 
 export const closeRepeat = () => {
   return { type: type.CLOSE_REPEAT };
+};
+
+export const openView = (data) => {
+  return { type: type.OPEN_VIEW_DIALOG, payload: data };
+};
+
+export const closeView = () => {
+  return { type: type.CLOSE_VIEW_DIALOG };
+};
+
+export const protectRoute = (data) => {
+  return { type: type.PROTECTED_ROUTE, payload: data };
+};
+
+export const add_package = (package_id, add_on_id) => {
+  const package1 = { packageId: package_id, add_on: add_on_id ? add_on_id : '' }
+  return { type: type.ADD_PACKAGE, payload: package1 };
+};
+
+
+
+export const get_all_address = (data) => {
+  return { type: type.GET_ALL_ADDRESS, payload: data };
+};
+
+export const openAdd_Address = (data) => {
+ 
+  return { type: type.OPEN_ADDRESS_ADD_DIALOG, payload: data };
+};
+
+export const closeAdd_Address = (data) => {
+  return { type: type.CLOSE_ADDRESS_ADD_DIALOG, payload: data };
+};
+
+export const openUpdate_Address = (data) => {
+  return { type: type.OPEN_UPDATE_ADDRESS_DIALOG, payload: data };
+};
+
+export const closeUpdate_Address = (data) => {
+  return { type: type.CLOSE_UPDATE_ADDRESS_DIALOG, payload: data };
+};
+
+export const openDelete_Address = (data) => {
+  return { type: type.OPEN_DELETE_ADDRESS_DIALOG, payload: data };
+};
+
+export const closeDelete_Address = (data) => {
+  return { type: type.CLOSE_DELETE_ADDRESS_DIALOG, payload: data };
+};
+
+
+export const apply_coupon = (data) => {
+  
+  return { type: type.APPLY_COUPON, payload: data };
+};
+
+export const get_schedule = (data) => {
+
+  return { type: type.GET_SCHEDULE, payload: data };
 };
 

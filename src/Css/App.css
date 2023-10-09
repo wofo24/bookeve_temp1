@@ -2,6 +2,16 @@
   text-align: center;
 }
 
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: auto !important;
+  display: flex;
+  flex-direction: column;
+
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -12,6 +22,7 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
 
 .App-header {
   /* background-color: #282c34; */
@@ -60,4 +71,54 @@
 
 .css-46bh2p-MuiCardContent-root:last-child {
   padding-bottom: 0;
+}
+
+
+/* /////////////////////////////////// */
+#app {
+  height: 100%;
+}
+
+html,
+body {
+  position: relative;
+  height: 100%;
+}
+
+.swiper {
+  height: 200px;
+  margin-bottom: 10px;
+  padding-bottom: 30px;
+
+
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 100%;
+  height: 200px;
+  /* margin */
+}
+
+.swiper-slide img {
+  display: block;
+  /* width: 100%; */
+  width: 500px;
+  margin-left: -50px;
+  /* margin-top: -0px; */
+  height: 200px;
+}
+
+.swiper-button-next {
+  float: right;
+  z-index: inherit;
+  display: none;
+}
+
+.swiper-button-prev {
+  display: none;
+  float: left;
+  z-index: inherit;
+
 }

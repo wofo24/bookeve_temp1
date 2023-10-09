@@ -5,35 +5,29 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { openRepeat, closeRepeat, openDialog, incrementPackageCount } from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
-export default function Repeat() {
-  const open_r = useSelector((state) => state.repeat_open);
-  const data = useSelector((state) => state.repeat_data);
+import { openDelete_Address, closeDelete_Address } from '../../Redux/actions/actions';
+export default function Open_delete() {
+  const open = useSelector((state) => state.delete_open)
   const dispatch = useDispatch()
+  const handleClickOpen = () => {
+    dispatch(openDelete_Address())
+  };
+
   const handleClose = () => {
-    dispatch(closeRepeat())
+    dispatch(closeDelete_Address())
   };
-  
-  const willChose = () => {
-    dispatch(closeRepeat())
-    dispatch(openDialog(data))
-  };
-  const RepeatLast = () => {
-    dispatch(incrementPackageCount(data.packageId))
-    handleClose()
-  }
+
   return (
     <div>
-
       <Dialog
-        open={open_r}
+        open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Do you want to repeat last?"}
+          {"Do you Really want to delete the address ?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -41,9 +35,9 @@ export default function Repeat() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={willChose}>No, I'll Choose.</Button>
-          <Button onClick={RepeatLast} autoFocus>
-            Repeat
+          <Button onClick={handleClose}>No</Button>
+          <Button onClick={handleClose} autoFocus>
+            Yes
           </Button>
         </DialogActions>
       </Dialog>
