@@ -1,5 +1,17 @@
 .App {
   text-align: center;
+
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: auto !important;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
 }
 
 .App-logo {
@@ -12,6 +24,7 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
 
 .App-header {
   /* background-color: #282c34; */
@@ -60,4 +73,87 @@
 
 .css-46bh2p-MuiCardContent-root:last-child {
   padding-bottom: 0;
+}
+
+
+/* /////////////////////////////////// */
+#app {
+  height: 100%;
+}
+
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 100ms;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+.highlight {
+  position: absolute;
+  display: inline-block;
+  color: #fff;
+  line-height: 2em;
+  padding: 1px 8px 1px 10px;
+  /* : 14px; */
+  top: 10%;
+  font-size: 11px;
+  /* margin-top: 10px; */
+}
+
+.red-bg {
+  background: red;
+}
+
+.highlight:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 74px;
+  top: 0px;
+  width: 10px;
+  border: 12px solid red;
+  border-right-color: transparent;
+}
+
+/* ///////////////////////////////// */
+
+
+.swiper {
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 300px;
+  height: 150px;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+}
+
+.custom-switch .ant-switch-inner {
+  background-color: red;
+  border-color: red;
+}
+
+.css-1h9z79y-MuiButtonBase-root-MuiTab-root{ 
+  border: 1px solid red;
+  text-align: start;
 }
