@@ -13,8 +13,11 @@ import TextField from '@mui/material/TextField';
 
 // import Link from '@mui/material/Link';
 import { Link } from 'react-router-dom';
+
 import { openAdd_Address, closeAdd_Address } from '../../Redux/actions/actions';
 export default function Add_address() {
+
+    const buttonStyles = useSelector((state) => state.button_style)
     const openAdd = useSelector((state) => state.open_add_dialog)
     const dispatch = useDispatch()
     const [formData, setFormData] = useState([])
@@ -147,8 +150,8 @@ export default function Add_address() {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>No</Button>
-                    <Button onClick={handleClose} autoFocus>
+                    <Button {...buttonStyles} onClick={handleClose}>No</Button>
+                    <Button {...buttonStyles} onClick={handleClose} autoFocus>
                         Save!
                     </Button>
                 </DialogActions>

@@ -17,6 +17,7 @@ import { add_package, openView, closeView, incrementPackageCount } from '../../R
 import { useSelector, useDispatch } from 'react-redux';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Theme_Button from '../Theme/Theme_Button';
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
         padding: theme.spacing(2),
@@ -31,6 +32,9 @@ export default function ViewDialog() {
     const dispatch = useDispatch()
     const [selectedValue, setSelectedValue] = React.useState("");
     const view_data = useSelector((state) => state.view_data);
+    const buttonStyles = useSelector((state) => state.button_style)
+    console.log(buttonStyles, 'button style selected')
+
     const handleClickOpen1 = () => {
         dispatch(openView())
     };
@@ -85,7 +89,6 @@ export default function ViewDialog() {
                                 </Grid>
                             </Grid>
                         </Grid>
-                        {/* ))} */}
                     </Box>
                     <Box sx={{ flexGrow: 1 }} height={200} width={250} >
                         <FormControl>
@@ -116,9 +119,10 @@ export default function ViewDialog() {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={add_item}>
+                    <Theme_Button funBtn={add_item} label='Add package'/>
+                    {/* <Button autoFocus sx={buttonStyles} variant='contained' onClick={add_item}>
                         Add package
-                    </Button>
+                    </Button> */}
                 </DialogActions>
             </BootstrapDialog>
         </div>

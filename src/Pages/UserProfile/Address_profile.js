@@ -11,17 +11,17 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { Card } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
-import { openAdd_Address, closeAdd_Address, openDelete_Address } from '../Redux/actions/actions';
+import { openAdd_Address, closeAdd_Address, openDelete_Address } from '../../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
 // import Open_delete from '../Components/Dialog/Open_delete';
-export default function Address() {
+export default function Address_profile() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
 
     const handleClickOpen = (data) => {
         dispatch(openAdd_Address(data))
     };
+    const buttonStyles = useSelector((state) => state.apply_new_theme)
 
     const handle_Delete_Dialog = () => {
         dispatch(openDelete_Address())
@@ -32,6 +32,7 @@ export default function Address() {
     };
     return (
         <Container sx={{ marginTop: '20px' }}>
+            <Typography variant='h5' textAlign='center'>All address</Typography>
             <Card sx={{ my: 2 }}>
                 <Grid container mx={1}>
                     <Grid xs={8} p={2}>
@@ -56,7 +57,7 @@ export default function Address() {
                                 <Typography fontWeight={600}>Address Type: </Typography>
                             </Box>
                         </FormLabel>
-                    </Grid>
+                    </Grid> 
 
                     <Grid xs={4} p={2} >
                         <Button onClick={handle_Delete_Dialog} variant="contained" startIcon={<DeleteIcon />} >
@@ -65,14 +66,12 @@ export default function Address() {
                         <br />
                         <Button variant="contained" onClick={handleClickOpen} startIcon={<EditIcon />}>
                         </Button>
-
-
                     </Grid>
                 </Grid>
             </Card>
-            <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} fullWidth onClick={handleClickOpen} variant='outlined' sx={{ my: 1 }}>Add Address <AddIcon /> </Button>
 
-            <Button fullWidth onClick={() => navigate('/schedule')} variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Proceed</Button>
-        </Container>
+            <Button fullWidth onClick={handleClickOpen} variant='outlined' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Add Address <AddIcon /> </Button>
+
+        </Container >
     )
 }

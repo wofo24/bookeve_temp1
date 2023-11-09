@@ -41,7 +41,7 @@ export default function AlertDialogSlide() {
         if (selectedValue || dialog_data?.variants == []) {
             dispatch(incrementPackageCount(dialog_data.packageId))
             dispatch(add_package(dialog_data.packageId, selectedValue ? selectedValue : ''));
-            setSelectedValue(null); // or setSelectedValue(''); to unselect the radio button
+            setSelectedValue(null);
             handleClose();
         }
     }
@@ -53,8 +53,8 @@ export default function AlertDialogSlide() {
                 TransitionComponent={Transition}
                 keepMounted
                 onClose={handleClose}
-                aria-describedby="alert-dialog-slide-description"
-            >
+                aria-describedby="alert-dialog-slide-description">
+
                 <DialogContent >
                     <Box sx={{ flexGrow: 1 }} height={200} width={250} >
                         <Grid container mb={2}>
@@ -93,6 +93,7 @@ export default function AlertDialogSlide() {
                     </Box>
 
                 </DialogContent>
+
                 <DialogActions>
                     <Button onClick={handleClose} variant='outlined' color='error'>Cancel</Button>
                     <Button variant='outlined' onClick={handleIncrement}>Add </Button>

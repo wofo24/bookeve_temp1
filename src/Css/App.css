@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+
 }
 
 body {
@@ -9,6 +10,7 @@ body {
   overflow: auto !important;
   display: flex;
   flex-direction: column;
+  position: relative;
 
 }
 
@@ -79,46 +81,79 @@ body {
   height: 100%;
 }
 
-html,
-body {
-  position: relative;
-  height: 100%;
+
+.fade-enter {
+  opacity: 0;
 }
 
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 100ms;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 100ms;
+}
+
+.highlight {
+  position: absolute;
+  display: inline-block;
+  color: #fff;
+  line-height: 2em;
+  padding: 1px 8px 1px 10px;
+  /* : 14px; */
+  top: 10%;
+  font-size: 11px;
+  /* margin-top: 10px; */
+}
+
+.red-bg {
+  background: red;
+}
+
+.highlight:after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 74px;
+  top: 0px;
+  width: 10px;
+  border: 12px solid red;
+  border-right-color: transparent;
+}
+
+/* ///////////////////////////////// */
+
+
 .swiper {
-  height: 200px;
-  margin-bottom: 10px;
-  padding-bottom: 30px;
-
-
+  width: 100%;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .swiper-slide {
   background-position: center;
   background-size: cover;
-  width: 100%;
-  height: 200px;
-  /* margin */
+  width: 300px;
+  height: 150px;
 }
 
 .swiper-slide img {
   display: block;
-  /* width: 100%; */
-  width: 500px;
-  margin-left: -50px;
-  /* margin-top: -0px; */
-  height: 200px;
+  width: 100%;
 }
 
-.swiper-button-next {
-  float: right;
-  z-index: inherit;
-  display: none;
+.custom-switch .ant-switch-inner {
+  background-color: red;
+  border-color: red;
 }
 
-.swiper-button-prev {
-  display: none;
-  float: left;
-  z-index: inherit;
-
+.css-1h9z79y-MuiButtonBase-root-MuiTab-root{ 
+  border: 1px solid red;
+  text-align: start;
 }
