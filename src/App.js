@@ -32,6 +32,7 @@ import All_Address from './Components/Dialog/All_Address';
 import Schedule_dialog from './Components/Dialog/Schedule_dialog';
 import All_Bookings from './Pages/All_Bookings';
 import Edit_Profile from './Components/Dialog/Edit_Profile';
+import Booking_details from './Pages/Booking_details';
 const Cart = React.lazy(() => import('./Pages/Cart'))
 const Signup = React.lazy(() => import('./Pages/Signup'))
 const Login = React.lazy(() => import('./Pages/Login'))
@@ -89,6 +90,8 @@ function App() {
                   <Route path="/package_view" element={<PackageView />} />
                   <Route path="/search" element={<Search />} />
                   <Route path="/booking" element={<All_Bookings />} />
+                  <Route path="/booking_details" element={<Booking_details />} />
+                  <Route path="/all_booking" element={<All_Bookings />} />
                 </Routes>
               ) : <Container>
                 <Routes>
@@ -110,6 +113,7 @@ function App() {
                   <Route path="/package_view" element={<PackageView />} />
                   <Route path="/search" element={<Search />} />
                   <Route path="/all_booking" element={<All_Bookings />} />
+                  <Route path="/booking_details" element={<Booking_details />} />
                 </Routes>
               </Container>}
             </>

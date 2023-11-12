@@ -13,17 +13,7 @@ export default function Navigation() {
     const [value, setValue] = React.useState(1);
     // console.log(buttonStyles, 'buttton style from Navigatuib')
     const navigate = useNavigate()
-    React.useEffect(() => {
-        if (value === 0) {
-            navigate('/profile')
-        }
-        else if (value === 1) {
-            navigate('/')
-        }
-        else if (value === 2) {
-            navigate('/cart')
-        }
-    }, [value])
+   
 
     return (
         <Media
@@ -37,13 +27,11 @@ export default function Navigation() {
                     <BottomNavigation
                         showLabels
                         value={value}
-                        onChange={(event, newValue) => {
-                            setValue(newValue);
-                        }}
+                      
                     >
-                        <BottomNavigationAction label="Profile" style={{ color: `${buttonStyles.icons_Color}` }} icon={<AccountBoxRoundedIcon style={{ color: `${buttonStyles.icons_Color}` }} />} />
-                        <BottomNavigationAction label="Home" style={{ color: `${buttonStyles.icons_Color}` }} icon={<HomeRoundedIcon style={{ color: `${buttonStyles.icons_Color}` }} />} />
-                        <BottomNavigationAction label="Cart" style={{ color: `${buttonStyles.icons_Color}` }} icon={<ShoppingCartRoundedIcon style={{ color: `${buttonStyles.icons_Color}` }} />} />
+                        <BottomNavigationAction onClick={()=>navigate('/profile')} label="Profile" style={{ color: `${buttonStyles.icons_Color}` }} icon={<AccountBoxRoundedIcon style={{ color: `${buttonStyles.icons_Color}` }} />} />
+                        <BottomNavigationAction onClick={()=>navigate('/')} label="Home" style={{ color: `${buttonStyles.icons_Color}` }} icon={<HomeRoundedIcon style={{ color: `${buttonStyles.icons_Color}` }} />} />
+                        <BottomNavigationAction onClick={()=>navigate('/cart')} label="Cart" style={{ color: `${buttonStyles.icons_Color}` }} icon={<ShoppingCartRoundedIcon style={{ color: `${buttonStyles.icons_Color}` }} />} />
                     </BottomNavigation>
                 </Box>
             ))}
