@@ -1,6 +1,5 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-// import Home from './Pages/Home';
 import Cookies from 'js-cookie';
 import Location from './Tracker/Location';
 import axios from 'axios';
@@ -118,13 +117,11 @@ function App() {
               </Container>}
             </>
           )}
-
-
-
         </Media>
         <Navigation />
         <Footer />
       </BrowserRouter>
+
     </body>
 
   );

@@ -4,9 +4,12 @@ import { Grid } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { Box, Typography, Button, Container } from '@mui/material'
 import Media from 'react-media';
+import { useDispatch, useSelector } from 'react-redux'
+
 import { useNavigate } from 'react-router-dom';
 export default function Bookings() {
     const navigate = useNavigate()
+    const buttonStyles = useSelector((state) => state?.apply_new_theme)
     return (
         <>
             <Media
@@ -21,9 +24,10 @@ export default function Bookings() {
                         <Container margin={'auto'} sx={{
                             p: 2,
                             borderRadius: '10px',
-                            backdropFilter: `blur(10px)`,
-                            background: ' rgb(255 255 255 / 0.6)',
-                            color: 'black'
+                            backdropFilter: buttonStyles.child_backdropFilter,
+                            background: buttonStyles.child_bg,
+                            color:buttonStyles.child_div_text, 
+                           
                         }} >
                             <Grid container>
                                 <Grid xs={6}>
@@ -101,9 +105,9 @@ export default function Bookings() {
                         <Container margin={'auto'} sx={{
                             p: 2,
                             borderRadius: '10px',
-                            backdropFilter: `blur(10px)`,
-                            background: ' rgb(255 255 255 / 0.6)',
-                            color: 'black'
+                            backdropFilter: buttonStyles.child_backdropFilter,
+                            background: buttonStyles.child_bg,
+                            color:buttonStyles.child_div_text, 
                         }} >
                             <Grid container>
                                 <Grid xs={6} textAlign={'left'}>

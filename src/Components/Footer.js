@@ -18,7 +18,7 @@ export default function Footer() {
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     return (
         <footer style={footerStyle}>
-            <Box sx={{ mx: 0, p: 2, backgroundColor: buttonStyles.buttonColor, color: buttonStyles.buttonText }}>
+            <Box sx={{ mx: 0, p: 2, background: buttonStyles.buttonColor, color: buttonStyles.buttonText }}>
                 <Typography sx={{ fontFamily: buttonStyles.fontFamily, textAlign: 'center' }}>Get your bio link For free in 30 Seconds</Typography>
             </Box>
             <hr />

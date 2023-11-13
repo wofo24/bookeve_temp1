@@ -98,10 +98,11 @@ export default function Profile() {
         }}
       >{(item) => item.large && (
         <Container sx={{
-          color: '', p: 3, my: 6,
+          p: 3, my: 6,
           borderRadius: '10px',
-          backdropFilter: `blur(1px)`,
-          background: ' rgb(255 255 255 / 0.3)'
+          backdropFilter: buttonStyles.child_backdropFilter,
+          background: buttonStyles.child_bg,
+          color:buttonStyles.child_div_text, 
         }}>
           <Grid container>
             <Grid xs={6}>
@@ -168,9 +169,9 @@ export default function Profile() {
           <Box sx={{
             p: 2,
             borderRadius: '10px',
-            backdropFilter: `blur(10px)`,
-            background: ' rgb(255 255 255 / 0.6)',
-            color: 'black',
+            backdropFilter: buttonStyles.child_backdropFilter,
+            background: buttonStyles.child_bg,
+            color:buttonStyles.child_div_text, 
             m: 3
           }}>
 
@@ -198,7 +199,7 @@ export default function Profile() {
                       <ListIcon />
                     </Grid>
                     <Grid xs={5} textAlign={'start'}>
-                      <Typography ml={2}> order</Typography></Grid>
+                      <Typography ml={2}>My Booking</Typography></Grid>
                     <Grid xs={6} textAlign={'end'}><ArrowForwardIosIcon /></Grid>
                   </Grid>
                 </Link>

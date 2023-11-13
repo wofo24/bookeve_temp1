@@ -30,6 +30,7 @@ export default function CategoryItems() {
         dispatch(show_this_category_package(item))
         navigate('/package_view')
     }
+    const buttonStyles = useSelector((state) => state.apply_new_theme)
 
     const [swiperRef, setSwiperRef] = useState(5);
     const styleSwiper = {
@@ -114,13 +115,12 @@ export default function CategoryItems() {
                                         <Paper sx={{
                                             borderRadius: '10px',
                                             backgroundColor: 'transparent',
-                                            background: 'rgba(255, 255, 255, 0.8)',
-                                            WebkitBackdropFilter: 'blur(1px)',
-                                            backdropFilter: 'blur(1px)',
-                                            color: '#fff'
+                                            backdropFilter: buttonStyles.child_backdropFilter,
+                                            background: buttonStyles.child_bg,
+                                            color: buttonStyles.child_div_text,
                                         }} onClick={() => handle_click(item.categoryId)}>
 
-                                            <span>Category Id, {item.categoryId}</span>
+                                            <span >Category Id, {item.categoryId}</span>
                                         </Paper>
                                     );
                                 })}

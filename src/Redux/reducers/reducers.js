@@ -22,43 +22,42 @@ const initialState = {
   search_item: '',
   button_style: [],
   apply_new_theme: savedTheme || {
-    background: `linear-gradient(199deg, #558bc7, #f4f735)`,
-    animation: `first 10s linear infinite`,
-    OAnimation: `first 10s linear infinite`,
-    WebkitAnimation: `first 10s linear infinite`,
-    MozAnimation: `first 10s linear infinite`,
+    background: `#FFE394`,
+    animation: `first 15s linear infinite`,
+    OAnimation: `first 15s linear infinite`,
+    WebkitAnimation: `first 15s linear infinite`,
+    MozAnimation: `first 15s linear infinite`,
     fontFamily: 'monospace',
     backgroundPosition: '50% 50%',
     backgroundSize: '600% 600%',
     child_div_text: 'black',
-    child_bg: 'rgba(200, 200, 200, 1)',
+    child_bg: ' rgb(255 255 255 / 0.6)',
+    child_backdropFilter: `blur(10px)`,
     color: 'white',
-    buttonColor: 'blue',
+    Company_Name_title: 'black',
+    buttonColor: 'rgb(255, 198, 41)',
     buttonText: 'white',
-    icons_Color: 'blue',
+    icons_Color: 'rgb(255, 198, 41)',
     text_style: 'Fantasy',
     theme_name: 'Minimal',
+    margin:'-7px',
+    padding:'0px',
     keyframesStyle: `
-      @-webkit-keyframes first {
-        0%{background-position:52% 0%}
-        50%{background-position:49% 100%}
-        100%{background-position:52% 0%}
-    }
-    @-moz-keyframes first {
-        0%{background-position:52% 0%}
-        50%{background-position:49% 100%}
-        100%{background-position:52% 0%}
-    }
-    @-o-keyframes first {
-        0%{background-position:52% 0%}
-        50%{background-position:49% 100%}
-        100%{background-position:52% 0%}
-    }
-    @keyframes first {
-        0%{background-position:52% 0%}
-        50%{background-position:49% 100%}
-        100%{background-position:52% 0%}
-    }
+    @-webkit-keyframes AnimationName {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+  @-moz-keyframes AnimationName {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+  @keyframes AnimationName {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
     `
   },
   all_theme: [],
@@ -66,7 +65,7 @@ const initialState = {
   all_address_dialog: false,
   open_schedule: false,
   profile_edit: false,
-  category_id_to_show_its_package: 0
+  category_id_to_show_its_package: 1
 };
 
 

@@ -32,7 +32,7 @@ export default function Address() {
         dispatch(closeAdd_Address())
     };
     return (
-        <Container sx={{ marginTop: '20px', my:1 }}>
+        <Container sx={{ marginTop: '20px', my: 1 }}>
             <Grid container>
 
                 <Grid xs={6} textAlign={'left'}>
@@ -46,7 +46,13 @@ export default function Address() {
 
                 </Grid>
             </Grid>
-            <Card sx={{ my: 2 }}>
+            <Card sx={{
+                my: 2,
+                borderRadius: '10px',
+                backdropFilter: `blur(10px)`,
+                background: ' rgb(255 255 255 / 0.6)',
+                color: 'black',
+            }}>
                 <Grid container mx={1}>
                     <Grid xs={8} p={2}>
                         <FormLabel id="demo-radio-buttons-group-label" sx={{ display: 'flex' }}>

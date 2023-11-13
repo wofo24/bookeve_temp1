@@ -39,7 +39,13 @@ export default function Track_order() {
 
     return (
         <Container>
-            <Card sx={{ m: 1, my: 4 }}>
+            <Card sx={{
+                m: 1, my: 4,
+                borderRadius: '10px',
+                backdropFilter: `blur(10px)`,
+                background: ' rgb(255 255 255 / 0.6)',
+                color: 'black',
+            }}>
                 <CardHeader
                     avatar={
                         <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">

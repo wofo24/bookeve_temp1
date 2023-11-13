@@ -176,8 +176,9 @@ export default function Schedule() {
             <Box sx={{
                 p: 5,
                 borderRadius: '10px',
-                backdropFilter: `blur(10px)`,
-                background: ' rgb(255 255 255 / 0.6)',
+                backdropFilter: buttonStyles.child_backdropFilter,
+                background: buttonStyles.child_bg,
+                color: buttonStyles.child_div_text,
                 m: 5,
                 '@media (max-width: 600px)': {
                     p:2,
