@@ -53,6 +53,7 @@ function a11yProps(index) {
 export default function PackageView() {
     const posts = useSelector((state) => state.posts);
     const category_id_toShow = useSelector((state) => state.category_id_to_show_its_package);
+    const style = useSelector((state) => state.apply_new_theme);
     const { state } = useLocation();
     const [choice, setChoice] = useState(category_id_toShow);
     const [value, setValue] = React.useState(0);
@@ -66,11 +67,14 @@ export default function PackageView() {
         setChoice(data.categoryId)
         dispatch(show_this_category_package(data))
     }
+ 
+    const filteredNames = posts.filter(name => name?.categoryId == category_id_toShow);
 
-    const filteredNames = posts.filter(name => name.categoryId == category_id_toShow);
+    // console.log(JSON.stringify(filteredNames[0]?.categoryName), 'current test')
+    
     const Show_allCate = (array) => {
         const searchCategory = filteredNames[0];
-        const newArrayWithNoSelectedCategory = array.filter(item => item.categoryId !== searchCategory.categoryId);
+        const newArrayWithNoSelectedCategory = array.filter(item => item?.categoryId !== searchCategory.categoryId);
         setFiltered_Array([searchCategory, ...newArrayWithNoSelectedCategory]);
     }
 
@@ -132,7 +136,11 @@ export default function PackageView() {
                         {matches.large && (
                             <>
                                 <Box
-                                    sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: '100%', my: 5, width: 1150, borderRadius: '10px' }}
+                                    sx={{  
+                                        borderRadius: '10px',
+                                    backdropFilter: style.child_backgroundFilter,
+                                    background: style.child_bg,
+                                    color: style.color, flexGrow: 1,display: 'flex', height: '100%', my: 5, width: 1150}}
                                 >
 
                                     <Tabs
@@ -153,11 +161,10 @@ export default function PackageView() {
                                                 justifyContent: 'start',
                                                 flexDirection: 'row-reverse', // Reverses the direction, placing the button label on the left
 
-                                            }} label={<Box onClick={() => handleClick(item.categoryId)} sx={{ display: 'flex', textTransform: 'capitalize', textAlign: 'left' }}> <Typography variant='h6'>{item.categoryName}</Typography> </Box>}  {...a11yProps(0)} />))}
+                                            }} label={<Box onClick={() => handleClick(item?.categoryId)} sx={{ display: 'flex', textTransform: 'capitalize', textAlign: 'left' }}> <Typography variant='h6'>{item.categoryName}</Typography> </Box>}  {...a11yProps(4)} />))}
 
                                     </Tabs>
                                     <Box sx={{
-
                                         background: '#fcf6e3', height: 800,
                                         overflow: 'scroll',
                                         scrollbarWidth: 'thin',

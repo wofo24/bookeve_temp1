@@ -1,15 +1,17 @@
 import React from 'react'
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
+import ListIcon from '@mui/icons-material/List';
 import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+// import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useState } from 'react';
@@ -17,11 +19,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import Theme_Button from '../../Components/Theme/Theme_Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Grid } from '@mui/material';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+// import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Bookings from '../../Components/Bookings';
 import Address from '../../Pages/Address'
 import { open_profile_dialog } from '../../Redux/actions/actions';
 import Media from 'react-media';
+import { Link } from 'react-router-dom';
+
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -94,10 +98,11 @@ export default function Profile() {
         }}
       >{(item) => item.large && (
         <Container sx={{
-          color: '', p: 3, my: 6,
+          p: 3, my: 6,
           borderRadius: '10px',
-          backdropFilter: `blur(1px)`,
-          background: ' rgb(255 255 255 / 0.3)'
+          backdropFilter: buttonStyles.child_backdropFilter,
+          background: buttonStyles.child_bg,
+          color:buttonStyles.child_div_text, 
         }}>
           <Grid container>
             <Grid xs={6}>
@@ -161,11 +166,79 @@ export default function Profile() {
         }}
       >
         {(item) => item.small && (
-          <>
-            this is small screen
-          </>
+          <Box sx={{
+            p: 2,
+            borderRadius: '10px',
+            backdropFilter: buttonStyles.child_backdropFilter,
+            background: buttonStyles.child_bg,
+            color:buttonStyles.child_div_text, 
+            m: 3
+          }}>
+
+            <Grid container px={2}>
+              <Grid xs={6}>
+                <Typography>{`item.name`}
+                </Typography>
+              </Grid>
+              <Grid xs={6} textAlign={'end'}>
+                <Typography>
+
+                  {`+91 ${`item.phone_number`}`}
+                </Typography>
+
+              </Grid>
+
+
+            </Grid>
+            <Box p={2}>
+              <Box mt={2} p={2} sx={{ border: '2px solid white', borderRadius: '10px' }}>
+
+                <Link to='/all_booking'>
+                  <Grid container>
+                    <Grid xs={1}>
+                      <ListIcon />
+                    </Grid>
+                    <Grid xs={5} textAlign={'start'}>
+                      <Typography ml={2}>My Booking</Typography></Grid>
+                    <Grid xs={6} textAlign={'end'}><ArrowForwardIosIcon /></Grid>
+                  </Grid>
+                </Link>
+
+              </Box>
+              <Box mt={2} p={2} sx={{ border: '2px solid white', borderRadius: '10px' }}>
+                <Link to='/address'>
+                  <Grid container>
+                    <Grid xs={1}>
+                      <LocationOnIcon />
+
+                    </Grid>
+                    <Grid xs={5} textAlign={'start'}><Typography ml={2}> Address</Typography></Grid>
+
+                    <Grid xs={6} textAlign={'end'}><ArrowForwardIosIcon /> </Grid>
+                  </Grid>
+                </Link>
+              </Box >
+              <Box mt={2} p={2} sx={{ border: '2px solid white', borderRadius: '10px' }}>
+                <Link to='/' >
+                  <Grid container>
+
+                    <Grid xs={1}>
+                      <LogoutIcon />
+                    </Grid>
+                    <Grid xs={5} textAlign={'start'}><Typography ml={2}> Sign out</Typography></Grid>
+
+                    <Grid xs={6} textAlign={'end'}><ArrowForwardIosIcon /> </Grid>
+                  </Grid>
+
+
+                </Link>
+              </Box >
+
+
+            </Box>
+          </Box>
         )}
       </Media>
-    </div>
+    </div >
   )
 }

@@ -33,7 +33,7 @@ export default function Payment() {
         {(item) => (
           item.large && (
             <Container sx={{ pt: 10, }}>
-              <Box sx={{ width: '50%', bgcolor: 'background.paper', margin: 'auto', borderRadius: '10px', color:'black', p:2 }}>
+              <Box sx={{ width: '50%', bgcolor: 'background.paper', margin: 'auto', borderRadius: '10px', color: 'black', p: 2 }}>
                 <Typography variant='h5' mb={2}>Select Payment method</Typography>
                 <List component="nav" aria-label="main mailbox folders">
                   <ListItemButton
@@ -73,7 +73,12 @@ export default function Payment() {
         {(item) => (
           item.small && (
             <Container>
-              <Box sx={{ width: '100%', bgcolor: 'background.paper', mt: 2 }}>
+              <Box sx={{
+                width: '100%', bgcolor: 'background.paper', mt: 2, borderRadius: '10px',
+                backdropFilter: buttonStyles.child_backdropFilter,
+                background: buttonStyles.child_bg,
+                color: buttonStyles.child_div_text,
+              }}>
                 <List component="nav" aria-label="main mailbox folders">
                   <ListItemButton
                     selected={selectedIndex === 0}

@@ -40,7 +40,7 @@ export default function Coupon() {
 
     const [formErrors, setFormErrors] = useState({});
     const dispatch = useDispatch()
-
+    const buttonStyles = useSelector((state) => state.apply_new_theme)
 
     const handleChange = (event) => {
         const { value, name } = event.target
@@ -56,9 +56,9 @@ export default function Coupon() {
     console.log(formErrors, 'errors')
     return (
         <div>
-            <React.Fragment  sx={{borderRadius:'30px'}}>
+            <React.Fragment sx={{ borderRadius: '30px' }}>
                 <BootstrapDialog
-               
+
                     onClose={handleClose}
                     aria-labelledby="customized-dialog-title"
                     open={open}
@@ -78,7 +78,7 @@ export default function Coupon() {
                     >
                         <CloseIcon />
                     </IconButton>
-                    <Box px={5} py={2}>
+                    <Box px={5} py={0}>
                         <Box>
                             <Typography textAlign='left' fontSize={36} >Apply Coupon</Typography>
                             <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>
@@ -106,17 +106,25 @@ export default function Coupon() {
                                             />
                                         </Grid>
                                         <Box width={300} p={3} margin={'auto'}>
-                                            <Button  id='BackgroundColorChangeOnly' fullWidth variant='contained' type='submit'>Apply</Button>
+                                            <Button id='BackgroundColorChangeOnly' fullWidth variant='contained' type='submit'>Apply</Button>
 
                                         </Box>
 
-                                            {/* <Typography textAlign='center' m={2}>Coupon available</Typography> */}
+                                        {/* <Typography textAlign='center' m={2}>Coupon available</Typography> */}
 
-                                      
-                                     
-                                        <Grid container>
+
+                                            
+                                        <Grid container sx={{
+                                           width:440,
+                                           borderRadius:"10px",
+                                           p:1,
+                                            margin:'auto',
+                                            border:'1px solid',
+                                            backdropFilter: buttonStyles.child_backdropFilter,
+                                            background: buttonStyles.child_bg,
+                                        }}>
                                             <Grid xs={6} textAlign={'start'}>
-                                                <Box sx={{ p: 3 }}>
+                                                <Box sx={{  }}>
 
                                                     <Typography>15% off on your first order</Typography>
                                                     <span>valid for new user</span>
@@ -126,14 +134,14 @@ export default function Coupon() {
 
                                             </Grid>
                                             <Grid xs={6} textAlign='end'>
-                                                <Box sx={{ p: 3, mt: 3, textAlign: 'last' }}>
+                                                <Box sx={{mt: 4, textAlign: 'last' }}>
                                                     <Button>Apply</Button>
                                                 </Box>
                                             </Grid>
 
                                         </Grid>
                                     </Grid>
-                                            <hr />
+                                    <hr />
                                 </Box>
                             </form>
                         </div>

@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Box, Button, Container } from '@mui/material';
+import { Box, Button, Container, Grid } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { get_schedule } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
@@ -172,12 +172,18 @@ export default function Schedule() {
 
     return (
         <Container>
+
             <Box sx={{
-                p: 5, 
+                p: 5,
                 borderRadius: '10px',
-                backdropFilter: `blur(10px)`,
-                background: ' rgb(255 255 255 / 0.6)',
-                m:5
+                backdropFilter: buttonStyles.child_backdropFilter,
+                background: buttonStyles.child_bg,
+                color: buttonStyles.child_div_text,
+                m: 5,
+                '@media (max-width: 600px)': {
+                    p:2,
+                    m:2
+                },
             }}>
                 <form>
                     <Box sx={{ display: 'flex', flex: 'wrap' }}>
@@ -213,15 +219,15 @@ export default function Schedule() {
                                         {formatDate(date)}
                                     </Box>
                                 </Box>
-                            ))}
+                            ))},0ig9
                     </Box>
                 </form>
-                <Box mt={3}><Typography variant='h6'>Select Time of service</Typography></Box>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '75%', m: 'auto' }} >
+                <Box mt={3} color={'black'}><Typography variant='h6'>Select Time of service</Typography></Box>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '75%', my: 2 }} >
                     {times?.map((item, index) => {
                         item?.replace(" AM", "");
                         return (
-                            <Box key={index} sx={{cursor:'pointer', p: 1, m: 1, borderRadius: '10px', width: 70 }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}> <span>{item}</span> </Box>
+                            <Box key={index} sx={{ cursor: 'pointer', p: 1, m: 1, borderRadius: '10px', width: 70, margin:'auto' }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}> <span>{item}</span> </Box>
                         )
                     })}
                 </Box>

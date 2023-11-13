@@ -43,7 +43,7 @@ export default function Home() {
     navigate('/package_view', { state: { data: item } })
   }
   const [swiperRef, setSwiperRef] = useState(5);
-
+  const buttonStyles = useSelector((state) => state.apply_new_theme)
   useEffect(() => {
     const word = query.split("")
     if (word.length <= 3) {
@@ -114,8 +114,16 @@ export default function Home() {
 
                     matches.small && (
                       <>
-                        <Box sx={{ pt: 0.2, position: 'sticky', top: 0, background: '#ffff', zIndex: '9999', height: '50px' }}>
-                          <Box sx={{ background: '#fff', zIndex: '9999', height: '50px' }}>
+
+                        <Box sx={{ pt: 0.2, position: 'sticky', top: 0, background: '#ffff', zIndex: '9999', height: '50px', }}>
+                          <Box sx={{
+
+                            zIndex: '9999', height: '50px', borderRadius: '10px',
+                            backdropFilter: buttonStyles.child_backdropFilter,
+                            background: buttonStyles.child_bg,
+                            color: buttonStyles.child_div_text,
+
+                          }}>
                             <Search />
                           </Box>
                         </Box>
@@ -138,6 +146,7 @@ export default function Home() {
                     {(matches) => (
                       matches.small && (
                         <>
+                          <CategoryItems />
                           {posts.map((item, index) => (
                             <Category data={item} key={index} />
                           ))}

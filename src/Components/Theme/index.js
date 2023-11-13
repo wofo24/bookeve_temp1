@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react';
 import { theme_change, get_all_theme, apply_new_theme } from '../../Redux/actions/actions';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Container, Paper, Typography } from '@mui/material';
 
 export default function Index() {
   const dispatch = useDispatch()
@@ -47,66 +47,8 @@ export default function Index() {
     window.location.reload(true)
   }
   return (
-    <div>
-      {/* <Box sx={{ m: 3, textAlign: 'center' }}>
-        <div style={{ margin: '12px', }}>
-          <Theme_Button  {...buttonStyles} label='Hello Aman' />
-          <div>
-            <label>Choose Icon & Text Color:</label>
-            <input
-              type="color"
-              value={buttonStyle.color}
-              onChange={(e) =>
-                handleSettingsChange({ ...buttonStyle, color: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label>Font Family:</label>
-            <select
-              value={buttonStyle.fontFamily}
-              onChange={(e) =>
-                handleSettingsChange({
-                  ...buttonStyle,
-                  fontFamily: e.target.value,
-                })
-              }
-            >
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="Times New Roman, serif">Times New Roman</option>
-              <option value="Verdana, sans-serif">Verdana</option>
-            </select>
-          </div>
-          <div>
-            <label>Text Color:</label>
-            <input
-              type="color"
-              value={buttonStyle.textColor}
-              onChange={(e) =>
-                handleSettingsChange({
-                  ...buttonStyle,
-                  textColor: e.target.value,
-                })
-              }
-            />
-          </div>
-          <div>
-            <label>Background Color:</label>
-            <input
-              type="color"
-              value={buttonStyle.background}
-              onChange={(e) =>
-                handleSettingsChange({
-                  ...buttonStyle,
-                  background: e.target.value,
-                })
-              }
-            />
-          </div>
-    ////////////////////////////////
-         
-        </div>
-      </Box> */}
+    <Container>
+     
       <Typography variant='h5' m={2}>Themes</Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center', flex: 'wrap' }}>
         {themes.map((item, index) => {
@@ -155,6 +97,6 @@ export default function Index() {
         })}
       </Box>
 
-    </div>
+    </Container>
   )
 }

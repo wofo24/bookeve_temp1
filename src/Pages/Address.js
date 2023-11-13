@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { Card } from '@mui/material';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { useSelector, useDispatch } from 'react-redux';
 import { openAdd_Address, closeAdd_Address, openDelete_Address } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
@@ -31,8 +32,27 @@ export default function Address() {
         dispatch(closeAdd_Address())
     };
     return (
-        <Container sx={{ marginTop: '20px' }}>
-            <Card sx={{ my: 2 }}>
+        <Container sx={{ marginTop: '20px', my: 1 }}>
+            <Grid container>
+
+                <Grid xs={6} textAlign={'left'}>
+                    <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
+                        <Typography onClick={() => navigate('/profile')}><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} fontSize='medium' /></Typography>
+                        <Typography variant='h6'> <b>Address</b></Typography>
+                    </Box>
+                </Grid>
+                <Grid xs={6} textAlign={'end'}>
+                    <Button variant='outlined'> <b>Help</b></Button>
+
+                </Grid>
+            </Grid>
+            <Card sx={{
+                my: 2,
+                borderRadius: '10px',
+                backdropFilter: `blur(10px)`,
+                background: ' rgb(255 255 255 / 0.6)',
+                color: 'black',
+            }}>
                 <Grid container mx={1}>
                     <Grid xs={8} p={2}>
                         <FormLabel id="demo-radio-buttons-group-label" sx={{ display: 'flex' }}>

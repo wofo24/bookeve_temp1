@@ -41,7 +41,7 @@ export default function Search(props) {
             >
                 {(item) => (
                     item.small && (
-                        <Box sx={{ border: '2px solid ', my: 1, mx: 1, borderRadius: '10px' }}>
+                        <Box sx={{ border: '0px solid ', my: 1, mx: 2, borderRadius: '10px' }}>
                             <FormControl fullWidth>
                                 <Input
                                     fullWidth
@@ -49,11 +49,12 @@ export default function Search(props) {
                                     inputRef={inputRef} // Use inputRef here
                                     value={query}
                                     size='large'
+
                                     placeholder='Search..'
                                     id="input-with-icon-adornment"
                                     startAdornment={
                                         <InputAdornment position="start">
-                                            <SearchRoundedIcon sx={{ my: 2, mx: 1 }} />
+                                            <SearchRoundedIcon sx={{ my: 2, mx: 1, width:30, height:30 }} />
                                         </InputAdornment>
                                     }
                                 />

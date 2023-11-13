@@ -43,7 +43,12 @@ export default function Small_Cart() {
                             <Grid xs={12}>
 
                                 <Box mx={1}>
-                                    <Box sx={{ border: `1.5px solid ${buttonStyles.buttonColor}`, borderRadius: '10px', p: 1 }} >
+                                    <Box sx={{
+                                        borderRadius: '10px',
+                                        backdropFilter: buttonStyles.child_backdropFilter,
+                                        background: buttonStyles.child_bg,
+                                        color:buttonStyles.child_div_text, p: 2
+                                    }} >
                                         <Box>
                                             <Typography> <b>Cart</b></Typography>
                                         </Box>
@@ -78,8 +83,8 @@ export default function Small_Cart() {
                                             </Typography> </Grid>
                                         </Grid>
 
-                                        <Grid sx={{ background: 'green', mt:2 }}>
-                                            <Typography sx={{color:'white', textAlign:'center', py:1}}>Congratulation &#8377;12,00 saved!
+                                        <Grid sx={{ background: 'green', mt: 2 }}>
+                                            <Typography sx={{ color: 'white', textAlign: 'center', py: 1 }}>Congratulation &#8377;12,00 saved!
                                             </Typography>
                                         </Grid>
 
@@ -97,7 +102,12 @@ export default function Small_Cart() {
                                             </Grid>
                                         </Box>
                                     </Box>
-                                    <Box sx={{ my: 1, border: `1.5px solid ${buttonStyles.buttonColor}`, borderRadius: '10px' }} onClick={handleOpen}  >
+                                    <Box sx={{
+                                        my: 1, borderRadius: '10px',
+                                        backdropFilter: `blur(10px)`,
+                                        background: ' rgb(255 255 255 / 0.6)',
+                                        color: 'black', p: 2
+                                    }} onClick={handleOpen}  >
                                         <Grid container p={1}>
                                             <Grid item xs={2}>
                                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
@@ -120,7 +130,12 @@ export default function Small_Cart() {
                                             </Grid>
                                         </Grid>
                                     </Box>
-                                    <Box sx={{ border: '1.5px solid red', borderRadius: '10px' }} p={1}>
+                                    <Box sx={{
+                                        borderRadius: '10px',
+                                        backdropFilter: `blur(10px)`,
+                                        background: ' rgb(255 255 255 / 0.6)',
+                                        color: 'black', p: 2
+                                    }} p={1}>
                                         <Typography mb={1}>Payment Summary</Typography>
                                         <Grid container>
                                             <Grid xs={6}>Item total</Grid>

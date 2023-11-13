@@ -64,10 +64,13 @@ export default function Header() {
     }
     return (
         <div>
-            <AppBar position="static" sx={{ background: buttonStyles.child_bg }}>
+            <AppBar position="static" sx={{
+                 backdropFilter: buttonStyles.child_backdropFilter,
+                background: buttonStyles.child_bg,
+            }}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters sx={{ m: 'auto' }}>
-                        <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                        <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                         <Typography
                             variant="h5"
                             noWrap
@@ -80,14 +83,14 @@ export default function Header() {
                                 fontFamily: buttonStyles.fontFamily,
                                 fontWeight: 700,
                                 letterSpacing: '.1rem',
-                                color: 'inherit',
+                                color: buttonStyles.Company_Name_title,
                                 textDecoration: 'none',
 
                             }}
                         >
                             Company Name
                         </Typography>
-                        <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } }}>
+                        <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' } , color:buttonStyles.icons_Color}}>
 
                             <Menu
                                 id="menu-appbar"
@@ -106,10 +109,11 @@ export default function Header() {
                                 onClose={handleCloseNavMenu}
                                 sx={{
                                     display: { xs: 'block', md: 'none' },
-                                    zIndex: '9999'
+                                    zIndex: '9999',
+                                    color: 'black'
                                 }}
                             >
-                                <Button onClick={() => navigate('/indexTheme')}>Try Theme</Button>
+                                <Button color='success' onClick={() => navigate('/indexTheme')}>Try Theme</Button>
                             </Menu>
                             <IconButton
                                 size="large"
@@ -122,9 +126,6 @@ export default function Header() {
                                 <MenuIcon />
                             </IconButton>
                         </Box>
-
-
-
 
                         <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -158,14 +159,13 @@ export default function Header() {
                                     <Button
 
                                         onClick={handleCloseNavMenu}
-                                        sx={{ mx: 3, my: 2, color: 'white', display: 'flex', fontSize: '20px', textTransform: 'capitalize', alignItems: 'center' }}
+                                        sx={{ mx: 3, my: 2, color: 'black', display: 'flex', fontSize: '20px', textTransform: 'capitalize', alignItems: 'center' }}
                                     >
                                         <SearchRoundedIcon sx={{ m: 1 }} /> Search
                                     </Button>
                                 </Link>
 
                                 <Link
-                                   
                                     style={{ textDecoration: 'none' }}
                                 >
                                     <Button
@@ -175,7 +175,7 @@ export default function Header() {
                                         aria-expanded={open ? 'true' : undefined}
                                         onClick={handleClick}
 
-                                        sx={{ mx: 3, my: 2, color: 'white', display: 'flex', fontSize: '20px', textTransform: 'capitalize' }}
+                                        sx={{ mx: 3, my: 2, color: 'black', display: 'flex', fontSize: '20px', textTransform: 'capitalize' }}
                                     >
                                         <AccountCircleOutlinedIcon sx={{ m: 1 }} />  Ashu
                                     </Button>
@@ -189,7 +189,7 @@ export default function Header() {
                                 >
                                     <Button
                                         onClick={handleCloseNavMenu}
-                                        sx={{ mx: 3, my: 2, color: 'white', display: 'flex', fontSize: '20px', textTransform: 'capitalize' }}
+                                        sx={{ mx: 3, my: 2, color: 'black', display: 'flex', fontSize: '20px', textTransform: 'capitalize' }}
                                     >
                                         <LocalMallOutlinedIcon sx={{ m: 1 }} />  Cart
                                     </Button>
