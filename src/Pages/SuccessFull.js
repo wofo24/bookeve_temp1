@@ -13,7 +13,7 @@ export default function SuccessFull() {
             <CheckCircleRoundedIcon color='success' sx={{ height: 100, width: 100 }} />
             <Typography color='success' variant='h6'>Ordered Successfully!</Typography>
             <Box p={4}>
-                <Button variant='contained' sx={{margin: 1 }} style={{background:buttonStyles.buttonColor, color:buttonStyles.buttonText}} onClick={() => navigate('/track_order')}>Track order</Button>
+                <Button variant='contained' sx={{margin: 1 }} style={{background:buttonStyles.buttonColor, color:buttonStyles.buttonText}} onClick={() => navigate('/track-order')}>Track order</Button>
                 <Button variant='contained'  style={{background:buttonStyles.buttonColor, color:buttonStyles.buttonText}} onClick={() => navigate('/')}>Go to home</Button>
             </Box>
         </Container>

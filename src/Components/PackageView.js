@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Package from './Package';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { Typography, CircularProgress } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import Category from './Category';
-// import * as React from 'react';
 import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-// import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Media from 'react-media';
-import Cart from '../Pages/Cart'
 import Small_Cart from './Small_Cart';
-import { show_this_category_package } from '../Redux/actions/actions';
+import { fetchPosts, show_this_category_package } from '../Redux/actions/actions';
+import { useLayoutEffect, useRef } from "react";
+import clsx from "clsx";
+import "../Components/Scollspy/Style.css";
 
 
 
@@ -43,45 +39,84 @@ TabPanel.propTypes = {
     index: PropTypes.number.isRequired,
     value: PropTypes.number.isRequired,
 };
-function a11yProps(index) {
-    return {
-        id: `vertical-tab-${index}`,
-        'aria-controls': `vertical-tabpanel-${index}`,
-    };
-}
+
+const capitalize = (text) => text.charAt(0).toUpperCase() + text.substr(1);
+const clamp = (value) => Math.max(0, value);
+const isBetween = (value, floor, ceil) => value >= floor && value <= ceil;
 
 export default function PackageView() {
     const posts = useSelector((state) => state.posts);
     const category_id_toShow = useSelector((state) => state.category_id_to_show_its_package);
     const style = useSelector((state) => state.apply_new_theme);
-    const { state } = useLocation();
     const [choice, setChoice] = useState(category_id_toShow);
-    const [value, setValue] = React.useState(0);
     const [filtered_Array, setFiltered_Array] = useState([])
     const dispatch = useDispatch()
-    const handleChange = (event, newValue) => {
-        setValue(newValue)
+
+    const filteredNames = posts.filter(name => name?.id == category_id_toShow);
+    const [activeId, setActiveId] = useState('');
+
+    console.log(filteredNames, posts, 'this is console')
+    const useScrollspy = (ids, offset = 0) => {
+        const mainRef = useRef(null);
+        useLayoutEffect(() => {
+            const listener = () => {
+                const mainElement = mainRef.current;
+                if (!mainElement) return;
+                const scroll = mainElement.scrollTop;
+                const position = ids.map((id) => {
+                    const element = document.getElementById(id);
+                    if (!element) return { id, top: -1, bottom: -1 };
+
+                    const rect = element.getBoundingClientRect();
+
+                    const top = clamp(rect.top + scroll - offset);
+                    const bottom = clamp(rect.bottom + scroll - offset);
+                    return { id, top, bottom };
+                })
+                    .find(({ top, bottom }) => isBetween(scroll, top, bottom));
+
+                setActiveId(position?.id || "");
+            };
+
+            listener();
+
+            const mainElement = mainRef.current;
+            if (mainElement) {
+                mainElement.addEventListener("scroll", listener);
+            }
+            return () => {
+                if (mainElement) {
+                    mainElement.removeEventListener("scroll", listener);
+                }
+            };
+        }, [ids, offset]);
+
+        return { activeId, mainRef };
     };
 
-    const handleClick = (data) => {
-        setChoice(data.categoryId)
-        dispatch(show_this_category_package(data))
-    }
- 
-    const filteredNames = posts.filter(name => name?.categoryId == category_id_toShow);
-
-    // console.log(JSON.stringify(filteredNames[0]?.categoryName), 'current test')
-    
+console.log(category_id_toShow, 'this is id')
     const Show_allCate = (array) => {
-        const searchCategory = filteredNames[0];
-        const newArrayWithNoSelectedCategory = array.filter(item => item?.categoryId !== searchCategory.categoryId);
-        setFiltered_Array([searchCategory, ...newArrayWithNoSelectedCategory]);
+        const searchCategory = filteredNames.length > 0 ? filteredNames[0] : category_id_toShow;
+        if (searchCategory) {
+            const newArrayWithNoSelectedCategory = array.filter(item => item?.id !== searchCategory.id);
+            setFiltered_Array([searchCategory, ...newArrayWithNoSelectedCategory]);
+        } else {
+            setFiltered_Array(array);
+        }
     }
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const newCategories = filtered_Array.map((item) => item.category);
+        setCategories(newCategories);
+    }, [filtered_Array]);
+
 
     useEffect(() => {
         Show_allCate(posts)
     }, [category_id_toShow, posts])
 
+    const { mainRef } = useScrollspy(categories, 45);
 
 
     return (
@@ -98,25 +133,25 @@ export default function PackageView() {
                     <>
                         {matches.small && (
                             <>
-                                <Stack direction="row" spacing={1} mx={1} my={2} sx={{ display: 'flex', overflow: 'scroll' }}>
-                                    {posts.map((item) => (
-                                        <Chip key={item.categoryId} label={`${item.categoryName}`} onClick={() => setChoice(item.categoryId)} />
+                                <Stack direction="row" height={40} spacing={1} mx={1} my={2} sx={{ display: 'flex', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }}>
+                                    {posts.map((item, index) => (
+                                        <Chip sx={{ height: 40, background: 'white', backgroundColor: choice === item.id ? '#e6cc67' : 'white' }} key={item.id} label={`${item.category}`} onClick={() => setChoice(item.id)} />
                                     ))}
                                 </Stack>
+                                <Box sx={{ p: 1 }}>
+                                    {posts?.map((item) => {
+                                        return (
+                                            <div>
+                                                {(item.id === choice) && (
+                                                    <>
+                                                        <Category data={item} />
 
-                                {filtered_Array?.map((item) => {
-
-                                    return (
-                                        <div>
-                                            {(item.categoryId === choice) && (
-                                                <>
-                                                    <Category data={item} />
-
-                                                </>
-                                            )}
-                                        </div>
-                                    )
-                                })}
+                                                    </>
+                                                )}
+                                            </div>
+                                        )
+                                    })}
+                                </Box>
                             </>
                         )
                         }
@@ -135,60 +170,50 @@ export default function PackageView() {
                     <>
                         {matches.large && (
                             <>
-                                <Box
-                                    sx={{  
+                                <Grid container
+                                    sx={{
                                         borderRadius: '10px',
-                                    backdropFilter: style.child_backgroundFilter,
-                                    background: style.child_bg,
-                                    color: style.color, flexGrow: 1,display: 'flex', height: '100%', my: 5, width: 1150}}
+                                        backdropFilter: style.child_backgroundFilter,
+                                        background: style.child_bg,
+                                        color: style.color, flexGrow: 1, display: 'flex', height: '100%', my: 5, width: 1150
+                                    }}
                                 >
-
-                                    <Tabs
-                                        value={value}
-                                        orientation="vertical"
-                                        variant="scrollable"
-                                        onChange={handleChange}
-                                        aria-label="Vertical tabs example"
-                                        sx={{ borderRight: 1, borderColor: 'divider', width: 250, pl: 2, pt: 4 }}
-                                    >
-                                        {posts.map((item, index) => (
-                                            <Tab sx={{
-                                                textTransform: 'none',
-                                                fontWeight: '700',
-                                                fontSize: '20px',
-                                                width: 'auto',
-                                                display: 'flex', // Use flex layout
-                                                justifyContent: 'start',
-                                                flexDirection: 'row-reverse', // Reverses the direction, placing the button label on the left
-
-                                            }} label={<Box onClick={() => handleClick(item?.categoryId)} sx={{ display: 'flex', textTransform: 'capitalize', textAlign: 'left' }}> <Typography variant='h6'>{item.categoryName}</Typography> </Box>}  {...a11yProps(4)} />))}
-
-                                    </Tabs>
-                                    <Box sx={{
-                                        background: '#fcf6e3', height: 800,
-                                        overflow: 'scroll',
-                                        scrollbarWidth: 'thin',
-                                        '&::-webkit-scrollbar': {
-                                            width: '0.2rem',
-                                            height: '0.2rem',
-                                        },
-                                    }}>
-
-                                        <TabPanel>
-                                            <Typography color='red'>
-                                                {filtered_Array.map((item, index) => (
+                                    <Grid item xs={3} px={4} py={2} >
+                                        <Box sx={{ margin: 'auto' }}>
+                                            {categories.map((item, index) => {
+                                                console.log(category_id_toShow, item, 'active items')
+                                                return (
+                                                    <Box key={index} sx={{
+                                                        borderRight: item === activeId && '2px solid  #ffc629;', my: 1, px: 2, py: .1, background: item === activeId && '#ffc629', background: item === activeId && 'linear-gradient(to right, white, #ffd45e)',
+                                                    }}>
+                                                        <a
+                                                            href={`#${item}`}
+                                                            className={clsx("menu-link", item === activeId && "menu-link-active")}
+                                                        >
+                                                            <Box sx={{ my: .4, display: 'flex', textTransform: 'capitalize', textAlign: 'left' }}>
+                                                                <Typography variant='h6' fontSize={'25px'} fontWeight={600}> {capitalize(item)}</Typography>
+                                                            </Box>
+                                                        </a>
+                                                    </Box>
+                                                )
+                                            })}
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={5} alignItems={'center'} >
+                                        <Box sx={{ height: '700px', paddingBottom: '22rem', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }} ref={mainRef}>
+                                            {filtered_Array.map((item, index) => (
+                                                <section key={`section-${item.categoryName}`} id={item.categoryName} className="section">
                                                     <Category data={item} key={index} />
-                                                ))}
-                                            </Typography>
-                                        </TabPanel>
-
-                                    </Box>
-
-                                    <Box sx={{ color: 'black', borderRadius: '10px', py: 3, width: 360, pl: 2.5 }}>
-                                        <Small_Cart />
-                                    </Box>
-                                </Box>
-
+                                                </section>
+                                            ))}
+                                        </Box>
+                                    </Grid>
+                                    <Grid item xs={3} pt={2}>
+                                        <Box sx={{ color: 'black', borderRadius: '10px', width: 395, }}>
+                                            <Small_Cart />
+                                        </Box>
+                                    </Grid>
+                                </Grid>
                             </>
                         )
                         }

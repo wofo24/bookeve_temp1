@@ -8,78 +8,117 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { useSelector, useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import Media from 'react-media';
+import { get_public_information } from '../Redux/actions/actions';
 const footerStyle = {
     marginTop: 'auto',
     marginBottom: '40px'
 };
 
 export default function Footer() {
-    const dispatch = useDispatch()
     const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const public_info = useSelector((state) => state?.public_information?.data)
+    const error = useSelector((state) => state.error)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(get_public_information())
+    }, [])
+
+
+
     return (
         <footer style={footerStyle}>
-            <Box sx={{ mx: 0, p: 2, background: buttonStyles.buttonColor, color: buttonStyles.buttonText }}>
-                <Typography sx={{ fontFamily: buttonStyles.fontFamily, textAlign: 'center' }}>Get your bio link For free in 30 Seconds</Typography>
-            </Box>
-            <hr />
-            <Grid container >
-                <Grid item xs={12} lg={6} sm={12}>
-                    <Box mt={5} >
-                        <Box textAlign='center'>
-                            <Typography variant='h4'>Business Name</Typography><br />
-                            <Typography variant='h5'>New Delhi</Typography>
-                            <Typography mt={2}><b> 2023 Example@gmail.com</b></Typography>
+            <Media queries={{
+                small: '(max-width: 768px)',
+                medium: '(min-width: 769px) and (max-width: 1024px)',
+                large: '(min-width: 1025px)',
+            }}>
+                {(item) => item.large && (
+                    <Box>
+                        <Box sx={{ mx: 0, p: 2, background: buttonStyles.buttonColor, color: buttonStyles.buttonText }}>
+                            <Typography sx={{ fontFamily: buttonStyles.fontFamily, textAlign: 'center' }}>Get your bio link For free in 30 Seconds</Typography>
                         </Box>
+                        <hr />
+                        <Grid container >
+                            <Grid item xs={12} lg={6} sm={12}>
+                                <Box mt={1} textAlign={'left'} >
+                                    <Box textAlign='left' mx={5}>
+                                        <Typography variant='h3' fontWeight={700}>{public_info?.business_name}</Typography> <br />
+                                        <Typography variant='h5' fontWeight={700}> <LocationOnIcon fontSize='large' sx={{ mr: 1 }} />  {public_info?.address}</Typography>
+                                        <Typography mt={2}><b> 2023 Example@gmail.com</b></Typography>
+                                    </Box>
 
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} lg={6} sm={12}>
+                                <Box sx={{ fontFamily: buttonStyles.fontFamily, display: 'flex', justifyContent: 'end' }} mt={8} mx={7} >
+                                    <Box>
+
+                                        <Typography variant='h5' sx={{ fontWeight: 800, fontFamily: buttonStyles.fontFamily, textAlign: 'center', fontSize: '30px' }}>
+                                            Contact with us on-
+                                        </Typography>
+
+                                        <Box sx={{ my: 1 }} textAlign='center'>
+                                            <InstagramIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info.instagram}`} />
+                                            <YouTubeIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info.youtube}`} />
+                                            <WhatsAppIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info.whatsapp}`} />
+                                            <FacebookIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info.facebook}`} />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Box>
-                </Grid>
-                <Grid item xs={12} lg={6} sm={12}>
-                    <Box sx={{ fontFamily: buttonStyles.fontFamily, display: 'flex', justifyContent: 'center' }} mt={10} mx={2} >
-                        <Box>
+                )}
 
-                            <Typography variant='h5' sx={{ fontWeight: 600, fontFamily: buttonStyles.fontFamily, textAlign: 'center' }}>
-                                Contact with us on-
-                            </Typography>
-
-                            <Box sx={{ my: 1 }} textAlign='center'>
-                                <InstagramIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = 'https://www.instagram.com/'} />
-                                <YouTubeIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = 'https://www.youtube.com/'} />
-                                <WhatsAppIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = "https://wa.me/8423174102/?text='hello'"} />
-                                <FacebookIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = 'https://www.facebook.com/'} />
-                            </Box>
+            </Media>
+            <Media queries={{
+                small: '(max-width: 768px)',
+                medium: '(min-width: 769px) and (max-width: 1024px)',
+                large: '(min-width: 1025px)',
+            }}>
+                {(item) => item.small && (
+                    <Box>
+                        <Box sx={{ mx: 0, p: 2, background: buttonStyles.buttonColor, color: buttonStyles.buttonText }}>
+                            <Typography sx={{ fontFamily: buttonStyles.fontFamily, textAlign: 'center' }}>Get your bio link For free in 30 Seconds</Typography>
                         </Box>
+                        <hr />
+                        <Grid container >
+                            <Grid item xs={12} lg={6} sm={12}>
+                                <Box mt={5} >
+                                    <Box textAlign='center'>
+                                        <Typography variant='h4' fontWeight={700}>{public_info?.business_name}</Typography> <br />
+                                        <Typography variant='h5'>{public_info?.address}</Typography>
+                                        <Typography mt={2}><b> 2023 Example@gmail.com</b></Typography>
+                                    </Box>
+
+                                </Box>
+                            </Grid>
+                            <Grid item xs={12} lg={6} sm={12}>
+                                <Box sx={{ mb: 4, fontFamily: buttonStyles.fontFamily, display: 'flex', justifyContent: 'center' }} mt={10} mx={2} >
+                                    <Box>
+                                        <Typography variant='h5' sx={{ fontWeight: 600, fontFamily: buttonStyles.fontFamily, textAlign: 'center' }}>
+                                            Contact with us on-
+                                        </Typography>
+
+                                        <Box sx={{ my: 1 }} textAlign='center'>
+                                            <InstagramIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info?.instagram}`} />
+                                            <YouTubeIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info?.youtube}`} />
+                                            <WhatsAppIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info?.whatsapp}`} />
+                                            <FacebookIcon sx={{ m: .3, mx: 2 }} style={{ color: buttonStyles.icons_Color }} fontSize='large' onClick={event => window.location.href = `${public_info?.facebook}`} />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        </Grid>
                     </Box>
-                </Grid>
-            </Grid>
+                )}
+
+            </Media>
+
         </footer>
     );
 }
-
-
-
-{/* <Grid item xs={5} textAlign='right' px={2}>
-                                <LocationOnIcon fontSize='large' style={{ color: buttonStyles.icons_Color }} />
-                            </Grid>
-                            <Grid item xs={7} textAlign='left'>
-                                <Typography style={{ color: buttonStyles.icons_Color }}>
-                                    Locations
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={5} textAlign='right' px={2}>
-                                <CallIcon fontSize='large' style={{ color: buttonStyles.icons_Color }} />
-                            </Grid>
-                            <Grid item xs={7} textAlign='left'>
-                                <Typography>
-                                    <a href="tel:123-456-7890" style={{ color: buttonStyles.icons_Color }}>+91 123-456-7890</a>
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={5} textAlign='right' px={2}>
-                                <MailIcon fontSize='large' style={{ color: buttonStyles.icons_Color }} />
-                            </Grid>
-                            <Grid item xs={7} textAlign='left'>
-                                <Typography >
-                                    <a href="mailto: abc@example.com" style={{ color: buttonStyles.icons_Color }}>Send Email</a>
-                                </Typography>
-                            </Grid> */}
-
-{/* </Grid> */ }

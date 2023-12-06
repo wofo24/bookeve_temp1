@@ -1,17 +1,14 @@
-
 body {
   height: 100vh;
   margin: 0 !important;
   padding: 0;
-  overflow: auto !important;
+  overflow-x: hidden; 
   display: flex;
   flex-direction: column;
   position: relative;
+  /* overflow-x: hidden; */
 }
 
-#root{
-  margin: 0 !important;
-}
 
 .App-logo {
   height: 40vmin;
@@ -84,7 +81,7 @@ body {
 .highlight {
   position: absolute;
   display: inline-block;
-  color: #fff;
+  color: #f02929;
   line-height: 2em;
   padding: 1px 8px 1px 10px;
   /* : 14px; */
@@ -94,7 +91,7 @@ body {
 }
 
 .red-bg {
-  background: red;
+  background: #e8a3a3;
 }
 
 .highlight:after {
@@ -122,11 +119,13 @@ body {
   background-size: cover;
   width: 300px;
   height: 150px;
+  /* margin-right:20px; */
 }
 
 .swiper-slide img {
   display: block;
   width: 100%;
+
 }
 
 .custom-switch .ant-switch-inner {
@@ -134,7 +133,12 @@ body {
   border-color: red;
 }
 
-.css-1h9z79y-MuiButtonBase-root-MuiTab-root{ 
+.css-1h9z79y-MuiButtonBase-root-MuiTab-root {
   border: 1px solid red;
   text-align: start;
+}
+
+.mySwiper .swiper-slide {
+
+  height: 200px;
 }

@@ -1,0 +1,38 @@
+html {
+
+    scroll-behavior: smooth;
+}
+
+.menu {
+    margin-bottom: 10rem;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+}
+
+.menu-item:not(:last-child) {
+    margin-right: 1.5em;
+}
+
+.menu-link {
+    font-weight: 600;
+    color: #353535;
+    text-decoration: none;
+    transition: color 0.1s ease;
+}
+
+.menu-link:hover,
+.menu-link-active {
+    color:#ffc629;
+    /* font-size: 20px; */
+}
+
+.section {
+    margin-top: 1rem;
+    
+    /* box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;    border-radius: 10px; */
+      display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #353535;
+}

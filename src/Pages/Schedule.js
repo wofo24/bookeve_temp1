@@ -30,7 +30,6 @@ export default function Schedule() {
 
     const navigate = useNavigate()
     const [value, setValue] = React.useState(null);
-    // const navigate = useNavigate()
     const selectedDate = new Date()
     const [month, setMonth] = useState([])
     const dates = [];
@@ -40,17 +39,12 @@ export default function Schedule() {
     const [formatted_date, setFormatted_date] = useState()
     const [selectedDiv, setSelectedDiv] = useState(null);
     const [activeNum, setActiveNum] = useState(0)
-
-
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const times = ['11:00 AM', '11:30 AM', '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM', '06:00 PM', '07:00 PM']
-
-
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month2 = currentDate.getMonth();
     const lastDateOfJuly2023 = getLastDateOfMonth(year, month2);
-
     const [selectedMonth, setSelectedMonth] = useState(() => {
         const current = selectedDate.getDate()
         if (lastDateOfJuly2023 === current) {
@@ -62,10 +56,8 @@ export default function Schedule() {
 
     });
     const endDate = new Date(selectedDate.getFullYear() + 1, selectedMonth, 0);
-    // console.log(endDate.getMonth(), 'enddate')
     for (let i = 0; i < endDate.getDate(); i++) {
         const date = new Date(selectedDate.getFullYear(), selectedMonth, i);
-
         if (date >= new Date()) {
             dates.push(date);
         }
@@ -73,17 +65,13 @@ export default function Schedule() {
     useEffect(() => {
         setMonth(monthNames);
         var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-        // var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         var lastDay = new Date(y, m + 1, 0);
-
     }, []);
-
 
     const get_month_name = (index) => {
         setGet_month_name_state(index + 1)
         setSelectedMonth(index)
     }
-
     const TimeFun = (time, index) => {
         setActiveNum(index)
         setGet_time_name_state(time)
@@ -92,10 +80,7 @@ export default function Schedule() {
 
     const handleDateClick = (date, index) => {
         setSelectedDiv(index)
-        // console.log(index, 'index ')
         const monthNumber = date.getMonth() + 1;
-        // console.log(index)
-        // console.log(monthNumber, 'monthnumber')
         const year = date.getFullYear();
         const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
         setFormatted_date(
@@ -105,57 +90,15 @@ export default function Schedule() {
                     ? get_time_name_state : '04:00'}:00`);
     };
 
-
     useEffect(() => {
         const oldmonth = []
         const d = new Date()
         let monthIndex = d.getMonth();
-        // console.log(monthIndex + 1)
         for (let i = 1; i < monthIndex + 1; i++) {
             oldmonth.push(i)
         }
-        // console.log(oldmonth, 'oldmonth')
-
     }, [])
 
-    const handleDateChange = (date) => {
-        const dateObject = new Date(date);
-        const year = dateObject.getFullYear();
-        const month = String(dateObject.getMonth() + 1).padStart(2, "0");
-        const day = String(dateObject.getDate()).padStart(2, "0");
-        const formattedDate = `${year}-${month}-${day}`;
-        // setSelectedDatE(formattedDate);
-    };
-    const [choose, setChoose] = useState(false)
-    const [index, setIndex] = useState()
-
-    const handleTime = (times, index) => {
-        const timeString = times;
-        const formattedTime = timeString.replace(/ PM| AM/g, "");
-        // setServiceTime(`${selectedDatE}T${formattedTime}:00`);
-        setChoose(true)
-        setIndex(index)
-    };
-    const formatted_date_function = () => {
-        if (get_time_name_state) {
-            if (formatted_date) {
-                // localStorage.setItem('TimeDate', serviceTime, selectedDatE);
-                navigate('/payment', { state: formatted_date })
-            }
-            else {
-                alert('please choose a Date')
-            }
-
-        }
-        else {
-            alert('Please choose a time')
-        }
-
-    }
-
-    // useEffect(() => {
-    //     localStorage.setItem('TimeDate', serviceTime, selectedDatE);
-    // }, [serviceTime]);
 
     function getLastDateOfMonth(year, month) {
         return new Date(year, month + 1, 0).getDate();
@@ -181,8 +124,8 @@ export default function Schedule() {
                 color: buttonStyles.child_div_text,
                 m: 5,
                 '@media (max-width: 600px)': {
-                    p:2,
-                    m:2
+                    p: 2,
+                    m: 2
                 },
             }}>
                 <form>
@@ -194,7 +137,7 @@ export default function Schedule() {
 
                             if (dateInMonth > newD.getMonth()) {
                                 return (
-                                    <Box sx={{ p: 1, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
+                                    <Box sx={{ p: 1, px: 2, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
                                         onClick={() => get_month_name(index)}
                                     >
                                         {month}
@@ -209,27 +152,29 @@ export default function Schedule() {
 
                     </Box>
                     <Box sx={{ display: "flex", overflowX: "scroll" }}>
-                        {dates
-                            .filter((date) => date >= new Date())
-                            .map((date, index) => (
-                                <Box
-                                    onClick={() => handleDateClick(date, index)}
-                                >
-                                    <Box sx={{ cursor: 'pointer', textAlign: "center", borderRadius: '10px', px: 2, py: 1.5, m: 1, height: 45, width: 38 }} style={(selectedDiv === index ? activeMonth : InactiveMonth)} onClick={() => handleDateClick(date)} >
-                                        {formatDate(date)}
-                                    </Box>
+                        {dates.filter((date) => date >= new Date()).map((date, index) => (
+                            <Box
+                                onClick={() => handleDateClick(date, index)}
+                            >
+                                <Box sx={{ cursor: 'pointer', textAlign: "center", borderRadius: '10px', px: 2, py: 1.5, m: 1, height: 75, width: 58 }} style={(selectedDiv === index ? activeMonth : InactiveMonth)} onClick={() => handleDateClick(date)} >
+                                    {formatDate(date)}
                                 </Box>
-                            ))},0ig9
+                            </Box>
+                        ))}
                     </Box>
                 </form>
                 <Box mt={3} color={'black'}><Typography variant='h6'>Select Time of service</Typography></Box>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '75%', my: 2 }} >
-                    {times?.map((item, index) => {
-                        item?.replace(" AM", "");
-                        return (
-                            <Box key={index} sx={{ cursor: 'pointer', p: 1, m: 1, borderRadius: '10px', width: 70, margin:'auto' }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}> <span>{item}</span> </Box>
-                        )
-                    })}
+                <Box sx={{ width: '100%', display: 'flex', placeContent: 'center' }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '75%', my: 2 }} >
+                        {times?.map((item, index) => {
+                            item?.replace(" AM", "");
+                            return (
+                                <Box sx={{ width:110, my:1 }}>
+                                    <Box key={index} sx={{ cursor: 'pointer', p: 1, my: 2, borderRadius: '10px', width: 100, margin: 'auto' }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}> <span>{item}</span> </Box>
+                                </Box>
+                            )
+                        })}
+                    </Box>
                 </Box>
                 <Box sx={{ p: 3 }}>
                     <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={() => navigate('/payment')} >Proceed</Button>

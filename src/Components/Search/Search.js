@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -12,23 +12,27 @@ import FilledInput from '@mui/material/FilledInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+
+
 export default function Search(props) {
     const dispatch = useDispatch();
-    const query = useSelector((state) => state.search_item);
+   
     const inputRef = useRef(null);
-
-    useEffect(() => {
-        inputRef.current && inputRef.current.focus();
-    }, []);
+    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const [queries, setQueries] = useState()
 
     const handleChange = (event) => {
         const { value } = event.target;
-        dispatch(get_search_item(value));
+        setQueries(value)
+        dispatch(get_search_item(value, props.search_type));
     }
     const handleDelete = (val) => {
         dispatch(empty_quarry(val));
-        console.log('this is called')
     }
+
+    useEffect(() => {
+        dispatch(get_search_item(queries, props.search_type));
+    }, [props.search_type])
 
     return (
         <div>
@@ -41,22 +45,30 @@ export default function Search(props) {
             >
                 {(item) => (
                     item.small && (
-                        <Box sx={{ border: '0px solid ', my: 1, mx: 2, borderRadius: '10px' }}>
+                        <Box sx={{}}>
                             <FormControl fullWidth>
-                                <Input
+                                <TextField
+
                                     fullWidth
                                     onChange={handleChange}
                                     inputRef={inputRef} // Use inputRef here
-                                    value={query}
-                                    size='large'
+                                    // value={query}
+                                    size='medium'
+                                    placeholder="Search..."
+                                    InputProps={{
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchRoundedIcon sx={{ width: 40, height: 40, color: buttonStyles.icons_Color }} />
+                                            </InputAdornment>
+                                        ),
+                                        style: { textAlign: 'center', borderRadius: '15px' },
+                                        "& .MuiOutlinedInput-root": {
+                                            "&.Mui-focused fieldset": {
+                                                border: '2px solid'
+                                            }
+                                        }
 
-                                    placeholder='Search..'
-                                    id="input-with-icon-adornment"
-                                    startAdornment={
-                                        <InputAdornment position="start">
-                                            <SearchRoundedIcon sx={{ my: 2, mx: 1, width:30, height:30 }} />
-                                        </InputAdornment>
-                                    }
+                                    }}
                                 />
                             </FormControl>
 
@@ -76,7 +88,6 @@ export default function Search(props) {
                 {(item => (
                     item.large && (
                         <Box
-
                             component="form"
                             sx={{
                                 '& > :not(style)': { m: 2, mt: 6 },
@@ -88,8 +99,8 @@ export default function Search(props) {
                                 <OutlinedInput
 
                                     onChange={handleChange}
-                                    inputRef={inputRef} // Use inputRef here
-                                    value={query}
+                                    inputRef={inputRef}
+
                                     id="outlined-adornment-password"
                                     endAdornment={
                                         <InputAdornment position="end">

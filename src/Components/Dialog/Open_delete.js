@@ -9,6 +9,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { openDelete_Address, closeDelete_Address } from '../../Redux/actions/actions';
 export default function Open_delete() {
   const open = useSelector((state) => state.delete_open)
+
+  const buttonStyles = useSelector((state) => state.apply_new_theme)
   const dispatch = useDispatch()
   const handleClickOpen = () => {
     dispatch(openDelete_Address())
@@ -25,6 +27,7 @@ export default function Open_delete() {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{ style: { borderRadius: '15px' } }}
       >
         <DialogTitle id="alert-dialog-title">
           {"Do you Really want to delete the address ?"}
@@ -34,11 +37,9 @@ export default function Open_delete() {
 
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{m:1}}>
           <Button onClick={handleClose}>No</Button>
-          <Button onClick={handleClose} autoFocus>
-            Yes
-          </Button>
+          <Button  size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >yes</Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -1,34 +1,60 @@
 import { Box, Button, Grid, Typography } from '@mui/material'
-import React, { useState } from 'react'
-
+import React, { useState, useEffect } from 'react'
+import { store_id } from '../Redux/actions/actions';
 import TextField from '@mui/material/TextField';
 import { useSelector, useDispatch } from 'react-redux';
-
-// import Link from '@mui/material/Link';
 import { Link } from 'react-router-dom';
 import Media from 'react-media';
-// import style from '../Css/Signup.module.css'
+import { login } from '../Redux/actions/actions';
+import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function Login() {
+    const location = useLocation();
+    const data = location?.state?.formData;
+    const [formData, setFormData] = useState({
+        country_code: 'IN',
+        "phone_number": data?.phone_number
+    });
 
-    const [formData, setFormData] = useState([])
     const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const [formErrors, setFormErrors] = useState({});
+    const positive_response = useSelector((state) => state.useLogged_in)
+    const [formErrors, setFormErrors] = useState({ "phone_number": undefined });
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
 
     const handleChange = (event) => {
         const { value, name } = event.target
         setFormData({ ...formData, [name]: value })
     }
-    // console.log(formData, 'form data')
-
     const handleSubmit = (event) => {
         event.preventDefault();
+        dispatch(login(formData))
     };
+
+    useEffect(() => {
+        if (positive_response?.success === true) {
+            dispatch(store_id(parseInt(positive_response?.data?.phone_number)));
+            navigate('/otp')
+        }
+        else {
+            if (positive_response) {
+                positive_response?.phone_number?.map((item) => {
+                    if (item === "User with mobile no doesn't exist.") {
+                        setTimeout(() => {
+                            navigate('/signup', { state: { formData } })
+                        }, 2000);
+                    }
+                }
+                )
+            }
+            setFormErrors({ 'phone_number': positive_response.phone_number })
+        }
+    }, [positive_response]);
 
     return (
         <div>
-
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -54,12 +80,13 @@ export default function Login() {
                         </Box>
                         <div>
                             <form onSubmit={handleSubmit}>
-                                <Box py={1}>
+                                <Box py={3} mx={2}>
                                     <Grid container spacing={3}>
                                         <Grid xs={12} item>
                                             <TextField
                                                 onChange={handleChange}
                                                 fullWidth
+                                                defaultValue={data?.phone_number}
                                                 type='tel'  // Use type 'tel' for phone numbers
                                                 id="standard-textarea"
                                                 label="Phone number"
@@ -68,6 +95,7 @@ export default function Login() {
                                                 inputProps={{
                                                     pattern: "^[0-9]{10}$",
                                                 }}
+
                                                 variant="standard"
                                                 error={!!formErrors.phone_number}
                                                 helperText={formErrors.phone_number}
@@ -78,7 +106,7 @@ export default function Login() {
                                         </Grid>
                                         <Grid item xs={6} textAlign='right' >
                                             <Box>
-                                                <Link to="/forgot_password" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
+                                                <Link to="/otp" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
                                                     Forgot Password ?
                                                 </Link>
                                             </Box>

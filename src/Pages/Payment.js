@@ -32,7 +32,7 @@ export default function Payment() {
         }}>
         {(item) => (
           item.large && (
-            <Container sx={{ pt: 10, }}>
+            <Container sx={{ my:15 }}>
               <Box sx={{ width: '50%', bgcolor: 'background.paper', margin: 'auto', borderRadius: '10px', color: 'black', p: 2 }}>
                 <Typography variant='h5' mb={2}>Select Payment method</Typography>
                 <List component="nav" aria-label="main mailbox folders">
