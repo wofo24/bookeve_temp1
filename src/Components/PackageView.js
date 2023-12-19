@@ -10,6 +10,7 @@ import Media from 'react-media';
 import Small_Cart from './Small_Cart';
 import { fetchPosts, show_this_category_package } from '../Redux/actions/actions';
 import { useLayoutEffect, useRef } from "react";
+import Search from './Search/Search';
 import clsx from "clsx";
 import "../Components/Scollspy/Style.css";
 
@@ -54,8 +55,6 @@ export default function PackageView() {
 
     const filteredNames = posts.filter(name => name?.id == category_id_toShow);
     const [activeId, setActiveId] = useState('');
-
-    console.log(filteredNames, posts, 'this is console')
     const useScrollspy = (ids, offset = 0) => {
         const mainRef = useRef(null);
         useLayoutEffect(() => {
@@ -66,9 +65,7 @@ export default function PackageView() {
                 const position = ids.map((id) => {
                     const element = document.getElementById(id);
                     if (!element) return { id, top: -1, bottom: -1 };
-
                     const rect = element.getBoundingClientRect();
-
                     const top = clamp(rect.top + scroll - offset);
                     const bottom = clamp(rect.bottom + scroll - offset);
                     return { id, top, bottom };
@@ -77,9 +74,7 @@ export default function PackageView() {
 
                 setActiveId(position?.id || "");
             };
-
             listener();
-
             const mainElement = mainRef.current;
             if (mainElement) {
                 mainElement.addEventListener("scroll", listener);
@@ -94,7 +89,7 @@ export default function PackageView() {
         return { activeId, mainRef };
     };
 
-console.log(category_id_toShow, 'this is id')
+
     const Show_allCate = (array) => {
         const searchCategory = filteredNames.length > 0 ? filteredNames[0] : category_id_toShow;
         if (searchCategory) {
@@ -121,6 +116,7 @@ console.log(category_id_toShow, 'this is id')
 
     return (
         <div>
+
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -133,24 +129,36 @@ console.log(category_id_toShow, 'this is id')
                     <>
                         {matches.small && (
                             <>
-                                <Stack direction="row" height={40} spacing={1} mx={1} my={2} sx={{ display: 'flex', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }}>
-                                    {posts.map((item, index) => (
-                                        <Chip sx={{ height: 40, background: 'white', backgroundColor: choice === item.id ? '#e6cc67' : 'white' }} key={item.id} label={`${item.category}`} onClick={() => setChoice(item.id)} />
-                                    ))}
-                                </Stack>
-                                <Box sx={{ p: 1 }}>
-                                    {posts?.map((item) => {
-                                        return (
-                                            <div>
-                                                {(item.id === choice) && (
-                                                    <>
-                                                        <Category data={item} />
 
-                                                    </>
-                                                )}
-                                            </div>
-                                        )
-                                    })}
+
+
+                                <Box sx={{ background: 'gree', position: 'sticky', top: 5, width: '100%', zIndex: 99999, }}>
+                                    <Box px={2.5} py={2} sx={{}}>
+                                        <Box py={.1}>
+                                            <Search />
+                                        </Box>
+                                    </Box>
+                                </Box>
+                                <Box mx={1}>
+                                    <Stack direction="row" height={40} spacing={1} mx={1} my={2} sx={{ display: 'flex', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }}>
+                                        {posts.map((item, index) => (
+                                            <Chip sx={{ height: 40, background: 'white', backgroundColor: choice === item.id ? '#e6cc67' : 'white' }} key={item.id} label={`${item.category}`} onClick={() => setChoice(item.id)} />
+                                        ))}
+                                    </Stack>
+                                    <Box sx={{ p: 1 }}>
+                                        {posts?.map((item) => {
+                                            return (
+                                                <div>
+                                                    {(item.id === choice) && (
+                                                        <>
+                                                            <Category data={item} />
+
+                                                        </>
+                                                    )}
+                                                </div>
+                                            )
+                                        })}
+                                    </Box>
                                 </Box>
                             </>
                         )

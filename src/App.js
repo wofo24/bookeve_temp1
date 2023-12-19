@@ -23,6 +23,7 @@ import Address_profile from './Pages/UserProfile/Address_profile';
 import All_order from './Pages/UserProfile/All_order'
 import { Box, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux'
+// import { useSelector, useDispatch } from 'react-redux';
 import Index from './Components/Theme/Index';
 import Media from 'react-media';
 import InstallPrompt from './Components/InstallPrompt/Install';
@@ -51,6 +52,15 @@ const Payment = React.lazy(() => import('./Pages/Payment'))
 
 function App() {
   const New_themes = useSelector((state) => state.apply_new_theme)
+  const dispatch = useDispatch()
+  const token = Cookies.get('unknown_user_token')
+  useEffect(() => {
+    if (token) {
+      console.log('token a;ready exist ')
+    } else {
+      dispatch(Unknown_user_entered())
+    }
+  }, [])
 
   return (
     <body style={New_themes} >

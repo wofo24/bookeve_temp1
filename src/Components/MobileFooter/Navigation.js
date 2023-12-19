@@ -16,6 +16,7 @@ export default function Navigation() {
     const navigate = useNavigate()
     const [path, setPath] = useState()
 
+    // console.log(buttonStyles.icons_Color)
     useEffect(() => {
         setPath(window.location.pathname)
     }, [window.location.pathname])
@@ -28,11 +29,11 @@ export default function Navigation() {
                 large: '(min-width: 1025px)',
             }}>
             {(item) => (item.small && (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 'auto' }}>
                     <BottomNavigation
                         showLabels
                         value={value}
-                        sx={{ position: 'fixed', bottom: 0, width: '100%', zIndex: '9999', height: '70px', background: '#ffff', px: 2, pt:1, alignContent: 'center' }}
+                        sx={{ position: 'fixed', bottom: 0, width: '100%', zIndex: '9999', height: '70px', background: '#ffff', px: 2, pt: 1, alignContent: 'center' }}
                     >
                         <BottomNavigationAction onClick={() => navigate('/profile')} label="Profile" style={{ marginLeft: '0px', height: '55px', width: 'auto', borderRadius: '35px', color: path === '/profile' ? `${buttonStyles.icons_Color}` : `${buttonStyles.icons_Color}`, background: path === '/profile' ? `${buttonStyles.icons_Background}` : 'white' }} icon={<AccountBoxRoundedIcon style={{ color: path === '/profile' ? `${buttonStyles.icons_Color}` : `${buttonStyles.icons_Color}` }} />} />
 

@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import Theme_Button from '../../Components/Theme/Theme_Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card, Grid } from '@mui/material';
-// import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Bookings from '../../Components/Bookings';
 import Address from '../../Pages/Address'
 import { get_my_profile, open_profile_dialog } from '../../Redux/actions/actions';
@@ -91,8 +90,13 @@ export default function Profile() {
 
   const Logout = () => {
     Cookies.remove('token')
-    navigate('/')
-    window.location.reload(true)
+    const token = Cookies.get('token')
+    if (token) {
+      Cookies.remove('token')
+      window.location.reload(true)
+      navigate('/')
+
+    }
   }
 
   return (
@@ -113,8 +117,8 @@ export default function Profile() {
         }}>
           <Grid container>
             <Grid xs={6}>
-              <Typography variant='h4'  sx={{textTransform:'capitalize'}}> <b>{(get_my_profile_success_error?.name).toUpperCase()}</b></Typography>
-              <span style={{fontSize:'12px'}}>{get_my_profile_success_error?.phone_number}</span> &nbsp;<span>{get_my_profile_success_error?.email_id}</span>
+              <Typography variant='h4' sx={{ textTransform: 'capitalize' }}> <b>{(get_my_profile_success_error?.name)}</b></Typography>
+              <span style={{ fontSize: '12px' }}>{get_my_profile_success_error?.phone_number}</span> &nbsp;<span>{get_my_profile_success_error?.email_id}</span>
             </Grid>
             <Grid xs={6} sx={{ textAlign: 'end', pt: 2 }}>
               <Button variant='outlined' color='success' onClick={handleChangeD}>Edit Profile</Button>
@@ -188,8 +192,8 @@ export default function Profile() {
 
             <Grid container>
               <Grid xs={7}>
-                <Typography variant='h6' sx={{textTransform:'capitalize'}}> <>{get_my_profile_success_error?.name}</></Typography>
-                <span style={{fontSize:'15px'}}>{get_my_profile_success_error?.phone_number}</span>&nbsp; <br/><span style={{fontSize:'15px'}}>{get_my_profile_success_error?.email_id ? get_my_profile_success_error.email_id : 'No email'}</span>
+                <Typography variant='h6' sx={{ textTransform: 'capitalize' }}> <>{get_my_profile_success_error?.name}</></Typography>
+                <span style={{ fontSize: '15px' }}>{get_my_profile_success_error?.phone_number}</span>&nbsp; <br /><span style={{ fontSize: '15px' }}>{get_my_profile_success_error?.email_id ? get_my_profile_success_error.email_id : 'No email'}</span>
               </Grid>
               <Grid xs={5} sx={{ textAlign: 'end', mt: 1 }}>
                 <Button size='small' variant='outlined' color='success' onClick={handleChangeD}>Edit Profile</Button>

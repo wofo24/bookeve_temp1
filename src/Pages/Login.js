@@ -8,6 +8,9 @@ import Media from 'react-media';
 import { login } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { styled } from '@mui/system';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 export default function Login() {
     const location = useLocation();
@@ -16,13 +19,14 @@ export default function Login() {
         country_code: 'IN',
         "phone_number": data?.phone_number
     });
-
+    const outerTheme = useTheme();
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     const positive_response = useSelector((state) => state.useLogged_in)
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined });
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
+    // console.log(buttonStyles, 'this is buttton')
 
     const handleChange = (event) => {
         const { value, name } = event.target
@@ -32,6 +36,69 @@ export default function Login() {
         event.preventDefault();
         dispatch(login(formData))
     };
+
+    const customTheme = (outerTheme) =>
+        createTheme({
+            components: {
+                MuiTextField: {
+                    styleOverrides: {
+                        root: {
+                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '& label.Mui-focused': {
+                                color: `${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+                MuiOutlinedInput: {
+                    styleOverrides: {
+                        notchedOutline: {
+                            borderColor: `${buttonStyles.icons_Color}`,
+                        },
+                        root: {
+                            [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+                                borderColor: `${buttonStyles.icons_Color}`,
+                            },
+                            [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+                                borderColor: `${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+                MuiFilledInput: {
+                    styleOverrides: {
+                        root: {
+                            '&:before, &:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&:hover:not(.Mui-disabled, .Mui-error):before': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&.Mui-focused:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+                MuiInput: {
+                    styleOverrides: {
+                        root: {
+                            '&:before': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&:hover:not(.Mui-disabled, .Mui-error):before': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&.Mui-focused:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+            },
+        });
 
     useEffect(() => {
         if (positive_response?.success === true) {
@@ -80,44 +147,45 @@ export default function Login() {
                         </Box>
                         <div>
                             <form onSubmit={handleSubmit}>
+
                                 <Box py={3} mx={2}>
                                     <Grid container spacing={3}>
                                         <Grid xs={12} item>
-                                            <TextField
-                                                onChange={handleChange}
-                                                fullWidth
-                                                defaultValue={data?.phone_number}
-                                                type='tel'  // Use type 'tel' for phone numbers
-                                                id="standard-textarea"
-                                                label="Phone number"
-                                                name='phone_number'
-                                                required
-                                                inputProps={{
-                                                    pattern: "^[0-9]{10}$",
-                                                }}
+                                            <ThemeProvider theme={customTheme(outerTheme)}>
 
-                                                variant="standard"
-                                                error={!!formErrors.phone_number}
-                                                helperText={formErrors.phone_number}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={6} textAlign='left' >
+                                                <TextField
+                                                    onChange={handleChange}
+                                                    fullWidth
+                                                    defaultValue={data?.phone_number}
+                                                    type='tel'  // Use type 'tel' for phone numbers
+                                                    id="standard-textarea"
+                                                    label="Phone number"
+                                                    name='phone_number'
+                                                    required
+                                                    inputProps={{
+                                                        pattern: "^[0-9]{10}$",
+                                                    }}
+                                                    variant="standard"
+                                                    error={!!formErrors.phone_number}
+                                                    helperText={formErrors.phone_number}
+                                                />
+                                            </ThemeProvider>
 
                                         </Grid>
-                                        <Grid item xs={6} textAlign='right' >
+                                        {/* <Grid item xs={6} textAlign='left' >
+
+                                        </Grid> */}
+                                        <Grid item xs={12} textAlign='right' >
                                             <Box>
                                                 <Link to="/otp" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
                                                     Forgot Password ?
                                                 </Link>
                                             </Box>
                                         </Grid>
-                                        <Grid item xs={6} py={2} textAlign='left'>
-                                            <Link to="/signup" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
-                                                Don't Have Account ?
-                                            </Link>
-                                        </Grid>
-                                        <Grid item xs={6} py={2} textAlign='right'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
+
+                                        <Grid item xs={12} py={2} textAlign='center'>
+                                            {/* <Button style={{ brder: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }}>No</Button> */}
+                                            <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -136,7 +204,8 @@ export default function Login() {
                 }}
             >
                 {(item) => (item.large && (
-                    <Box px={8} py={5} my={5} mx={15} sx={{
+                    // <Box px={10} py={5} my={5} mx={35} sx={{
+                    <Box px={10} py={5} my={5} mx={35} sx={{
                         borderRadius: "10px",
                         backdropFilter: buttonStyles.child_backdropFilter,
                         background: buttonStyles.child_bg,
@@ -144,7 +213,7 @@ export default function Login() {
                     }}>
 
                         <Box>
-                            <Typography textAlign='left' fontSize={36} >Login</Typography>
+                            <Typography textAlign='left' fontSize={46} >Login</Typography>
                             <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>
                                 <span className='ThemeColorYellow'>
                                     Welcome Back!
@@ -154,33 +223,37 @@ export default function Login() {
                         <div>
                             <form onSubmit={handleSubmit}>
                                 <Box py={1}>
-                                    <Grid container spacing={3}>
+                                    <Grid container spacing={5}>
                                         <Grid xs={12} item>
-                                            <TextField
-                                                onChange={handleChange}
-                                                fullWidth
-                                                type='tel'  // Use type 'tel' for phone numbers
-                                                id="standard-textarea"
-                                                label="Phone number"
-                                                name='phone_number'
-                                                required
-                                                inputProps={{
-                                                    pattern: "^[0-9]{10}$",
-                                                }}
-                                                variant="standard"
-                                                error={!!formErrors.phone_number}
-                                                helperText={formErrors.phone_number}
-                                            />
+                                            <ThemeProvider theme={customTheme(outerTheme)}>
+
+                                                <TextField
+                                                    onChange={handleChange}
+                                                    fullWidth
+                                                    type='tel'  // Use type 'tel' for phone numbers
+                                                    id="standard-textarea"
+                                                    label="Phone number"
+                                                    name='phone_number'
+                                                    required
+                                                    inputProps={{
+                                                        pattern: "^[0-9]{10}$",
+                                                    }}
+                                                    variant="standard"
+                                                    error={!!formErrors.phone_number}
+                                                    helperText={formErrors.phone_number}
+                                                />
+                                            </ThemeProvider>
+
                                         </Grid>
                                         <Grid item xs={6} textAlign='left' >
 
                                         </Grid>
                                         <Grid item xs={6} textAlign='right' >
-                                            <Box>
+                                            {/* <Box>
                                                 <Link to="/forgot_password" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
                                                     Forgot Password ?
                                                 </Link>
-                                            </Box>
+                                            </Box> */}
                                         </Grid>
                                         <Grid item xs={6} py={2} textAlign='left'>
                                             <Link to="/signup" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
@@ -188,7 +261,7 @@ export default function Login() {
                                             </Link>
                                         </Grid>
                                         <Grid item xs={6} py={2} textAlign='right'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
+                                            <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>

@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import img from '../images/SampleIMage.jpg'
-import { Button, Link } from '@mui/material';
-import style_css from '../Css/Home.module.css'
+import { Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { add_package, show_message, incrementPackageCount, decrementPackageCount, openDialog, openRepeat, openView, } from '../Redux/actions/actions';
+import { add_package, add_package_count, show_message, incrementPackageCount, decrementPackageCount, openDialog, openRepeat, openView, add_in_bag, } from '../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Theme_Button from './Theme/Theme_Button';
 export default function Package({ item }) {
   const dispatch = useDispatch()
+  const buttonStyles = useSelector((state) => state.apply_new_theme)
   const [show_btn, setShow_btn] = useState(false)
-
+  const bag_packages = useSelector((state) => state.package_data_bag)
   const Increment = (id) => {
     if (item.variants) {
       if (item.count === 0) {
@@ -26,16 +25,17 @@ export default function Package({ item }) {
         dispatch(openRepeat(item))
       }
     } else {
-      dispatch(incrementPackageCount(id));
-      console.log(id, 'this is eds')
+      dispatch(incrementPackageCount(id, item.count));
+
       dispatch(show_message(true, 'Package added successfully!', 'success'))
       dispatch(add_package(id));
     }
   }
   const Decrement = (id) => {
-    dispatch(decrementPackageCount(id));
+    dispatch(decrementPackageCount(id, item.count));
+    dispatch(add_package_count(id, item.count + 1));
     dispatch(show_message(true, 'Package removed!', 'warning'))
-  
+
   }
   const Show_btn = () => {
     if (!item.variants) {
@@ -49,6 +49,11 @@ export default function Package({ item }) {
 
 
   useEffect(() => {
+    dispatch(add_package_count(item.id, item.count));
+  }, [item.count])
+
+
+  useEffect(() => {
     if (item.count <= 0) {
       setShow_btn(false)
     }
@@ -58,11 +63,19 @@ export default function Package({ item }) {
 
   }, [item.count])
 
+  useEffect(() => {
+    if (bag_packages.length > 0) {
+      const demo = { "packages": bag_packages }
+      dispatch(add_in_bag(demo))
+    } else {
+      console.log('bag_packages is empty, skipping API call');
+    }
+  }, [bag_packages]);
+
+
   const open_view = (data) => {
     dispatch(openView(data))
   }
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
- 
 
 
   return (
@@ -77,7 +90,6 @@ export default function Package({ item }) {
         borderRadius: '10px',
         maxHeight: '190px',
         minHeightL: '150px',
-
         '@media screen and (min-width: 1200px)': {
           minWidth: '450px', // Adjust the value as needed
           margin: '0 auto', // Center the card horizontally
@@ -126,7 +138,7 @@ export default function Package({ item }) {
                     alignContent: 'center',
                     pt: .7
                   }}>
-                    <RemoveIcon onClick={() => Decrement(item?.id)} sx={{}} />
+                    <RemoveIcon onClick={() => Decrement(item?.id, item.count)} sx={{}} />
                   </Grid>
                   <Grid item textAlign={'center'} sx={{
                     display: 'flex', justifyContent: 'center',
@@ -139,7 +151,7 @@ export default function Package({ item }) {
                     alignContent: 'center',
                     pt: .7
                   }}>
-                    <AddIcon onClick={() => Increment(item?.id)} sx={{}} />
+                    <AddIcon onClick={() => Increment(item?.id, item.count)} sx={{}} />
                   </Grid>
                 </Grid> : (<Theme_Button borderRadius={'10px'} funBtn={Show_btn} mt={-5} ml={3.5} px={3} width={'80px'} label={'Add'} textColor='#ffc219' background='white' />)
                 }

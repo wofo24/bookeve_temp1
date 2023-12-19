@@ -16,7 +16,12 @@ const initialState = {
   view_data: [],
   protected_routes: [],
   packages: [],
-  all_address: [],
+  all_address: {
+    all_address: [],
+    posted_address_result: [],
+    delete_address_result: [],
+    update_address_result: [],
+  },
   open_address_data: [],
   all_ordered: [],
   search_item: '',
@@ -51,22 +56,10 @@ const initialState = {
     margin: '-7px',
     padding: '0px',
     keyframesStyle: `
-    @-webkit-keyframes AnimationName {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-  }
-  @-moz-keyframes AnimationName {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-  }
-  @keyframes AnimationName {
-      0%{background-position:0% 50%}
-      50%{background-position:100% 50%}
-      100%{background-position:0% 50%}
-  }
-    `
+    @-webkit-keyframes AnimationName {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @-moz-keyframes AnimationName {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    @keyframes AnimationName {0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  `
   },
   selected_address: '',
   selected_date_time: '',
@@ -84,6 +77,9 @@ const initialState = {
   unknown_user_success_error: [],
   get_my_profile_success_error: [],
   get_my_profile_update_success_error: [],
+  card_data: [],
+  package_data_bag: [],
+  searched_quarry: ''
 };
 
 
@@ -102,16 +98,13 @@ const rootReducer = (state = initialState, action) => {
         ...state, posts: state?.posts?.map((category) => ({
           ...category,
           packages: category?.packages?.map((packageItem) => ({
-            ...packageItem, count: packageItem.id === action.payload ? packageItem.count + 1 : packageItem.count,
+            ...packageItem, count: packageItem?.id === action.payload ? packageItem?.count + 1 : packageItem?.count,
           })),
         })),
       };
-
-
     case type.DECREMENT:
       return {
-        ...state,
-        posts: state.posts.map((category) => ({
+        ...state, posts: state.posts.map((category) => ({
           ...category,
           packages: category?.packages?.map((packageItem) => ({
             ...packageItem,
@@ -122,6 +115,31 @@ const rootReducer = (state = initialState, action) => {
           })),
         })),
       };
+    case type.ADD_OR_UPDATE_ITEM:
+      const { id, quantity } = action.payload;
+      const existingItemIndex = state.package_data_bag.findIndex(item => item.id === id);
+      if (existingItemIndex !== -1) {
+        if (quantity !== 0) {
+          return {
+            ...state,
+            package_data_bag: state.package_data_bag.map((item, index) =>
+              index === existingItemIndex ? { ...item, quantity: quantity } : item
+            ),
+          };
+        } else {
+          return state;
+        }
+      } else {
+        if (quantity !== 0) {
+          return {
+            ...state,
+            package_data_bag: [...state.package_data_bag, { id, quantity }],
+          };
+        } else {
+          return state;
+        }
+      }
+
     case type.OPEN_DIALOG:
       return { ...state, dialog_open: true, dialog_data: action.payload };
     case type.USER_LOGIN:
@@ -148,7 +166,6 @@ const rootReducer = (state = initialState, action) => {
     case type.UPDATE_MY_PROFILE_SUCCESS:
     case type.UPDATE_MY_PROFILE_ERROR:
       return { ...state, get_my_profile_update_success_error: action.payload };
-
     case type.CLOSE_DIALOG:
       return { ...state, dialog_open: false };
     case type.OPEN_REPEAT:
@@ -163,11 +180,39 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, protected_routes: action.payload };
     case type.ADD_PACKAGE:
       return { ...state, packages: action.payload };
+    // address ---------------------------------------------------------------------------------------------------->
+
     case type.GET_ALL_ADDRESS:
-      return { ...state, all_address: action.payload };
+      return { ...state, all_address: { ...state.all_address, all_address: action.payload } };
+    case type.POST_ADDRESS:
+      return { ...state, all_address: { ...state.all_address, posted_address_result: action.payload } };
+    case type.UPDATE_ADDRESS:
+      return { ...state, all_address: { ...state.all_address, update_address_result: action.payload } };
+    case type.DELETE_ADDRESS:
+      return { ...state, all_address: { ...state.all_address, delete_address_result: action.payload } };
+
+    // address ---------------------------------------------------------------------------------------------------->
 
     case type.OPEN_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: true, open_address_data: action.payload };
+
+    // unknown bag ----------------------------------------------------------------------------------------------------->
+    case type.GET_ALL_CART_DATA:
+      return { ...state, card_data: action.payload };
+
+    case type.ADD_IN_BAG:
+      return { ...state, card_data: action.payload };
+
+    case type.UPDATE_IN_BAG:
+      return { ...state, card_data: action.payload };
+
+
+    case type.INCREMENT_IN_U_BAG:
+      return { ...state, card_data: action.payload };
+    case type.DECREMENT_IN_U_BAG:
+      return { ...state, card_data: action.payload }
+    // unknown bag ----------------------------------------------------------------------------------------------------->
+
     case type.CLOSE_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: false, open_address_data: action.payload };
     case type.OPEN_DELETE_ADDRESS_DIALOG:
@@ -186,6 +231,8 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, error: action.payload };
     case type.SEARCH_ITEM:
       return { ...state, search_item: action.payload };
+    case type.SEARCHED_QUARRY:
+      return { ...state, searched_quarry: action.payload };
     case type.GET_SEARCH_TYPE:
       return { ...state, search_type: action.payload };
     case type.EMPTY_QUARRY:

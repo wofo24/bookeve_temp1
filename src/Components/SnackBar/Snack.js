@@ -20,7 +20,7 @@ export default function Snack() {
         }
         dispatch( show_message(false, MessageArray.message, MessageArray.messageType))
     };
-   console.log(MessageArray)
+//    console.log(MessageArray)
     return (
         <Stack spacing={2} sx={{ width: '100%' }}>
             <Snackbar open={MessageArray.open} autoHideDuration={5000} onClose={handleClose}>

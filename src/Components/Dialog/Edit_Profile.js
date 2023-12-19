@@ -24,6 +24,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Theme_Button from '../Theme/Theme_Button';
 import Media from 'react-media';
 import Cookies from 'js-cookie';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -37,6 +39,70 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 export default function Edit_Profile() {
+
+    const customTheme = (outerTheme) =>
+        createTheme({
+            components: {
+                MuiTextField: {
+                    styleOverrides: {
+                        root: {
+                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '& label.Mui-focused': {
+                                color: `${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+                MuiOutlinedInput: {
+                    styleOverrides: {
+                        notchedOutline: {
+                            borderColor: `${buttonStyles.icons_Color}`,
+                        },
+                        root: {
+                            [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+                                borderColor: `${buttonStyles.icons_Color}`,
+                            },
+                            [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+                                borderColor: `${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+                MuiFilledInput: {
+                    styleOverrides: {
+                        root: {
+                            '&:before, &:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&:hover:not(.Mui-disabled, .Mui-error):before': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&.Mui-focused:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+                MuiInput: {
+                    styleOverrides: {
+                        root: {
+                            '&:before': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&:hover:not(.Mui-disabled, .Mui-error):before': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&.Mui-focused:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    const outerTheme = useTheme();
     const open = useSelector((state) => state.profile_edit);
     const dispatch = useDispatch()
     const [selectedValue, setSelectedValue] = React.useState("");
@@ -96,21 +162,22 @@ export default function Edit_Profile() {
                                 <Box sx={{ mx: 5, my: 2 }}>
 
                                     <FormControl margin='auto' >
-                                        <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 0 }}>
-                                            <Grid xs={12} mt={2} px={2}>
-                                                <TextField defaultValue={get_my_profile_success_error?(get_my_profile_success_error?.name):'name'.camelCase()} onChange={handleChange} name='name' fullWidth label="Name*" id="fullWidth" />
+                                        <ThemeProvider theme={customTheme(outerTheme)}>
+                                            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 0 }}>
+                                                <Grid xs={12} mt={2} px={2}>
+                                                    <TextField defaultValue={get_my_profile_success_error ? get_my_profile_success_error?.name : 'name'} onChange={handleChange} name='name' fullWidth label="Name*" id="fullWidth" />
+                                                </Grid>
+                                                <Grid xs={6} mt={2} p={2}>
+                                                    <TextField id="" defaultValue={get_my_profile_success_error?.email_id} onChange={handleChange} name='email_id' fullWidth label="Email *" variant="outlined" />
+                                                </Grid>
+                                                <Grid xs={6} mt={2} p={2}>
+                                                    <TextField id="fullWidth" type='date' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" />
+                                                </Grid>
+                                                <Grid xs={12} mt={3} >
+                                                    <Button fullWidth type='submit' onClick={handleSubmit} size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Update</Button>
+                                                </Grid>
                                             </Grid>
-                                            <Grid xs={6} mt={2} p={2}>
-                                                <TextField id="" defaultValue={get_my_profile_success_error?.email_id} onChange={handleChange} name='email_id' fullWidth label="Email *" variant="outlined" />
-                                            </Grid>
-                                            <Grid xs={6} mt={2} p={2}>
-                                                <TextField id="fullWidth" type='date' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" />
-                                            </Grid>
-                                            <Grid xs={12} mt={3} >
-                                                <Button fullWidth type='submit' onClick={handleSubmit} size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Update</Button>
-                                            </Grid>
-                                        </Grid>
-
+                                        </ThemeProvider>
                                     </FormControl>
 
                                 </Box>
@@ -156,17 +223,19 @@ export default function Edit_Profile() {
                                 <DialogContent >
                                     <Box minHeight={350}>
                                         <FormControl margin='auto'>
-                                            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 0 }}>
-                                                <Grid xs={12} mt={2} px={2}>
-                                                    <TextField defaultValue={get_my_profile_success_error?.name} onChange={handleChange} name='name' fullWidth label="Name*" id="fullWidth" />
+                                            <ThemeProvider theme={customTheme(outerTheme)}>
+                                                <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 0 }}>
+                                                    <Grid xs={12} mt={2} px={2}>
+                                                        <TextField defaultValue={get_my_profile_success_error?.name} onChange={handleChange} name='name' fullWidth label="Name*" id="fullWidth" />
+                                                    </Grid>
+                                                    <Grid xs={12} mt={2} p={2}>
+                                                        <TextField defaultValue={get_my_profile_success_error?.email_id} fullWidth label="Email *" onChange={handleChange} name='email_id' variant="outlined" />
+                                                    </Grid>
+                                                    <Grid xs={12} mt={2} p={2}>
+                                                        <TextField id="fullWidth" type='date' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" />
+                                                    </Grid>
                                                 </Grid>
-                                                <Grid xs={12} mt={2} p={2}>
-                                                    <TextField defaultValue={get_my_profile_success_error?.email_id} fullWidth label="Email *" onChange={handleChange} name='email_id' variant="outlined" />
-                                                </Grid>
-                                                <Grid xs={12} mt={2} p={2}>
-                                                    <TextField id="fullWidth" type='date' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" />
-                                                </Grid>
-                                            </Grid>
+                                            </ThemeProvider>
                                         </FormControl>
                                     </Box>
                                 </DialogContent>

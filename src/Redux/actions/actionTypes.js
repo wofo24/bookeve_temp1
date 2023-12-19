@@ -10,6 +10,7 @@ export const USER_SIGNUP = 'USER_SIGNUP';
 export const STORE_ID = 'STORE_ID';
 export const ACTIVATE_USER = 'ACTIVATE_USER';
 
+
 export const SUCCESS_OTP = 'SUCCESS_OTP';
 export const FAIL_OTP = 'FAIL_OTP';
 
@@ -42,6 +43,19 @@ export const PROTECTED_ROUTE = 'PROTECTED_ROUTE';
 export const ADD_PACKAGE = 'ADD_PACKAGE';
 
 export const GET_ALL_ADDRESS = 'GET_ALL_ADDRESS';
+export const POST_ADDRESS = 'POST_ADDRESS';
+export const UPDATE_ADDRESS = 'UPDATE_ADDRESS';
+export const DELETE_ADDRESS = 'DELETE_ADDRESS';
+
+export const GET_ALL_CART_DATA = 'GET_ALL_CART_DATA';
+
+export const ADD_IN_BAG = 'ADD_IN_BAG';
+export const UPDATE_IN_BAG = 'UPDATE_IN_BAG';
+export const DELETE_IN_BAG = 'DELETE_IN_BAG';
+
+export const INCREMENT_IN_U_BAG = 'INCREMENT_IN_U_BAG';
+export const DECREMENT_IN_U_BAG = 'DECREMENT_IN_U_BAG';
+
 
 export const OPEN_ADDRESS_ADD_DIALOG = 'OPEN_ADDRESS_ADD_DIALOG';
 export const CLOSE_ADDRESS_ADD_DIALOG = 'CLOSE_ADDRESS_ADD_DIALOG';
@@ -60,6 +74,8 @@ export const GET_ORDER_DATA_ERROR = 'GET_ORDER_DATA_ERROR';
 
 export const SEARCH_ITEM = 'SEARCH_ITEM';
 export const GET_SEARCH_TYPE = 'GET_SEARCH_TYPE';
+
+export const SEARCHED_QUARRY = 'SEARCHED_QUARRY';
 
 export const BUTTON_THEME = 'BUTTON_THEME';
 
@@ -99,6 +115,13 @@ export const CLOSE_HELP = 'CLOSE_HELP';
 
 
 export const SHOW_MESSAGE = 'SHOW_MESSAGE';
+
+
+export const ADD_OR_UPDATE_ITEM = 'ADD_OR_UPDATE_ITEM';
+
+
+
+
 
 
 

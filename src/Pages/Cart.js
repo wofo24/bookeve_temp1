@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Coupon from '../Components/Coupon'
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
@@ -7,7 +7,7 @@ import { Card } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { openAdd_Address, open_coupon_dialog, click_to_apply_coupon, show_all_address, hide_all_address, open_schedule_dialog } from '../Redux/actions/actions';
+import { openAdd_Address, add_package_count, open_coupon_dialog, get_all_cart_data, click_to_apply_coupon, show_all_address, hide_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -15,6 +15,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import Small_Cart from '../Components/Small_Cart';
+import DeleteIcon from '@mui/icons-material/Delete';
 export default function Cart() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -22,6 +23,9 @@ export default function Cart() {
   const selected_address = useSelector((state) => state.selected_address)
   const selected_date_time = useSelector((state) => state.selected_date_time)
   const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
+  const package_data_bag = useSelector((state) => state.package_data_bag)
+  const card_data = useSelector((state) => state.card_data)
+  const [cardData, setCardData] = useState(card_data.map(item => ({ id: item.package_id, quantity: item.quantity })));
   const handleOpen = () => {
     dispatch(open_coupon_dialog())
   }
@@ -34,6 +38,36 @@ export default function Cart() {
   const openSchedule = () => {
     dispatch(open_schedule_dialog())
   }
+
+
+  const totalPackagePrice = []
+
+  const handleIncrease = (id, quantity) => {
+    const updatedCardData = cardData.map(item => {
+      if (item.package_id === id) {
+        return { ...item, quantity: quantity + 1 };
+      }
+      return item;
+    });
+    // setCardData(updatedCardData);
+    // console.log(updatedCardData, 'this si card data')
+  };
+  console.log(card_data, 'this si card data')
+
+  const handelDecrease = (id, quantity) => {
+    const updatedQuantity = quantity - 1;
+    dispatch(add_package_count(id, updatedQuantity))
+  }
+
+  useEffect(() => {
+    console.log(package_data_bag, 'updated item');
+  }, [package_data_bag])
+
+  useEffect(() => {
+    dispatch(get_all_cart_data())
+  }, [])
+
+
   return (
     <div>
       <Media
@@ -55,34 +89,39 @@ export default function Cart() {
                 background: buttonStyles.child_bg,
                 color: buttonStyles.child_div_text,
               }}>
-                <Grid container mt={1} >
+                <Grid container mt={1}>
                   <Grid xs={6}>
                     <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
                       <Typography><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} onClick={() => navigate('/')} fontSize='medium' /></Typography>
                       <Typography variant='h6' ml={-1}> <b>Cart</b></Typography>
                     </Box>
                   </Grid>
-
                 </Grid>
                 <hr />
+                {card_data ? card_data?.map((item) => {
+                  const total_price = item.original_price * item.quantity
+                  totalPackagePrice.push(total_price)
+                  return (
+                    <Grid container mt={2} mb={1}>
+                      <Grid xs={6}>
+                        <Typography  >{item?.package}</Typography>
+                        <Typography  >Price: &#8377; {item?.original_price * item?.quantity}</Typography>
+                      </Grid>
+                      <Grid xs={6} textAlign={'end'}>
+                        <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
+                          {item?.quantity <= 1 ? (<DeleteIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id, item.quantity)} />) : (<RemoveIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id, item.quantity)} />)}
+                          {item?.quantity}
+                          <AddIcon sx={{ mx: 1 }} onClick={() => handleIncrease(item.package_id, item.quantity)} />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  )
+                }) : <Typography>'no item in cart'</Typography>}
 
-                <Grid container mt={2} mb={5}>
-                  <Grid xs={6}>
-                    <Typography  >Package Name</Typography>
-                    <Typography  >Price: &#8377; 200</Typography>
-                  </Grid>
-                  <Grid xs={6} textAlign={'end'}>
-                    <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
-                      <RemoveIcon sx={{ mx: 1 }} />
-                      1
-                      <AddIcon sx={{ mx: 1 }} />
-                    </Button>
-                  </Grid>
-                </Grid>
                 <hr />
                 <Grid container>
                   <Grid xs={6}>Item total</Grid>
-                  <Grid xs={6} textAlign={'end'}> &#8377; 12,000</Grid>
+                  <Grid xs={6} textAlign={'end'}> &#8377;{totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)}</Grid>
                 </Grid>
                 <Grid container>
                   <Grid xs={6}>Item discount</Grid>

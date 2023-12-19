@@ -32,9 +32,6 @@ export default function Home() {
   const dispatch = useDispatch();
   const unknown_user_success_error = useSelector((state) => state.unknown_user_success_error)
 
-  useEffect(() => {
-    dispatch(Unknown_user_entered())
-  }, [])
 
 
   useEffect(() => {
