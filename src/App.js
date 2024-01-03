@@ -21,14 +21,13 @@ import SuccessFull from './Pages/SuccessFull';
 import Track_order from './Pages/Track_order';
 import Address_profile from './Pages/UserProfile/Address_profile';
 import All_order from './Pages/UserProfile/All_order'
-import { Box, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux'
-// import { useSelector, useDispatch } from 'react-redux';
-import Index from './Components/Theme/Index';
+import CheckOut_list from './Components/Dialog/CheckOut_list';
+import Index from './Components/Theme';
 import Media from 'react-media';
 import InstallPrompt from './Components/InstallPrompt/Install';
 import Search from './Components/Search/Search';
-import Bookings from './Components/Bookings';
 import All_Address from './Components/Dialog/All_Address';
 import Schedule_dialog from './Components/Dialog/Schedule_dialog';
 import All_Bookings from './Pages/All_Bookings';
@@ -51,16 +50,22 @@ const Address = React.lazy(() => import('./Pages/Address'))
 const Payment = React.lazy(() => import('./Pages/Payment'))
 
 function App() {
+
   const New_themes = useSelector((state) => state.apply_new_theme)
+
   const dispatch = useDispatch()
-  const token = Cookies.get('unknown_user_token')
+  const unknown_user_token = Cookies.get('unknown_user_token')
+  const token = Cookies.get('token')
+
   useEffect(() => {
-    if (token) {
-      console.log('token a;ready exist ')
+    if (unknown_user_token || token) {
+      if (token) {
+        Cookies.remove('unknown_user_token')
+      }
     } else {
       dispatch(Unknown_user_entered())
     }
-  }, [])
+  }, [token, unknown_user_token])
 
   return (
     <body style={New_themes} >
@@ -78,6 +83,7 @@ function App() {
         <InstallPrompt />
         <AgreeDialog />
         <Coupon />
+        <CheckOut_list />
         <ViewT_C />
         <Help />
         <Snack />

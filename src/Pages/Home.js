@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPosts } from '../Redux/actions/actions';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Category from '../Components/Category';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import CategoryItems from '../Components/CategoryItems';
@@ -21,18 +21,15 @@ import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 import TrendingUpSharpIcon from '@mui/icons-material/TrendingUpSharp';
 import Testimonial from '../Components/Testimonial';
 import Cookies from 'js-cookie';
-import { Unknown_user_entered } from '../Redux/actions/actions';
-
 
 export default function Home() {
   const posts = useSelector((state) => state?.posts);
   const query = useSelector((state) => state.search_item);
+  const card_data = useSelector((state) => state.card_data);
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const unknown_user_success_error = useSelector((state) => state.unknown_user_success_error)
-
-
 
   useEffect(() => {
     if (unknown_user_success_error.success) {
@@ -57,10 +54,23 @@ export default function Home() {
   }, [query]);
 
 
+  // useEffect(() => {
+  //   if (text.length > 0) {
+  //     const demo = { "packages": text };
+  //     dispatch(update_in_bag(demo));
+  //   }
+  // }, [text, dispatch]);
+
+  // console.log(bag_packages, 'from home p=bag package')
+  // useEffect(() => {
+  //   dispatch(fetchPosts());
+  // }, [dispatch,]);
   useEffect(() => {
     dispatch(fetchPosts());
-  }, [dispatch]);
+  }, [dispatch, card_data]);
 
+  console.log(posts)
+  // 
 
   return (
     <div>

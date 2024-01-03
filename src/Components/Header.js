@@ -253,7 +253,7 @@ export default function Header() {
                         background: buttonStyles.child_bg,
                     }}>
                         <Container maxWidth="xl">
-                            <Toolbar disableGutters sx={{ m: 'auto' }}>
+                            <Toolbar disableGutters >
                                 <Box sx={{ height: '40px', width: '40px', display: { xs: 'flex', md: 'none' } }}>
                                     {public_info && public_info.company_logo ? (<img src={public_info.company_logo} style={{ height: '40px', width: '40px', marginRight: '9px' }} />) :
                                         (

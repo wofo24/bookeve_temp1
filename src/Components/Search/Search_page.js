@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { show_this_category_package, fetchPosts } from '../../Redux/actions/actions';
 import { get_search_item, empty_quarry } from '../../Redux/actions/actions';
-import img from '../../images/SampleIMage.jpg'
+// import img from '../images/SampleIMage.jpg'
+import img from '../../images/imagesSampleIMage.png'
 import WestRoundedIcon from '@mui/icons-material/WestRounded';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
@@ -47,9 +48,13 @@ export default function Search_page() {
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true);
     const query = useSelector((state) => state?.search_item);
+    // const searched_quarry = useSelector((state) => state?.searched_quarry);
+
+
     const dispatch = useDispatch()
     const posts = useSelector((state) => state?.posts);
     const [queries_Recent, setQueries_Recent] = useState('')
+
     useEffect(() => {
         dispatch(fetchPosts());
     }, [dispatch]);
@@ -58,7 +63,6 @@ export default function Search_page() {
         dispatch(show_this_category_package(item))
         navigate('/package-view')
     }
-
 
     useEffect(() => {
         dispatch(fetchPosts())
@@ -75,6 +79,7 @@ export default function Search_page() {
     const recentSearch = [
         'Hair', 'Hair wash', 'Nail', 'Bridal makeup'
     ]
+
 
     return (
         <>
@@ -127,7 +132,6 @@ export default function Search_page() {
                                     </Grid>
                                 );
                             })}
-                            {/* <hr /> */}
                             {query?.package?.map((item) => {
                                 const matchingPost = posts.find((post) => post.id === item.id);
                                 if (matchingPost) {
@@ -174,6 +178,7 @@ export default function Search_page() {
 
                         </Box> :
                         <>
+                            {/* {query && query.category.length !== 0 && query.package.length !== 0 && <h1>no mathc</h1>} */}
                             <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: buttonStyles.child_bg, pb: 4, pt: 2, px: 2, mx: 2, borderRadius: '15px' }}>
                                 <Box textAlign={'left'} color={'gray'} >
                                     <Typography>Recent Search</Typography>

@@ -23,18 +23,26 @@ export default function Search(props) {
     const searched_quarry = useSelector((state) => state.searched_quarry)
     const inputRef = useRef(null);
     const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const [queries, setQueries] = useState(props.queries_Recent)
+    const [queries, setQueries] = useState(props.queries_Recent ? props.queries_Recent : searched_quarry)
     const navigate = useNavigate()
 
     const handleChange = (event) => {
         const { value } = event.target;
-        setQueries(value)
-        if (queries.split("").length >= 3) {
+        setQueries(value);
+
+        if (value && value.length >= 3) {
             dispatch(get_search_item(value, props.search_type));
         }
     }
+
+    useEffect(() => {
+        setQueries(props.queries_Recent);
+      }, [props.queries_Recent]);
+      
+
     const handleDelete = (val) => {
         dispatch(empty_quarry(val));
+        setQueries('')
     }
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -49,6 +57,8 @@ export default function Search(props) {
             inputRef.current && inputRef.current.focus()
         }
     }, [])
+
+    console.log(searched_quarry)
 
     const customTheme = (outerTheme) =>
         createTheme({
@@ -131,11 +141,11 @@ export default function Search(props) {
                                         size='medium'
                                         placeholder="Search..."
                                         onKeyPress={handleKeyPress}
-                                        defaultValue={searched_quarry ? searched_quarry : queries}
+                                        defaultValue={queries ? queries : searched_quarry}
                                         InputProps={{
                                             endAdornment: (
                                                 <InputAdornment position="start">
-                                                    <SearchRoundedIcon sx={{ ml: -.5, width: 40, height: 40, color: buttonStyles.icons_Color }} />
+                                                    {queries ? <CloseIcon onClick={handleDelete} sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} /> : <SearchRoundedIcon sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} />}
                                                 </InputAdornment>
                                             ),
                                             startAdornment: (

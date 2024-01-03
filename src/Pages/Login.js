@@ -172,10 +172,15 @@ export default function Login() {
                                             </ThemeProvider>
 
                                         </Grid>
-                                        {/* <Grid item xs={6} textAlign='left' >
-
-                                        </Grid> */}
-                                        <Grid item xs={12} textAlign='right' >
+                                        <Grid item xs={6} textAlign='left' >
+                                            <Box>
+                                                <Typography style={{ cursor: 'pointer', fontSize: '12px' }} variant='paragraph'> Don't Have an account ? </Typography>
+                                                <Link to="/signup" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
+                                                    Sign up
+                                                </Link>
+                                            </Box>
+                                        </Grid>
+                                        <Grid item xs={6} textAlign='right' >
                                             <Box>
                                                 <Link to="/otp" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
                                                     Forgot Password ?
@@ -204,7 +209,7 @@ export default function Login() {
                 }}
             >
                 {(item) => (item.large && (
-                    // <Box px={10} py={5} my={5} mx={35} sx={{
+
                     <Box px={10} py={5} my={5} mx={35} sx={{
                         borderRadius: "10px",
                         backdropFilter: buttonStyles.child_backdropFilter,

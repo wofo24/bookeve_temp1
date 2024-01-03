@@ -78,8 +78,24 @@ const initialState = {
   get_my_profile_success_error: [],
   get_my_profile_update_success_error: [],
   card_data: [],
-  package_data_bag: [],
-  searched_quarry: ''
+  searched_quarry: '',
+  card_data_error: [],
+  address_id: [],
+  proceed_to_pay: false,
+  check_out_data: {
+    cart_item_for_check_out_bag_data: [],
+    cart_item_for_check_out_address_id: [],
+    check_out_success: [],
+    check_out_fail: [],
+    check_out_get_list_success: [],
+    check_out_get_list_fail: []
+  },
+  open_check: {
+    data_success: [],
+    data_fail: [],
+    open: false
+  }
+
 };
 
 
@@ -115,47 +131,25 @@ const rootReducer = (state = initialState, action) => {
           })),
         })),
       };
-    case type.ADD_OR_UPDATE_ITEM:
-      const { id, quantity } = action.payload;
-      const existingItemIndex = state.package_data_bag.findIndex(item => item.id === id);
-      if (existingItemIndex !== -1) {
-        if (quantity !== 0) {
-          return {
-            ...state,
-            package_data_bag: state.package_data_bag.map((item, index) =>
-              index === existingItemIndex ? { ...item, quantity: quantity } : item
-            ),
-          };
-        } else {
-          return state;
-        }
-      } else {
-        if (quantity !== 0) {
-          return {
-            ...state,
-            package_data_bag: [...state.package_data_bag, { id, quantity }],
-          };
-        } else {
-          return state;
-        }
-      }
 
     case type.OPEN_DIALOG:
-      return { ...state, dialog_open: true, dialog_data: action.payload };
+      return { ...state, dialog_open: false, dialog_data: action.payload };
     case type.USER_LOGIN:
       return { ...state, useLogged_in: action.payload };
+    case type.OPEN_CHECKOUT_LIST:
+      return { ...state, open_check: { ...state.open_check, data_success: action.payload, open: true } };
+    case type.CLOSE_CHECKOUT_LIST:
+      return { ...state, open_check: { ...state.open_check, data_fail: action.payload, open: false } };
     case type.ACTIVATE_USER:
       return { ...state, active_user: action.payload };
     case type.STORE_ID:
       return { ...state, user_id: action.payload };
     case type.USER_SIGNUP:
       return { ...state, useSign_Up: action.payload };
-
     case type.SUCCESS_OTP:
       return { ...state, otp_resend: action.payload };
     case type.FAIL_OTP:
       return { ...state, otp_resend: action.payload };
-
     case type.UNKNOWN_USER_SUCCESS:
       return { ...state, unknown_user_success_error: action.payload };
     case type.UNKNOWN_USER_ERROR:
@@ -181,7 +175,6 @@ const rootReducer = (state = initialState, action) => {
     case type.ADD_PACKAGE:
       return { ...state, packages: action.payload };
     // address ---------------------------------------------------------------------------------------------------->
-
     case type.GET_ALL_ADDRESS:
       return { ...state, all_address: { ...state.all_address, all_address: action.payload } };
     case type.POST_ADDRESS:
@@ -195,28 +188,23 @@ const rootReducer = (state = initialState, action) => {
 
     case type.OPEN_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: true, open_address_data: action.payload };
-
+    case type.ADD_OR_UPDATE_ITEM:
+      return { ...state }
     // unknown bag ----------------------------------------------------------------------------------------------------->
+
     case type.GET_ALL_CART_DATA:
       return { ...state, card_data: action.payload };
-
-    case type.ADD_IN_BAG:
-      return { ...state, card_data: action.payload };
-
+    case type.GET_ALL_CART_DATA_ERROR:
+      return { ...state, card_data_error: action.payload };
     case type.UPDATE_IN_BAG:
       return { ...state, card_data: action.payload };
 
-
-    case type.INCREMENT_IN_U_BAG:
-      return { ...state, card_data: action.payload };
-    case type.DECREMENT_IN_U_BAG:
-      return { ...state, card_data: action.payload }
     // unknown bag ----------------------------------------------------------------------------------------------------->
 
     case type.CLOSE_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: false, open_address_data: action.payload };
     case type.OPEN_DELETE_ADDRESS_DIALOG:
-      return { ...state, delete_open: true };
+      return { ...state, delete_open: true, address_id: action.payload };
     case type.CLOSE_DELETE_ADDRESS_DIALOG:
       return { ...state, delete_open: false };
     case type.OPEN_UPDATE_ADDRESS_DIALOG:
@@ -264,6 +252,7 @@ const rootReducer = (state = initialState, action) => {
     case type.SELECTED_ADDRESS:
       return { ...state, selected_address: action.payload };
     case type.SELECTED_DATE_TIME:
+
       return { ...state, selected_date_time: action.payload };
     case type.OPEN_AGREE_BOX:
       return { ...state, agree_box: true };
@@ -278,11 +267,38 @@ const rootReducer = (state = initialState, action) => {
     case type.CLOSE_HELP:
       return { ...state, help_dialog: false };
 
+    case type.PROCEED_TO_PAY_OPEN:
+      return { ...state, proceed_to_pay: true };
+    case type.PROCEED_TO_PAY_CLOSE:
+      return { ...state, proceed_to_pay: false };
+
     case type.APPLY_COUPON_ON_CLICK:
       return { ...state, apply_onClick_coupon: action.payload };
+    case type.READY_FOR_CHECK_OUT_DATA:
+      return { ...state, check_out_data: { ...state.check_out_data, cart_item_for_check_out_bag_data: action.payload } };
+    case type.READY_FOR_CHECK_OUT_DATA_ADDRESS_ID:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, cart_item_for_check_out_address_id: action.payload }
+      };
     case type.SHOW_MESSAGE:
       return {
         ...state, snack_bar_message: action.payload
+      }
+    case type.CHECKED_OUT_SUCCESS:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_success: action.payload }
+      }
+    case type.CHECKED_OUT_FAIL:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_fail: action.payload }
+      }
+    case type.CHECKED_OUT_LIST_SUCCESS:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_success: action.payload }
+      }
+    case type.CHECKED_OUT_LIST_FAIL:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_fail: action.payload }
       }
     default:
       return state;

@@ -9,11 +9,12 @@ import Box from '@mui/material/Box';
 import Media from 'react-media';
 import Small_Cart from './Small_Cart';
 import { fetchPosts, show_this_category_package } from '../Redux/actions/actions';
+import { useNavigate } from 'react-router-dom';
 import { useLayoutEffect, useRef } from "react";
 import Search from './Search/Search';
 import clsx from "clsx";
 import "../Components/Scollspy/Style.css";
-
+import WestRoundedIcon from '@mui/icons-material/WestRounded';
 
 
 function TabPanel(props) {
@@ -52,9 +53,15 @@ export default function PackageView() {
     const [choice, setChoice] = useState(category_id_toShow);
     const [filtered_Array, setFiltered_Array] = useState([])
     const dispatch = useDispatch()
-
+    const navigate = useNavigate()
+    const [queries_Recent, setQueries_Recent] = useState('')
     const filteredNames = posts.filter(name => name?.id == category_id_toShow);
     const [activeId, setActiveId] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [value, setValue] = useState(false);
+    console.log(posts, 'this is post')
+    console.log(category_id_toShow, 'this is all category')
+
     const useScrollspy = (ids, offset = 0) => {
         const mainRef = useRef(null);
         useLayoutEffect(() => {
@@ -89,7 +96,6 @@ export default function PackageView() {
         return { activeId, mainRef };
     };
 
-
     const Show_allCate = (array) => {
         const searchCategory = filteredNames.length > 0 ? filteredNames[0] : category_id_toShow;
         if (searchCategory) {
@@ -99,7 +105,6 @@ export default function PackageView() {
             setFiltered_Array(array);
         }
     }
-    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         const newCategories = filtered_Array.map((item) => item.category);
@@ -129,35 +134,52 @@ export default function PackageView() {
                     <>
                         {matches.small && (
                             <>
-
-
-
-                                <Box sx={{ background: 'gree', position: 'sticky', top: 5, width: '100%', zIndex: 99999, }}>
-                                    <Box px={2.5} py={2} sx={{}}>
-                                        <Box py={.1}>
-                                            <Search />
+                                <Box sx={{ background: '#ffff', position: 'sticky', top: 0, width: '100%', zIndex: 99999, }}>
+                                    <Box px={3} py={1}>
+                                        <Grid container>
+                                            <Grid item xs={2} onClick={() => navigate('/')}> <WestRoundedIcon sx={{ color: 'gray' }} /></Grid>
+                                            <Grid item xs={10} sx={{ color: 'gray' }}> <Typography mt={.4} fontSize={'15px'}>Search for best package and categories</Typography></Grid>
+                                        </Grid>
+                                    </Box>
+                                    <Box px={2.5} py={1} pb={2} sx={{}}>
+                                        <Box py={.1} onClick={() => navigate('/search')}>
+                                            <Search queries_Recent={queries_Recent} />
                                         </Box>
                                     </Box>
                                 </Box>
                                 <Box mx={1}>
                                     <Stack direction="row" height={40} spacing={1} mx={1} my={2} sx={{ display: 'flex', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }}>
-                                        {posts.map((item, index) => (
-                                            <Chip sx={{ height: 40, background: 'white', backgroundColor: choice === item.id ? '#e6cc67' : 'white' }} key={item.id} label={`${item.category}`} onClick={() => setChoice(item.id)} />
+                                        {posts.map((item) => (
+                                            <React.Fragment key={item.id}>
+                                                {value && (
+                                                    <Chip
+                                                        sx={{ height: 40, background: 'white', backgroundColor: choice === item.id ? '#e6cc67' : 'white' }}
+                                                        label={`${item.category}`}
+                                                        onClick={() => {
+                                                            setChoice(item.id);
+                                                            setValue(true);
+                                                        }}
+                                                    />
+                                                )}
+                                            </React.Fragment>
                                         ))}
                                     </Stack>
                                     <Box sx={{ p: 1 }}>
-                                        {posts?.map((item) => {
-                                            return (
-                                                <div>
-                                                    {(item.id === choice) && (
-                                                        <>
-                                                            <Category data={item} />
-
-                                                        </>
-                                                    )}
-                                                </div>
-                                            )
-                                        })}
+                                        {posts?.map((item, index) => (
+                                            <div key={index}>
+                                                {item.id === choice && (
+                                                    <>
+                                                        <Category data={item} />
+                                                        {setValue(true)}
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))}
+                                        {!value && (
+                                            <Box textAlign={'center'} mb={5}>
+                                                <Typography>Sorry! This Category has no package.</Typography>
+                                            </Box>
+                                        )}
                                     </Box>
                                 </Box>
                             </>
