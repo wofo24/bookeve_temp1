@@ -26,10 +26,6 @@ export default function Address_profile() {
     const handle_Delete_Dialog = () => {
         dispatch(openDelete_Address())
     }
-
-    const handleClose = () => {
-        dispatch(closeAdd_Address())
-    };
     return (
         <Container sx={{ marginTop: '20px' }}>
             <Typography variant='h5' textAlign='center'>All address</Typography>

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import Media from 'react-media';
-import FormControlLabel from '@mui/material/FormControlLabel';
+// import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -16,29 +16,53 @@ import Stack from '@mui/material/Stack';
 import 'swiper/css/navigation';
 import { useSwiper } from 'swiper/react';
 import '../Css/Swiper.css';
-import { Grid, Typography } from '@mui/material';
-import { show_this_category_package } from '../Redux/actions/actions';
+import { Card, Grid, Typography } from '@mui/material';
+import { show_this_category_package, get_public_information } from '../Redux/actions/actions';
 import Switch from '@mui/material/Switch';
+import { useEffect } from 'react';
 const label = { inputProps: { 'aria-label': 'Switch demo' } }
 
 export default function CategoryItems() {
     const posts = useSelector((state) => state.posts);
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const swiper = useSwiper();
     const handle_click = (item) => {
         dispatch(show_this_category_package(item))
-        navigate('/package_view')
+        navigate('/package-view')
     }
+
     const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const public_info = useSelector((state) => state?.public_information?.data)
+    const [active_check, setActive_check] = useState(() => (public_info?.services_mode === 'home_services' ? false : true))
+    const error = useSelector((state) => state.error)
 
     const [swiperRef, setSwiperRef] = useState(5);
     const styleSwiper = {
-        height: '130px',
+        height: '160px',
+        width: '180px',
         borderRadius: '25px',
         background: '#fff',
-        width: '110px'
+        mt: 2
     }
+    useEffect(() => {
+        dispatch(get_public_information())
+    }, [])
+    // const dispatch = useDispatch()
+    // console.log(public_info, 'this is public info')
+
+    const handleChange = (event) => {
+        if (active_check) {
+            if (active_check === true) {
+                setActive_check(false)
+            }
+        } else {
+            setActive_check(true)
+        }
+
+    }
+
+    useEffect(() => {
+    }, [active_check])
     const AntSwitch = styled(Switch)(({ theme }) => ({
         width: 38,
         height: 22,
@@ -80,12 +104,11 @@ export default function CategoryItems() {
             borderRadius: 26 / 2,
             opacity: 2,
             backgroundColor:
-                theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
+                theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : '#ffdd00',
             boxSizing: 'border-box',
 
         },
     }));
-
 
     return (
         <>
@@ -101,9 +124,11 @@ export default function CategoryItems() {
                         {matches.small && (
                             <Box
                                 sx={{
+                                    overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' },
                                     display: 'flex',
                                     '& > :not(style)': {
-                                        m: 1,
+                                        mx: 1,
+                                        my: 1,
                                         minWidth: 128,
                                         minHeight: 138,
                                     },
@@ -118,9 +143,9 @@ export default function CategoryItems() {
                                             backdropFilter: buttonStyles.child_backdropFilter,
                                             background: buttonStyles.child_bg,
                                             color: buttonStyles.child_div_text,
-                                        }} onClick={() => handle_click(item.categoryId)}>
+                                        }} onClick={() => handle_click(item.id)}>
 
-                                            <span >Category Id, {item.categoryId}</span>
+                                            <span >Category Id, {item.id}</span>
                                         </Paper>
                                     );
                                 })}
@@ -130,23 +155,23 @@ export default function CategoryItems() {
 
 
                         {matches.large && (
-                            <Box sx={{ width: '100%', my: 1, pt: 3, pb: -10 }} >
+                            <Box sx={{ width: '100%', my: 1, pt: 2, pb: -10 }} >
                                 <Grid container>
                                     <Grid sx={{ mb: 2, background: '#fff8bf', px: 2, display: 'flex' }}>
 
                                         <div style={{ fontWeight: '700', color: 'black', fontSize: '28px', display: 'flex', }}>
-                                            <Typography sx={{ fontWeight: '700', display: 'flex', fontSize: '22px' }}>Home service</Typography>
+                                            <Typography sx={{ color: !active_check && '#ffdd00', fontWeight: '700', display: 'flex', fontSize: '24px' }}>Home service</Typography>
                                             <Stack direction="row" spacing={1} alignItems="center" sx={{ alignItems: 'center', ml: 1 }} >
-                                                <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
-                                                <Typography sx={{ color: '#ffdd00', fontWeight: '700', display: 'flex', fontSize: '22px' }}>Parlour</Typography>
+                                                <AntSwitch checked={active_check} onChange={handleChange} inputProps={{ 'aria-label': 'ant design' }} />
+                                                <Typography sx={{ color: active_check && '#ffdd00', fontWeight: '700', display: 'flex', fontSize: '22px' }}>Parlour</Typography>
                                             </Stack>
 
                                         </div>
 
                                     </Grid>
-                                    <Grid container mb={-3}>
+                                    <Grid container mb={-6} mt={2}>
                                         <Grid item xs={6}>
-                                            <Typography variant='h4'>Choose By category</Typography>
+                                            <Typography fontSize={'25px'} color={buttonStyles.icons_Color && 'black'}>Choose by category</Typography>
                                         </Grid>
                                         <Grid item xs={6} textAlign='end'>
                                         </Grid>
@@ -156,33 +181,33 @@ export default function CategoryItems() {
                                 <Swiper
                                     effect="slide" // Change to slide effect
                                     spaceBetween={10} // Adjust spaceBetween to your preference
-                                    pagination={{
-                                        clickable: true,
-                                    }}
-                                    style={{ paddingBottom: '50px' }}
+                                    // pagination={{
+                                    //     clickable: true,
+                                    // }}
+                                    style={{ paddingBottom: '10px' }}
                                     modules={[Navigation, Pagination, Scrollbar, A11y]}
                                     onSwiper={setSwiperRef}
-                                    slidesPerView={7}
+                                    slidesPerView={5.3}
                                     navigation={true}
                                     className="mySwiper"
                                 >
 
-                                    {posts.map((item) => {
+                                    {/* {posts.map((item) => {
                                         return (
-                                            <SwiperSlide onClick={() => handle_click(item.categoryId)} style={styleSwiper}>
-                                                <Box sx={{}} >
-
-                                                </Box>
+                                            <SwiperSlide onClick={() => handle_click(item.categoryId)} >
+                                                <Card sx={styleSwiper} >
+                                                    {item.categoryName}
+                                                </Card>
                                             </SwiperSlide>
                                         )
-                                    })}
+                                    })} */}
                                 </Swiper>
                             </Box>
                         )}
                     </>
                 )}
             </Media>
-            <hr />
+            <hr style={{ borderBottom: '2px solid black' }} />
         </>
 
     );

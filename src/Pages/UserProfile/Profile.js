@@ -18,13 +18,14 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import Theme_Button from '../../Components/Theme/Theme_Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { Grid } from '@mui/material';
-// import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import { Card, Grid } from '@mui/material';
 import Bookings from '../../Components/Bookings';
 import Address from '../../Pages/Address'
-import { open_profile_dialog } from '../../Redux/actions/actions';
+import { get_my_profile, open_profile_dialog } from '../../Redux/actions/actions';
 import Media from 'react-media';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
 
 
 function TabPanel(props) {
@@ -62,30 +63,40 @@ function a11yProps(index) {
 
 export default function Profile() {
   const navigate = useNavigate()
+  const token = Cookies.get('token')
   const buttonStyles = useSelector((state) => state.apply_new_theme)
-  const pages = ['Orders', 'Favourites', 'Address',];
+  const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
+  const pages = ['Orders', 'Address',];
+  const style = { textDecoration: 'none', color: 'black', ':hover': { color: 'red' } }
   const [value, setValue] = React.useState(0);
-  const [choice, setChoice] = useState('Lipstick');
   const dispatch = useDispatch()
 
-  const handleClick = (data) => {
-    setChoice(data.categoryName)
-  }
-  const handleChangeRoute = (index) => {
-    if (0 === index) {
-      navigate('/all_order')
-
-    }
-    else if (1 === index) {
-      navigate('/address_profile')
-    }
-  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue)
   };
   const handleChangeD = () => {
     dispatch(open_profile_dialog())
+
+
+  }
+
+  useEffect(() => {
+    dispatch(get_my_profile(token))
+  }, [])
+  useEffect(() => {
+    console.log(get_my_profile_success_error, 'this si ')
+  }, [get_my_profile_success_error])
+
+  const Logout = () => {
+    Cookies.remove('token')
+    const token = Cookies.get('token')
+    if (token) {
+      Cookies.remove('token')
+      window.location.reload(true)
+      navigate('/')
+
+    }
   }
 
   return (
@@ -102,12 +113,12 @@ export default function Profile() {
           borderRadius: '10px',
           backdropFilter: buttonStyles.child_backdropFilter,
           background: buttonStyles.child_bg,
-          color:buttonStyles.child_div_text, 
+          color: buttonStyles.child_div_text,
         }}>
           <Grid container>
             <Grid xs={6}>
-              <Typography variant='h4'> <b>Name</b></Typography>
-              <span>number</span> &nbsp;<span>example123@gmail.com</span>
+              <Typography variant='h4' sx={{ textTransform: 'capitalize' }}> <b>{(get_my_profile_success_error?.name)}</b></Typography>
+              <span style={{ fontSize: '12px' }}>{get_my_profile_success_error?.phone_number}</span> &nbsp;<span>{get_my_profile_success_error?.email_id}</span>
             </Grid>
             <Grid xs={6} sx={{ textAlign: 'end', pt: 2 }}>
               <Button variant='outlined' color='success' onClick={handleChangeD}>Edit Profile</Button>
@@ -142,12 +153,14 @@ export default function Profile() {
             </Tabs>
             <Box sx={{ background: '', width: '100%' }}>
               <TabPanel value={value} index={0}>
-                <Box >
+                <Box mt={-4}>
                   <Bookings />
                 </Box>
               </TabPanel>
               <TabPanel value={value} index={1}>
-                Item Two
+                <Box mt={-4}>
+                  <Address from={false} />
+                </Box>
               </TabPanel>
               <TabPanel value={value} index={2}>
                 <Address />
@@ -166,47 +179,43 @@ export default function Profile() {
         }}
       >
         {(item) => item.small && (
-          <Box sx={{
+          <Card sx={{
             p: 2,
             borderRadius: '10px',
             backdropFilter: buttonStyles.child_backdropFilter,
             background: buttonStyles.child_bg,
-            color:buttonStyles.child_div_text, 
+            color: buttonStyles.child_div_text,
             m: 3
           }}>
 
-            <Grid container px={2}>
-              <Grid xs={6}>
-                <Typography>{`item.name`}
-                </Typography>
+
+
+            <Grid container>
+              <Grid xs={7}>
+                <Typography variant='h6' sx={{ textTransform: 'capitalize' }}> <>{get_my_profile_success_error?.name}</></Typography>
+                <span style={{ fontSize: '15px' }}>{get_my_profile_success_error?.phone_number}</span>&nbsp; <br /><span style={{ fontSize: '15px' }}>{get_my_profile_success_error?.email_id ? get_my_profile_success_error.email_id : 'No email'}</span>
               </Grid>
-              <Grid xs={6} textAlign={'end'}>
-                <Typography>
-
-                  {`+91 ${`item.phone_number`}`}
-                </Typography>
-
+              <Grid xs={5} sx={{ textAlign: 'end', mt: 1 }}>
+                <Button size='small' variant='outlined' color='success' onClick={handleChangeD}>Edit Profile</Button>
               </Grid>
-
-
             </Grid>
             <Box p={2}>
               <Box mt={2} p={2} sx={{ border: '2px solid white', borderRadius: '10px' }}>
 
-                <Link to='/all_booking'>
+                <Link to='/all-booking' className='Profile_Button' style={style}>
                   <Grid container>
                     <Grid xs={1}>
                       <ListIcon />
                     </Grid>
-                    <Grid xs={5} textAlign={'start'}>
-                      <Typography ml={2}>My Booking</Typography></Grid>
-                    <Grid xs={6} textAlign={'end'}><ArrowForwardIosIcon /></Grid>
+                    <Grid xs={9} textAlign={'start'}>
+                      <Typography ml={2} >My Booking</Typography></Grid>
+                    <Grid xs={2} textAlign={'end'}><ArrowForwardIosIcon /></Grid>
                   </Grid>
                 </Link>
 
               </Box>
               <Box mt={2} p={2} sx={{ border: '2px solid white', borderRadius: '10px' }}>
-                <Link to='/address'>
+                <Link to='/address' className='Profile_Button' style={style}>
                   <Grid container>
                     <Grid xs={1}>
                       <LocationOnIcon />
@@ -219,13 +228,13 @@ export default function Profile() {
                 </Link>
               </Box >
               <Box mt={2} p={2} sx={{ border: '2px solid white', borderRadius: '10px' }}>
-                <Link to='/' >
+                <Link to='/' className='Profile_Button' style={style} >
                   <Grid container>
 
                     <Grid xs={1}>
                       <LogoutIcon />
                     </Grid>
-                    <Grid xs={5} textAlign={'start'}><Typography ml={2}> Sign out</Typography></Grid>
+                    <Grid xs={5} textAlign={'start'}><Typography ml={2} onClick={Logout}> Sign out</Typography></Grid>
 
                     <Grid xs={6} textAlign={'end'}><ArrowForwardIosIcon /> </Grid>
                   </Grid>
@@ -236,7 +245,7 @@ export default function Profile() {
 
 
             </Box>
-          </Box>
+          </Card>
         )}
       </Media>
     </div >

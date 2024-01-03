@@ -30,12 +30,22 @@ const InstallPrompt = () => {
     );
 
     const [promptEvent, setPromptEvent] = useState(null);
+    const value = localStorage.getItem('trig')
 
     useEffect(() => {
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Prevent the default browser prompt
-            setPromptEvent(e);
-        });
+        if (!value) {
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault(); // Prevent the default browser prompt
+                setPromptEvent(e);
+            });
+            localStorage.setItem('trig', true)
+        } else {
+            console.log('nothing')
+        }
+
+
+
+
     }, []);
 
     const handleInstallClick = () => {
@@ -64,15 +74,20 @@ const InstallPrompt = () => {
     );
 
     useEffect(() => {
+        if (!value) {
+            handleClick({ vertical: 'top', horizontal: 'center' })();
+            const timeoutId = setTimeout(() => {
+                handleClose();
+            }, 5000);
 
-        handleClick({ vertical: 'top', horizontal: 'center' })();
-        const timeoutId = setTimeout(() => {
-            handleClose();
-        }, 5000);
+            return () => {
+                clearTimeout(timeoutId);
+            };
+            localStorage.setItem('trig', true)
+        } else {
+            console.log('nothing')
+        }
 
-        return () => {
-            clearTimeout(timeoutId);
-        };
     }, []);
 
     return (

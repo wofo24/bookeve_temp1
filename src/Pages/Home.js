@@ -1,62 +1,76 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchPosts } from '../Redux/actions/actions';
-import { useEffect, useState } from 'react';
-import style from '../Css/Home.module.css';
+import { useEffect, useState, useRef } from 'react';
 import Category from '../Components/Category';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
-import { Link } from 'react-router-dom';
-import DialogComponent from '../Components/Dialog/DialogComponent';
 import CategoryItems from '../Components/CategoryItems';
 import Carousel from '../Components/Carousel';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Typography } from '@mui/material';
 import Search from '../Components/Search/Search';
 import Search_All from '../Components/Search/Search_All';
 import Media from 'react-media';
 import { useNavigate } from 'react-router-dom';
-import Index from '../Components/Theme/Index'
-// import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-// import Media from 'react-media';
-import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
-import ArrowCircleRightRoundedIcon from '@mui/icons-material/ArrowCircleRightRounded';
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { useSwiper } from 'swiper/react';
-import CardMedia from '@mui/material/CardMedia';
 import '../Css/SwiperHome.css';
-import { Grid } from '@mui/material';
-import Switch from '@mui/material/Switch';
 import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 import TrendingUpSharpIcon from '@mui/icons-material/TrendingUpSharp';
 import Testimonial from '../Components/Testimonial';
+import Cookies from 'js-cookie';
+
 export default function Home() {
-  const posts = useSelector((state) => state.posts);
+  const posts = useSelector((state) => state?.posts);
   const query = useSelector((state) => state.search_item);
+  const card_data = useSelector((state) => state.card_data);
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch();
+  const unknown_user_success_error = useSelector((state) => state.unknown_user_success_error)
+
+  useEffect(() => {
+    if (unknown_user_success_error.success) {
+      Cookies.set('unknown_user_token', unknown_user_success_error.data.token)
+    }
+  }, [unknown_user_success_error])
   const handle_click = (item) => {
-    navigate('/package_view', { state: { data: item } })
+    navigate('/package-view', { state: { data: item } })
   }
   const [swiperRef, setSwiperRef] = useState(5);
   const buttonStyles = useSelector((state) => state.apply_new_theme)
-  useEffect(() => {
-    const word = query.split("")
-    if (word.length <= 3) {
-      setShowSearch(false)
-    }
-    else {
-      setShowSearch(true)
-    }
 
-  }, [query])
+  useEffect(() => {
+    if (query && typeof query === 'string') {
+      const word = query.split("");
+      if (word.length <= 3) {
+        setShowSearch(false);
+      } else {
+        setShowSearch(true);
+      }
+    }
+  }, [query]);
+
+
+  // useEffect(() => {
+  //   if (text.length > 0) {
+  //     const demo = { "packages": text };
+  //     dispatch(update_in_bag(demo));
+  //   }
+  // }, [text, dispatch]);
+
+  // console.log(bag_packages, 'from home p=bag package')
+  // useEffect(() => {
+  //   dispatch(fetchPosts());
+  // }, [dispatch,]);
   useEffect(() => {
     dispatch(fetchPosts());
-  }, [dispatch]);
+  }, [dispatch, card_data]);
+
+  console.log(posts)
+  // 
 
   return (
     <div>
@@ -86,13 +100,8 @@ export default function Home() {
               </TransitionGroup>
             </>
           )
-
         )}
-
       </Media>
-
-
-
       <TransitionGroup>
         <CSSTransition
           in={!showSearch}
@@ -113,21 +122,11 @@ export default function Home() {
                   {(matches) => (
 
                     matches.small && (
-                      <>
-
-                        <Box sx={{ pt: 0.2, position: 'sticky', top: 0, background: '#ffff', zIndex: '9999', height: '50px', }}>
-                          <Box sx={{
-
-                            zIndex: '9999', height: '50px', borderRadius: '10px',
-                            backdropFilter: buttonStyles.child_backdropFilter,
-                            background: buttonStyles.child_bg,
-                            color: buttonStyles.child_div_text,
-
-                          }}>
-                            <Search />
-                          </Box>
+                      <Box sx={{ position: 'sticky', top: 0, zIndex: '9999', background: buttonStyles.child_bg, py: 1 }}>
+                        <Box onClick={() => navigate('/search')} sx={{ mx: 1, position: 'sticky', top: 0, zIndex: '9999', height: '56px', borderRadius: '15px', background: '#ffff' }}>
+                          <Search />
                         </Box>
-                      </>
+                      </Box>
                     )
 
                   )}
@@ -147,7 +146,7 @@ export default function Home() {
                       matches.small && (
                         <>
                           <CategoryItems />
-                          {posts.map((item, index) => (
+                          {posts?.map((item, index) => (
                             <Category data={item} key={index} />
                           ))}
                         </>
@@ -166,9 +165,9 @@ export default function Home() {
 
                     {(matches) => (
                       matches.large && (
-                        <>
+                        <Box>
                           <CategoryItems />
-                          <Typography variant='h4' textAlign='center' m={2}>Explore Packages </Typography>
+                          <Typography variant='h4' color={'black'} textAlign='center' m={2} fontWeight={520}>Explore Packages </Typography>
                           <Box sx={{ background: '#a7d1b3', px: 3, position: 'relative' }}>
                             <Box sx={{ display: 'flex', pt: 3, pb: 2, float: 'left' }}>
                               <Typography variant='h5'>Trending </Typography><TrendingUpSharpIcon color='error' sx={{ ml: 1 }} fontSize='large' />
@@ -182,31 +181,33 @@ export default function Home() {
                               style={{ paddingBottom: '50px' }}
                               modules={[Navigation, Pagination, Scrollbar, A11y]}
                               onSwiper={setSwiperRef}
-                              slidesPerView={4}
+                              slidesPerView={3.2}
                               navigation={true}
                               className="mySwiper1"
                             >
 
                               {posts.map((item) => {
                                 return (
-                                  <SwiperSlide onClick={() => handle_click(item)} style={{ borderRadius: '25px', background: '#ffff', height: '200px', width: '290px' }}>
-                                    <div class="highlight red-bg ribbon">
-                                      Best Seller
-                                    </div>
-                                    <Box sx={{ mt: 1.5, height: '65%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px' }}>
-                                      <img src='./' alt='image' />
-                                    </Box>
-                                    <Box sx={{ height: '33%', borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', background: 'yellow' }}>
-                                      <Box textAlign='left' >
-                                        <Typography sx={{ color: 'red', ml: 1 }}>Main heading</Typography>
-                                        <Box sx={{ display: 'flex' }}>
-                                          <StarsSharpIcon fontSize='small' sx={{ color: 'green', ml: 1, mt: .2 }} /> <Typography sx={{ color: 'green', ml: .5 }}>2.8 (20)</Typography>
-                                        </Box>
-                                        <Typography textAlign='end' sx={{ color: 'black', ml: 1, mt: -3, mr: 2 }}>
-                                          &#8377; 999
-                                        </Typography>
+                                  <SwiperSlide onClick={() => handle_click(item)} style={{ height: '211px', width: '320px' }} >
+                                    <Card sx={{ borderRadius: '25px', background: '#ffff', height: '211px', width: '310px' }}>
+                                      <div class="highlight red-bg ribbon">
+                                        Best Seller
+                                      </div>
+                                      <Box sx={{ background: 'gray', height: '67%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px' }}>
+                                        <img src='./' alt='image' />
                                       </Box>
-                                    </Box>
+                                      <Box sx={{ height: '33%', borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', background: 'white' }}>
+                                        <Box textAlign='left' pt={1} >
+                                          <Typography sx={{ ml: 1 }}>Main heading</Typography>
+                                          <Box sx={{ display: 'flex' }}>
+                                            <StarsSharpIcon fontSize='small' sx={{ color: 'green', ml: 1, mt: .2 }} /> <Typography sx={{ ml: .5 }}>2.8 (20)</Typography>
+                                          </Box>
+                                          <Typography textAlign='end' sx={{ color: 'black', ml: 1, mt: -3, mr: 2, fontSize: 'large' }}>
+                                            &#8377; 999
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    </Card>
                                   </SwiperSlide>
                                 );
                               })}
@@ -227,45 +228,44 @@ export default function Home() {
                               style={{ paddingBottom: '50px' }}
                               modules={[Navigation, Pagination, Scrollbar, A11y]}
                               onSwiper={setSwiperRef}
-                              slidesPerView={4} // Set slidesPerView to 5
+                              slidesPerView={3.2}
                               navigation={true}
                               className="mySwiper1"
                             >
 
                               {posts.map((item) => {
                                 return (
-                                  <SwiperSlide onClick={() => handle_click(item)} style={{ borderRadius: '25px', background: '#ffff', height: '200px', width: '290px' }}>
-                                    <div class="highlight red-bg ribbon">
-                                      Best Seller
-                                    </div>
-                                    <Box sx={{ mt: 1.5, height: '65%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px' }}>
-                                      <img src='./' alt='image' />
-                                    </Box>
-                                    <Box sx={{ height: '33%', borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', background: 'yellow' }}>
-                                      <Box textAlign='left' >
-                                        <Typography sx={{ color: 'red', ml: 1 }}>Main heading</Typography>
-                                        <Box sx={{ display: 'flex' }}>
-                                          <StarsSharpIcon fontSize='small' sx={{ color: 'green', ml: 1, mt: .2 }} /> <Typography sx={{ color: 'green', ml: .5 }}>2.8 (20)</Typography>
-                                        </Box>
-                                        <Typography textAlign='end' sx={{ color: 'black', ml: 1, mt: -3, mr: 2 }}>
-                                          &#8377; 999
-                                        </Typography>
+                                  <SwiperSlide onClick={() => handle_click(item)} style={{ height: '211px', width: '320px' }} >
+                                    <Card sx={{ borderRadius: '25px', background: '#ffff', height: '211px', width: '300px' }}>
+                                      <div className="highlight red-bg ribbon">
+                                        Best Seller
+                                      </div>
+                                      <Box sx={{ background: 'gray', height: '67%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px' }}>
+                                        <img src='./' alt='image' />
                                       </Box>
-                                    </Box>
+                                      <Box sx={{ height: '33%', borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', background: 'white' }}>
+                                        <Box textAlign='left' pt={1} >
+                                          <Typography sx={{ color: 'red', ml: 1 }}>Main heading</Typography>
+                                          <Box sx={{ display: 'flex' }}>
+                                            <StarsSharpIcon fontSize='small' sx={{ color: 'green', ml: 1, mt: .2 }} /> <Typography sx={{ color: 'green', ml: .5 }}>2.8 (20)</Typography>
+                                          </Box>
+                                          <Typography textAlign='end' sx={{ color: 'black', ml: 1, mt: -3, mr: 2, fontSize: 'large' }}>
+                                            &#8377; 999
+                                          </Typography>
+                                        </Box>
+                                      </Box>
+                                    </Card>
                                   </SwiperSlide>
                                 );
                               })}
                             </Swiper>
                           </Box>
                           <Testimonial />
-                        </>
+                        </Box>
                       )
                     )}
-                    {/* <CategoryItems /> */}
+
                   </Media>
-
-
-
                 </Container>
               </>
             )}

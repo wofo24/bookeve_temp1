@@ -9,13 +9,15 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { openAdd_Address, open_coupon_dialog, show_all_address, hide_all_address, open_schedule_dialog } from '../Redux/actions/actions';
+import { open_help, open_coupon_dialog, show_all_address, hide_all_address, open_schedule_dialog, open_agree_dialog } from '../Redux/actions/actions';
 import Media from 'react-media';
 
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 export default function Booking_details() {
     const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const date_time = useSelector((state) => state.selected_date_time)
+    const selected_address = useSelector((state) => state.selected_address)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const handleOpen = () => {
@@ -39,34 +41,43 @@ export default function Booking_details() {
                                 background: buttonStyles.child_bg,
                                 color: buttonStyles.color,
                             }}>
-                                <Box p={2} sx={{ borderRadius: '10px', background: 'white', color: 'black' }}>
-                                    <Grid container >
+                                <Card p={2} sx={{ borderRadius: '10px', background: 'white', color: 'black' }}>
+                                    <Grid container my={1} >
                                         <Grid xs={6}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                                                <Typography><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} onClick={()=>navigate('/all_booking')} fontSize='large' /></Typography>
-                                                <Typography variant='h6'> <b>Booking & plans</b></Typography>
+                                            <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center', }}>
+                                                <Typography><ArrowBackRoundedIcon sx={{ mt: .5, ml: 1 }} onClick={() => navigate('/all-booking')} fontSize='medium' /></Typography>
+                                                <Typography variant='h6' fontSize={'14px'} sx={{ mt: .5, ml: 1 }}> <b>Booking & plans</b></Typography>
                                             </Box>
                                         </Grid>
                                         <Grid xs={6} textAlign={'end'}>
-                                            <Button variant='outlined' sx={{ m: 2 }}> <b>Help</b></Button>
-                                            <Button variant='outlined' color='error'> <b>SOS</b></Button>
+                                            <Box sx={{ display: 'flex', flex: 'wrap', justifyContent: 'space-around', alignItems: 'center' }}>
+                                                <Box>
+                                                    <Button variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
+                                                </Box>
+                                                <Box>
+                                                    <Button variant='outlined' color='error'> <b>SOS</b></Button>
+                                                </Box>
+                                            </Box>
                                         </Grid>
                                     </Grid>
-                                </Box>
+                                </Card>
                                 <Box m={'auto'}>
                                     <Grid container >
                                         <Grid lg={7} xl={7} md={7} xs={12} pt={3} px={2}>
-                                            <Box sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                            <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
                                                 <Box p={1}>
                                                     <Typography> <b>Service Cart</b></Typography>
 
                                                     <Grid container my={2} >
-                                                        <Grid xs={6}>
+                                                        <Grid xs={4}>
                                                             <Typography> Package Name
                                                             </Typography>
                                                         </Grid>
+                                                        <Grid>
+                                                            <Typography>{1}</Typography>
+                                                        </Grid>
 
-                                                        <Grid xs={6} textAlign={'end'}>  <Typography> 1200
+                                                        <Grid xs={4} textAlign={'end'}>  <Typography> 1200
                                                         </Typography> </Grid>
                                                     </Grid>
                                                 </Box>
@@ -91,11 +102,11 @@ export default function Booking_details() {
                                                         <Grid xs={6} textAlign={'end'}><b>1200</b></Grid>
                                                     </Grid>
                                                 </Box>
-                                            </Box>
+                                            </Card>
 
                                         </Grid>
                                         <Grid lg={5} md={5} textAlign={'start'} px={2} pt={3} >
-                                            <Box sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                            <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
                                                 <Typography mb={1}>Booking Details</Typography>
                                                 <Grid container my={2}>
                                                     <Grid xs={6}>
@@ -108,27 +119,33 @@ export default function Booking_details() {
                                                 </Grid>
                                                 <Grid container my={2}>
                                                     <Grid xs={1}>   <FmdGoodIcon /></Grid>
-                                                    <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}>200</Grid>
+                                                    <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}>{selected_address}</Grid>
                                                 </Grid>
                                                 <Grid container>
                                                     <Grid xs={1}>    <AccessTimeFilledIcon /></Grid>
-                                                    <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}>date time</Grid>
+                                                    <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}><b>Slot :</b>{date_time}</Grid>
                                                 </Grid>
-                                                <Grid container>
-                                                    <Grid xs={6} textAlign={'end'}>
-                                                        <Button>Reschedule</Button>
+                                                <Grid container my={3} >
+                                                    <Grid xs={6} textAlign={'end'} p={2}>
+                                                        <Button variant='outlined' style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: `${buttonStyles.buttonColor}` }} fullWidth onClick={() => dispatch(open_schedule_dialog())}>
+                                                            Reschedule
+                                                        </Button>
 
                                                     </Grid>
-                                                    <Grid xs={6}> <Button variant='container' color='error'><b>cancel booking </b> </Button></Grid>
+                                                    <Grid xs={6} p={2}>
+                                                        <Button color='error' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={() => dispatch(open_schedule_dialog())}>
+                                                            Cancel
+                                                        </Button>
+                                                    </Grid>
                                                 </Grid>
                                                 <hr />
-                                            </Box>
-                                            <Box sx={{ my: 4, background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                            </Card>
+                                            <Card sx={{ my: 4, background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
                                                 <Typography mb={2}> <b>Cancellation & Research policy </b></Typography>
                                                 <span style={{ fontSize: '12px' }}>
                                                     The corresponding author must inform about the withdrawal ( Cancellation ) of the article before the acceptance from the International Journal of Medical Research and Review and the withdrawal ( Cancellation )</span>
 
-                                            </Box>
+                                            </Card>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -154,35 +171,54 @@ export default function Booking_details() {
                                 background: buttonStyles.child_bg,
                                 color: buttonStyles.color,
                             }}>
-                                <Box p={2} sx={{ borderRadius: '10px', background: 'white', color: 'black' }}>
-                                    <Grid container >
-                                        <Grid xs={6}>
+                                <Card p={2} sx={{ borderRadius: '10px', background: 'white', color: 'black' }}>
+                                    <Grid container my={1}>
+                                        <Grid xs={10} sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
                                             <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                                                <Typography onClick={() => navigate('/profile')}><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} fontSize='medium' /></Typography>
-                                                <Typography variant='h5'> <b>Booking & plans</b></Typography>
+                                                <Typography onClick={() => navigate('/profile')}><ArrowBackRoundedIcon sx={{ ml: 2 }} fontSize='large' /></Typography>
+                                                <Typography variant='h5' px={1}> <b>Booking & plans</b></Typography>
                                             </Box>
                                         </Grid>
-                                        <Grid xs={6} textAlign={'end'}>
-                                            <Button sx={{ mx: 2 }} variant='outlined'> <b>Help</b></Button>
+                                        <Grid xs={2} textAlign={'center'}>
+                                            <Button variant='outlined' sx={{ m: 2 }} onClick={() => dispatch(open_help())}> <b>Help</b></Button>
                                             <Button variant='outlined' color='error'> <b>SOS</b></Button>
                                         </Grid>
                                     </Grid>
-                                </Box>
+                                </Card>
                                 <Box m={'auto'}>
                                     <Grid container >
                                         <Grid lg={7} xl={7} md={7} xs={12} pt={3} px={2}>
-                                            <Box sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                            <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+
                                                 <Box p={1}>
                                                     <Typography> <b>Service Cart</b></Typography>
+                                                    <Box>
+                                                        <Grid container my={2} >
+                                                            <Grid xs={4} textAlign={'start'}>
+                                                                <Typography> Package Name
+                                                                </Typography>
+                                                            </Grid>
+                                                            <Grid xs={4} textAlign={'end'}>
+                                                                <Typography>Quantity</Typography>
+                                                            </Grid>
 
+                                                            <Grid xs={4} textAlign={'end'}>
+                                                                <Typography> Price
+                                                                </Typography> </Grid>
+                                                        </Grid>
+                                                    </Box>
                                                     <Grid container my={2} >
-                                                        <Grid xs={6}>
+                                                        <Grid xs={4} textAlign={'start'}>
                                                             <Typography> Package Name
                                                             </Typography>
                                                         </Grid>
+                                                        <Grid xs={4} textAlign={'end'}>
+                                                            <Typography>{1}</Typography>
+                                                        </Grid>
 
-                                                        <Grid xs={6} textAlign={'end'}>  <Typography> 1200
-                                                        </Typography> </Grid>
+                                                        <Grid xs={4} textAlign={'end'}>
+                                                            <Typography> 1200
+                                                            </Typography> </Grid>
                                                     </Grid>
                                                 </Box>
                                                 <Box sx={{ borderRadius: '10px' }} p={1}>
@@ -206,12 +242,12 @@ export default function Booking_details() {
                                                         <Grid xs={6} textAlign={'end'}><b>1200</b></Grid>
                                                     </Grid>
                                                 </Box>
-                                            </Box>
+                                            </Card>
 
                                         </Grid>
                                         <Grid lg={5} md={5} textAlign={'start'} px={2} pt={3} >
-                                            <Box sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
-                                                <Typography mb={1}>Booking Details</Typography>
+                                            <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                                <Typography mb={1}><b>Booking Details</b></Typography>
                                                 <Grid container my={2}>
                                                     <Grid xs={6}>
                                                         <Typography>Amount To Pay: 12,000</Typography>
@@ -223,27 +259,27 @@ export default function Booking_details() {
                                                 </Grid>
                                                 <Grid container my={2}>
                                                     <Grid xs={1}>   <FmdGoodIcon /></Grid>
-                                                    <Grid xs={11} textAlign={'start'}>200</Grid>
+                                                    <Grid xs={11} textAlign={'start'}><b>Address:</b> {selected_address}</Grid>
                                                 </Grid>
                                                 <Grid container>
                                                     <Grid xs={1}>    <AccessTimeFilledIcon /></Grid>
-                                                    <Grid xs={11} >date time</Grid>
+                                                    <Grid xs={11} ><b>Slot:</b> {date_time} </Grid>
                                                 </Grid>
-                                                <Grid container>
-                                                    <Grid xs={6} textAlign={'end'}>
-                                                        <Button>Reschedule</Button>
+                                                <Grid container my={3} spacing={2}>
+                                                    <Grid xs={6} px={2} textAlign={'end'}>
+                                                        <Button onClick={() => dispatch(open_schedule_dialog())}>Reschedule</Button>
 
                                                     </Grid>
-                                                    <Grid xs={6}> <Button variant='container' color='error'><b>cancel booking </b> </Button></Grid>
+                                                    <Grid xs={6} px={2}> <Button variant='contained' color='error' onClick={() => dispatch(open_agree_dialog())}><b>cancel booking </b> </Button></Grid>
                                                 </Grid>
                                                 <hr />
-                                            </Box>
-                                            <Box sx={{ my: 4, background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                            </Card>
+                                            <Card sx={{ my: 4, background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
                                                 <Typography mb={2}> <b>Cancellation & Research policy </b></Typography>
                                                 <span style={{ fontSize: '12px' }}>
                                                     The corresponding author must inform about the withdrawal ( Cancellation ) of the article before the acceptance from the International Journal of Medical Research and Review and the withdrawal ( Cancellation )</span>
 
-                                            </Box>
+                                            </Card>
                                         </Grid>
                                     </Grid>
                                 </Box>

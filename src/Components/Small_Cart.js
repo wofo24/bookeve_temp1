@@ -1,20 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Coupon from '../Components/Coupon'
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { openAdd_Address, open_coupon_dialog, show_all_address, hide_all_address, open_schedule_dialog } from '../Redux/actions/actions';
+import { openAdd_Address, show_message, click_to_apply_coupon, open_coupon_dialog, show_all_address, hide_all_address, open_schedule_dialog } from '../Redux/actions/actions';
 import Media from 'react-media';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { Link } from 'react-router-dom'
 export default function Small_Cart() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const buttonStyles = useSelector((state) => state.apply_new_theme)
-
+    const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
     const handleOpen = () => {
         dispatch(open_coupon_dialog())
     }
@@ -27,6 +28,16 @@ export default function Small_Cart() {
     const openSchedule = () => {
         dispatch(open_schedule_dialog())
     }
+    useEffect(() => {
+        if (Coupon_Code_value) {
+            dispatch(show_message(true, 'Coupon applied successful!', 'success'))
+        }
+        else {
+            dispatch(show_message(true, 'Coupon removed!', 'warning'))
+
+        }
+    }, [Coupon_Code_value])
+
     return (
 
         <Media
@@ -43,47 +54,49 @@ export default function Small_Cart() {
                             <Grid xs={12}>
 
                                 <Box mx={1}>
-                                    <Box sx={{
+                                    <Card sx={{
                                         borderRadius: '10px',
                                         backdropFilter: buttonStyles.child_backdropFilter,
                                         background: buttonStyles.child_bg,
-                                        color:buttonStyles.child_div_text, p: 2
+                                        color: buttonStyles.child_div_text, p: 2
                                     }} >
                                         <Box>
-                                            <Typography> <b>Cart</b></Typography>
+                                            <Typography variant='h6'> <b>Cart</b></Typography>
                                         </Box>
                                         <Grid container mt={1} >
                                             <Grid xs={6}>
-                                                <Typography> Package Name
-                                                </Typography>
+                                                <Typography> Package Name</Typography>
+                                                <Typography sx={{ fontSize: '10px' }}> Addon's Name</Typography>
                                             </Grid>
                                             <Grid xs={3} textAlign={'start'}>
-                                                <Button sx={{ width: '50px', height: '25px', color: buttonStyles.icons_Color, backgroundColor: 'white', borderRadius: '10px' }}>
-                                                    <RemoveIcon sx={{ mx: 1 }} />
-                                                    1
-                                                    <AddIcon sx={{ mx: 1 }} />
-                                                </Button>
+                                                <Box>
+                                                    <Button variant='outlined' color='warning' sx={{ width: '50px', height: '25px', color: buttonStyles.icons_Color, backgroundColor: 'white', borderRadius: '6px' }}>
+                                                        <RemoveIcon sx={{ m: 1, fontSize: '16px' }} />
+                                                        1
+                                                        <AddIcon sx={{ m: 1, fontSize: '16px' }} />
+                                                    </Button>
+                                                </Box>
                                             </Grid>
-                                            <Grid xs={3} textAlign={'center'}>  <Typography> 1200
+                                            <Grid xs={3} textAlign={'center'}>  <Typography>&#8377;1200
                                             </Typography> </Grid>
                                         </Grid>
                                         <Grid container mt={1}>
                                             <Grid xs={6}>
-                                                <Typography> Package Name
-                                                </Typography>
+                                                <Typography> Package Name</Typography>
+                                                <Typography sx={{ fontSize: '10px' }}> Addon's Name</Typography>
                                             </Grid>
                                             <Grid xs={3} textAlign={'start'}>
-                                                <Button sx={{ p: 1, width: '50px', height: '25px', color: buttonStyles.icons_Color, backgroundColor: 'white', borderRadius: '10px' }}>
-                                                    <RemoveIcon sx={{ mx: 1 }} />
-                                                    2
-                                                    <AddIcon sx={{ mx: 1 }} />
+                                                <Button variant='outlined' color='warning' sx={{ p: 1, width: '50px', height: '25px', color: buttonStyles.icons_Color, backgroundColor: 'white', borderRadius: '6px' }}>
+                                                    <RemoveIcon sx={{ m: 1, fontSize: '16px' }} />
+                                                    3
+                                                    <AddIcon sx={{ m: 1, fontSize: '16px' }} />
                                                 </Button>
                                             </Grid>
-                                            <Grid xs={3} textAlign={'center'}>  <Typography> 1200
+                                            <Grid xs={3} textAlign={'center'}>  <Typography> &#8377;1200
                                             </Typography> </Grid>
                                         </Grid>
 
-                                        <Grid sx={{ background: 'green', mt: 2 }}>
+                                        <Grid sx={{ background: '#22bb33', mt: 2 }}>
                                             <Typography sx={{ color: 'white', textAlign: 'center', py: 1 }}>Congratulation &#8377;12,00 saved!
                                             </Typography>
                                         </Grid>
@@ -97,12 +110,45 @@ export default function Small_Cart() {
                                                     </Box>
                                                 </Grid>
                                                 <Grid xs={6} sx={{ textAlign: 'end' }}>
-                                                    <Typography sx={{ cursor: 'pointer', fontSize: '14px' }}>View Cart</Typography>
+                                                    <Link
+                                                        to={`/cart`}
+                                                        style={{ textDecoration: 'none', color: 'inherit' }}
+                                                    >
+                                                        <Typography sx={{ cursor: 'pointer', fontSize: '14px', }}>View Cart</Typography>
+                                                    </Link>
                                                 </Grid>
                                             </Grid>
                                         </Box>
-                                    </Box>
-                                    <Box sx={{
+                                    </Card>
+
+                                    {Coupon_Code_value && (
+                                        <Card sx={{
+                                            my: 2,
+                                            borderRadius: '10px',
+                                            backdropFilter: `blur(10px)`,
+                                            background: '#22bb33',
+                                            color: 'black', p: 1
+                                        }}  >
+                                            <Grid container p={0}>
+                                                <Grid item xs={2} pt={.1}>
+                                                    <CheckCircleOutlineIcon fontSize='large' sx={{ color: '#e3f2fd' }} />
+                                                </Grid>
+                                                <Grid item xs={7}>
+                                                    <Box sx={{ color: '#e3f2fd' }}>
+                                                        <Typography><b>{Coupon_Code_value}</b> applied</Typography>
+                                                        <Typography sx={{ fontSize: '10px' }}>-&#8377;1200 (30% off)</Typography>
+                                                    </Box>
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'right' }}>
+                                                        <Button color='error' onClick={() => dispatch(click_to_apply_coupon(''))}>Remove</Button>
+                                                    </Box>
+                                                </Grid>
+
+                                            </Grid>
+                                        </Card>
+                                    )}
+                                    {!Coupon_Code_value && (<Card sx={{
                                         my: 1, borderRadius: '10px',
                                         backdropFilter: `blur(10px)`,
                                         background: ' rgb(255 255 255 / 0.6)',
@@ -111,7 +157,6 @@ export default function Small_Cart() {
                                         <Grid container p={1}>
                                             <Grid item xs={2}>
                                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                                    {/* <ArrowForwardIosIcon /> */}
                                                     <img width="30" style={{ marginTop: '0px' }} height="30" src="https://img.icons8.com/material/24/discount--v1.png" alt="discount--v1" />
                                                 </Box>
                                             </Grid>
@@ -129,8 +174,9 @@ export default function Small_Cart() {
                                                 </Box>
                                             </Grid>
                                         </Grid>
-                                    </Box>
-                                    <Box sx={{
+                                    </Card>)}
+
+                                    <Card sx={{
                                         borderRadius: '10px',
                                         backdropFilter: `blur(10px)`,
                                         background: ' rgb(255 255 255 / 0.6)',
@@ -154,7 +200,7 @@ export default function Small_Cart() {
                                             <Grid xs={6}><b>Total</b></Grid>
                                             <Grid xs={6} textAlign={'end'}><b>1200</b></Grid>
                                         </Grid>
-                                    </Box>
+                                    </Card>
                                 </Box>
 
                             </Grid>

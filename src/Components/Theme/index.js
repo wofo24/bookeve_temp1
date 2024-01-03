@@ -9,6 +9,7 @@ export default function Index() {
   const buttonStyles = useSelector((state) => state.button_style)
   const themes = useSelector((state) => state.all_theme)
   const New_themes = useSelector((state) => state.apply_new_theme)
+  const theme = [themes?.theme_configuration]
 
   const [buttonStyle, setButtonStyle] = useState({
     color: 'black',
@@ -46,18 +47,20 @@ export default function Index() {
     dispatch(apply_new_theme(item))
     window.location.reload(true)
   }
+ 
   return (
     <Container>
-     
+
       <Typography variant='h5' m={2}>Themes</Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center', flex: 'wrap' }}>
-        {themes.map((item, index) => {
+        {theme.map((item, index) => {
           return (
-            <Paper onClick={() => handleActivate(item, index)}
+            <Paper
+              // onClick={() => handleActivate(item, index)}
               sx={{
                 borderRadius: '10px',
                 backgroundPosition: item.backgroundPosition,
-                animation: `${item.keyframesStyle} ${item.animation}`,
+                animation: `${item.keyframesStyle['@keyframes AnimationName']} ${item.animation}`,
                 OAnimation: item.OAnimation,
                 WebkitAnimation: item.WebkitAnimation,
                 background: item.background,
@@ -87,14 +90,16 @@ export default function Index() {
                 paddingLeft: '10px',
                 cursor: 'pointer',
                 overflow: 'hidden',
+                animation: `${item.keyframesStyle['@keyframes AnimationName']} ${item.animation}`,
               }}>
-                <Typography sx={{ mt: 1, fontFamily: item.fontFamily }}>Title</Typography>
-
+                <Typography sx={{ mt: 1, fontFamily: item.fontFamily }}>
+                  Title
+                </Typography>
               </Paper>
             </Paper>
-
           );
         })}
+
       </Box>
 
     </Container>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -11,24 +11,105 @@ import Media from 'react-media';
 import FilledInput from '@mui/material/FilledInput';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import IconButton from '@mui/material/IconButton';
+import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import { alpha, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider, Theme, useTheme } from '@mui/material/styles';
+import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 export default function Search(props) {
+    const outerTheme = useTheme();
     const dispatch = useDispatch();
-    const query = useSelector((state) => state.search_item);
+    const searched_quarry = useSelector((state) => state.searched_quarry)
     const inputRef = useRef(null);
-
-    useEffect(() => {
-        inputRef.current && inputRef.current.focus();
-    }, []);
+    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const [queries, setQueries] = useState(props.queries_Recent ? props.queries_Recent : searched_quarry)
+    const navigate = useNavigate()
 
     const handleChange = (event) => {
         const { value } = event.target;
-        dispatch(get_search_item(value));
+        setQueries(value);
+
+        if (value && value.length >= 3) {
+            dispatch(get_search_item(value, props.search_type));
+        }
     }
+
+    useEffect(() => {
+        setQueries(props.queries_Recent);
+      }, [props.queries_Recent]);
+      
+
     const handleDelete = (val) => {
         dispatch(empty_quarry(val));
-        console.log('this is called')
+        setQueries('')
     }
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            if (queries.split("").length >= 3) {
+                navigate('/package-view')
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (window.location.pathname === '/search') {
+            inputRef.current && inputRef.current.focus()
+        }
+    }, [])
+
+    console.log(searched_quarry)
+
+    const customTheme = (outerTheme) =>
+        createTheme({
+            components: {
+                MuiTextField: {
+                    styleOverrides: {
+                        root: {
+                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '& label.Mui-focused': {
+                                color: `${buttonStyles.icons_Color}`,
+                            },
+                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Add this line for box shadow
+                            borderRadius: '15px',
+                            background: '#ffff'
+                        },
+                    },
+                },
+                MuiOutlinedInput: {
+                    styleOverrides: {
+                        notchedOutline: {
+                            borderColor: `white`,
+                        },
+                        root: {
+                            [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+                                borderColor: `${buttonStyles.icons_Color}`,
+                            },
+                            [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+                                borderColor: `${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+                MuiFilledInput: {
+                    styleOverrides: {
+                        root: {
+                            '&:before, &:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&:hover:not(.Mui-disabled, .Mui-error):before': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                            '&.Mui-focused:after': {
+                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                            },
+                        },
+                    },
+                },
+            },
+        });
 
     return (
         <div>
@@ -41,30 +122,47 @@ export default function Search(props) {
             >
                 {(item) => (
                     item.small && (
-                        <Box sx={{ border: '0px solid ', my: 1, mx: 2, borderRadius: '10px' }}>
+                        <Box >
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    gridTemplateColumns: { sm: '1fr 1fr 1fr' },
+                                    gap: 2,
+                                }}
+                            >
+                            </Box>
                             <FormControl fullWidth>
-                                <Input
-                                    fullWidth
-                                    onChange={handleChange}
-                                    inputRef={inputRef} // Use inputRef here
-                                    value={query}
-                                    size='large'
-
-                                    placeholder='Search..'
-                                    id="input-with-icon-adornment"
-                                    startAdornment={
-                                        <InputAdornment position="start">
-                                            <SearchRoundedIcon sx={{ my: 2, mx: 1, width:30, height:30 }} />
-                                        </InputAdornment>
-                                    }
-                                />
+                                <ThemeProvider theme={customTheme(outerTheme)}>
+                                    <TextField
+                                        fullWidth
+                                        onChange={handleChange}
+                                        inputRef={inputRef}
+                                        value={queries}
+                                        size='medium'
+                                        placeholder="Search..."
+                                        onKeyPress={handleKeyPress}
+                                        defaultValue={queries ? queries : searched_quarry}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="start">
+                                                    {queries ? <CloseIcon onClick={handleDelete} sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} /> : <SearchRoundedIcon sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} />}
+                                                </InputAdornment>
+                                            ),
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    {window.location.pathname === '/package-view' &&
+                                                        <ChevronLeftRoundedIcon onClick={() => navigate('/search')} sx={{ ml: -1.5, width: 40, height: 40, color: buttonStyles.icons_Color }} />
+                                                    }
+                                                </InputAdornment>
+                                            ),
+                                            style: { textAlign: 'center', borderRadius: '15px' },
+                                        }}
+                                    />
+                                </ThemeProvider>
                             </FormControl>
-
                         </Box>
                     )
                 )}
-
-
             </Media>
 
             <Media
@@ -76,7 +174,6 @@ export default function Search(props) {
                 {(item => (
                     item.large && (
                         <Box
-
                             component="form"
                             sx={{
                                 '& > :not(style)': { m: 2, mt: 6 },
@@ -85,23 +182,27 @@ export default function Search(props) {
                             autoComplete="off"
                         >
                             <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
-                                <OutlinedInput
+                                <ThemeProvider theme={customTheme(outerTheme)}>
+                                    <TextField
+                                        fullWidth
+                                        onChange={handleChange}
+                                        inputRef={inputRef}
 
-                                    onChange={handleChange}
-                                    inputRef={inputRef} // Use inputRef here
-                                    value={query}
-                                    id="outlined-adornment-password"
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                edge="end"
-                                            >
-                                                <CloseIcon onClick={() => handleDelete(' ')} />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                />
+                                        placeholder='Search..'
+                                        size='medium'
+
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <CloseIcon />
+                                                </InputAdornment>
+                                            ),
+                                            style: { textAlign: 'center', borderRadius: '15px' },
+                                        }}
+                                    />
+                                </ThemeProvider>
+
+
                             </FormControl>
 
                         </Box>
