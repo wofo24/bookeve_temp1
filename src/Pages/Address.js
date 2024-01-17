@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Card } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { useSelector, useDispatch } from 'react-redux';
-import { openAdd_Address, closeAdd_Address, openDelete_Address, get_all_address } from '../Redux/actions/actions';
+import { openAdd_Address, open_help, openDelete_Address, get_all_address } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
 import Media from 'react-media';
 export default function Address(props) {
@@ -30,16 +30,15 @@ export default function Address(props) {
     }
     useEffect(() => {
         dispatch(get_all_address())
-    }, [all_address.posted_address_result])
+    }, [all_address.posted_address_result, all_address.delete_address_result, all_address.update_address_result])
 
-    const handle_Delete_Dialog = () => {
-        dispatch(openDelete_Address())
+    const handle_Delete_Dialog = (id) => {
+        dispatch(openDelete_Address(id))
     }
 
     const handleChange = (event) => {
         setSelectedAddress(event.target.value);
     };
-    console.log(all_address)
     return (
         <Container sx={{ marginTop: '20px', my: 1 }}>
             <Media queries={{
@@ -48,7 +47,7 @@ export default function Address(props) {
                 large: '(min-width: 1025px)',
             }}>
                 {(item) => item.large && (
-                    <>
+                    <Box my={4}>
 
                         <Grid container>
 
@@ -59,7 +58,7 @@ export default function Address(props) {
                                 </Box>
                             </Grid>
                             <Grid xs={6} textAlign={'end'}>
-                                <Button variant='outlined'> <b>Help</b></Button>
+                                <Button variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
 
                             </Grid>
                         </Grid>
@@ -93,10 +92,10 @@ export default function Address(props) {
                                         </Grid>
 
                                         <Grid xs={2} p={2} >
-                                            <DeleteIcon onClick={handle_Delete_Dialog} style={{ color: buttonStyles.buttonColor }} />
+                                            <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: buttonStyles.buttonColor }} />
                                             <br />
                                             <br />
-                                            <EditIcon autoFocus onClick={() => handleClickOpen('update_address')} style={{ color: buttonStyles.buttonColor }} />
+                                            <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: buttonStyles.buttonColor }} />
                                         </Grid>
                                     </Grid>
                                 </Card>
@@ -112,7 +111,7 @@ export default function Address(props) {
 
 
                         </Container>
-                    </>
+                    </Box>
                 )}
 
             </Media>
@@ -165,12 +164,12 @@ export default function Address(props) {
                                         </Grid>
 
                                         <Grid xs={2} p={2} >
-                                          
-                                            <DeleteIcon onClick={handle_Delete_Dialog} style={{ color: buttonStyles.buttonColor }} />
+
+                                            <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: buttonStyles.buttonColor }} />
                                             <br />
                                             <br />
-                                           
-                                            <EditIcon autoFocus onClick={()=>handleClickOpen(item)} style={{ color: buttonStyles.buttonColor, marginTop: '20px' }} />
+
+                                            <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: buttonStyles.buttonColor, marginTop: '20px' }} />
 
 
                                         </Grid>

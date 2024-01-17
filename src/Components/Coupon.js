@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Paper, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TextField from '@mui/material/TextField';
 import { apply_coupon } from '../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { close_coupon_dialog, open_t_c_dialog, click_to_apply_coupon } from '../Redux/actions/actions';
+import { close_coupon_dialog, get_all_coupons, post_coupon_code, open_t_c_dialog, click_to_apply_coupon } from '../Redux/actions/actions';
 import Media from 'react-media';
 import Slide from '@mui/material/Slide';
 
@@ -36,9 +36,20 @@ export default function Coupon() {
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     const [toShow, setToShow] = useState()
     const textStyle = useSelector((state) => state.apply_new_theme)
+    const coupons = useSelector((state) => state.coupons)
+    const card_data = useSelector((state) => state.card_data)
 
-    // const buttonStyles = useSelector((state) => state.apply_new_theme)
+    useEffect(() => {
+        if (card_data && Array.isArray(card_data)) {
+            const packageIdsString = card_data?.map((item) => item?.package_id).join(',') || '';
+            if (open) {
+                dispatch(get_all_coupons(packageIdsString));
+            }
+        }
+    }, [open, card_data]);
+    
 
+    console.log(coupons?.get_coupon_success, 'this is getted token')
 
     const handleChange = (event) => {
         const { value, name } = event.target
@@ -62,6 +73,7 @@ export default function Coupon() {
         setFormData({ ...formData, coupon: data });
         handleClose()
     }
+
     const MainApply = (data) => {
         if (!formData || !formData.coupon || formData.coupon === '') {
             setFormErrors({ ...formErrors, coupon: 'You have to enter a coupon code first!' });
@@ -69,29 +81,15 @@ export default function Coupon() {
             setFormErrors({ ...formErrors, coupon: 'All characters must be in upper case!' });
         } else {
             setFormErrors({ ...formErrors, coupon: '' });
-            ApplyCoupon(data);
+            dispatch(post_coupon_code(formData.coupon))
         }
     }
+    useEffect(() => {
+        setFormErrors({ ...formErrors, coupon: coupons?.post_coupon_fail?.response?.data?.error });
+        console.log('coupon')
+    }, [coupons?.post_coupon_fail])
 
-    const CouponArray = [
-        {
-            id: 2,
-            discount: '15%',
-            in_which_order: 'Second',
-            save_price: '1300',
-            coupon_code: 'SDF34R',
-            description: "Cras mattis consectetur purus sit amet fermentum. Cras justo odio dapibus ac facilisis in egestas eget quam. Morbi leo risus, porta acconsectetur ac, vestibulum at eros"
-        },
-        {
-            id: 3,
-            discount: '45%',
-            in_which_order: 'First',
-            save_price: '1200',
-            coupon_code: 'SDF34G',
-            description: "Cras mattis consectetur purus sit amet fermentum. Cras justo odio dapibus ac facilisis in egestas eget quam. Morbi leo risus, porta acconsectetur ac, vestibulum at eros"
-        },
-    ]
-
+    
     return (
         <div>
             <Media
@@ -157,7 +155,7 @@ export default function Coupon() {
                                                 <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Apply</Button>
                                             </Box>
                                             <Box sx={{ margin: 'auto' }}>
-                                                {CouponArray.map((item) => (
+                                            {coupons?.get_coupon_success?.data && coupons?.get_coupon_success?.data.length !== 0 ? coupons?.get_coupon_success?.data?.map((item) => (
                                                     <Paper fullWidth elevation={2} sx={{ my: 2 }}>
                                                         <Grid container sx={{
                                                             width: 415,
@@ -169,9 +167,10 @@ export default function Coupon() {
                                                         }}>
                                                             <Grid xs={8} textAlign={'start'}>
                                                                 <Box sx={{}}>
+                                                                    <Typography><b style={{ fontSize: '16px' }}>{item.title}</b></Typography>
                                                                     <Typography><b style={{ fontSize: '16px' }}>{item.discount} off </b>on {item.in_which_order} order</Typography>
-                                                                    <Typography sx={{ color: '#76c265', fontSize: '14px' }} >Save &#8377;{item.save_price} for this order</Typography>
-                                                                    <span style={{ fontSize: '15px' }} ><b>Coupon Code: </b> <text style={{ color: 'green' }}>{item.coupon_code}</text></span><br />
+                                                                    <Typography sx={{ color: '#76c265', fontSize: '14px' }} >Save &#8377;{item.discount_value} for this order</Typography>
+                                                                    <span style={{ fontSize: '15px' }} ><b>Coupon Code: </b> <text style={{ color: 'green' }}>{item.code}</text></span><br />
                                                                     <Button size='small' onClick={() => dispatch(open_t_c_dialog(item.description))}>View T&C</Button>
                                                                 </Box>
                                                             </Grid>
@@ -184,7 +183,7 @@ export default function Coupon() {
 
                                                         </Grid>
                                                     </Paper>
-                                                ))}
+                                                )) : 'No any coupon available'}
                                             </Box>
 
 
@@ -235,9 +234,9 @@ export default function Coupon() {
                             >
                                 <CloseIcon />
                             </IconButton>
-                            <Box py={0} px={2} sx={{overflow: 'scroll', minHeight: 350}}>
+                            <Box py={0} px={2} sx={{ overflow: 'scroll',  minHeight: 350 }}>
                                 <Box>
-                                    <Typography textAlign='left' fontSize={26} sx={{ fontFamily: textStyle.fontFamily }}>Apply Coupon</Typography>
+                                    <Typography textAlign='left' mb={2} fontSize={26} sx={{ fontFamily: textStyle.fontFamily }}>Apply Coupon</Typography>
                                     {/* <Typography  variant='h5' ><b>Coupon</b></Typography>  */}
                                     <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>
                                         <span className='ThemeColorYellow'>
@@ -268,24 +267,23 @@ export default function Coupon() {
 
                                                 <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Apply</Button>
                                             </Box>
-                                            <Box sx={{ overflow: 'scroll' }}>
+                                            <Box sx={{ margin: 'auto' }}>
 
-
-                                                {CouponArray.map((item) => (
-                                                    <Paper fullWidth elevation={2} sx={{ my: 1 }}>
+                                                {(coupons?.get_coupon_success?.data?.length !== 0) ? coupons?.get_coupon_success?.data?.map((item) => (
+                                                    <Paper fullWidth elevation={2} sx={{ my: 2 }}>
                                                         <Grid container sx={{
-                                                            width: 320,
+                                                            width: 415,
                                                             borderRadius: "10px",
                                                             p: 2,
-                                                            margin: 'auto',
                                                             backdropFilter: buttonStyles.child_backdropFilter,
                                                             background: buttonStyles.child_bg,
                                                         }}>
                                                             <Grid xs={8} textAlign={'start'}>
                                                                 <Box sx={{}}>
-                                                                    <Typography><b style={{ fontSize: '16px' }}>{item.discount} off </b>on {item.in_which_order} order</Typography>
-                                                                    <Typography sx={{ color: '#76c265', fontSize: '14px' }} >Save &#8377;{item.save_price} for this order</Typography>
-                                                                    <span style={{ fontSize: '15px' }} ><b>Coupon Code: </b> <text style={{ color: 'green' }}>{item.coupon_code}</text></span><br />
+                                                                    <Typography><span style={{ fontSize: '16px' }}>{item.title}</span></Typography>
+                                                                    <Typography><span style={{ fontSize: '16px' }}> &#8377; {item.discount} </span></Typography>
+                                                                    <Typography sx={{ color: '#76c265', fontSize: '14px' }} >Save &#8377; {item.discount_value}</Typography>
+                                                                    <span style={{ fontSize: '15px' }} >Coupon Code: <text style={{ color: 'green' }}>{item.code}</text></span><br />
                                                                     <Button size='small' onClick={() => dispatch(open_t_c_dialog(item.description))}>View T&C</Button>
                                                                 </Box>
                                                             </Grid>
@@ -295,9 +293,14 @@ export default function Coupon() {
                                                                     <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} onClick={() => ApplyCoupon(item.coupon_code)}>{item.coupon_code === formData.coupon ? 'Applied' : 'Apply'}</Button>
                                                                 </Box>
                                                             </Grid>
+
                                                         </Grid>
                                                     </Paper>
-                                                ))}
+                                                ))
+                                                    :
+                                                    <Typography variant='h6' color={'error'}>
+                                                        "No coupons available"</Typography>
+                                                }
                                             </Box>
                                         </Grid>
                                     </form>

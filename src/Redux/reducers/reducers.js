@@ -4,7 +4,31 @@ import * as type from '../actions/actionTypes';
 const savedTheme = JSON.parse(localStorage.getItem('theme'));
 
 const initialState = {
-  posts: [],
+  posts: {
+    loading: false,
+    data: [],
+    error: [],
+  },
+  public_information: {
+    loading: false,
+    data: [],
+    error: []
+  },
+  useLogged_in: {
+    loading: false,
+    data: [],
+    error: []
+  },
+  active_user: {
+    loading: false,
+    data: [],
+    error: []
+  },
+  otp_resend: {
+    loading: false,
+    data: [],
+    error: [],
+  },
   error: null,
   dialog_open: false,
   repeat_open: false,
@@ -68,12 +92,12 @@ const initialState = {
   help_dialog: false,
   apply_onClick_coupon: '',
   snack_bar_message: [],
-  public_information: null,
-  useLogged_in: [],
+
+
   useSign_Up: [],
   user_id: null,
-  active_user: [],
-  otp_resend: [],
+
+
   unknown_user_success_error: [],
   get_my_profile_success_error: [],
   get_my_profile_update_success_error: [],
@@ -94,62 +118,75 @@ const initialState = {
     data_success: [],
     data_fail: [],
     open: false
-  }
-
+  },
+  reschedule: [],
+  show_in_details_checkout: [],
+  coupons: {
+    get_coupon_success: [],
+    get_coupon_fail: [],
+    post_coupon_success: [],
+    post_coupon_fail: [],
+  },
+  pathname: '',
+  update_in_post: 0,
+  cart_count: 0,
+  sign_out: false
 };
 
 
 const rootReducer = (state = initialState, action) => {
   switch (action.type) {
+    case type.FETCH_LOADING:
+      return { ...state, posts: { ...state.posts, loading: true } };
     case type.FETCH_DATA:
-      return { ...state, posts: action.payload, error: null };
+      return { ...state, posts: { ...state.posts, data: action.payload, loading: false } };
     case type.FETCH_ERROR:
-      return { ...state, error: action.payload };
-    case type.PUBLIC_INFORMATION_SUCCESS:
-      return { ...state, public_information: action.payload }
-    case type.PUBLIC_INFORMATION_ERROR:
-      return { ...state, error: action.payload }
-    case type.INCREMENT:
-      return {
-        ...state, posts: state?.posts?.map((category) => ({
-          ...category,
-          packages: category?.packages?.map((packageItem) => ({
-            ...packageItem, count: packageItem?.id === action.payload ? packageItem?.count + 1 : packageItem?.count,
-          })),
-        })),
-      };
-    case type.DECREMENT:
-      return {
-        ...state, posts: state.posts.map((category) => ({
-          ...category,
-          packages: category?.packages?.map((packageItem) => ({
-            ...packageItem,
-            count:
-              packageItem.id === action.payload
-                ? Math.max(packageItem.count - 1, 0)
-                : packageItem.count,
-          })),
-        })),
-      };
+      return { ...state, posts: { ...state.posts, error: action.payload, loading: false } };
 
+    // ------------------------------>
+    case type.PUBLIC_INFORMATION_LOADING:
+      return { ...state, public_information: { ...state.public_information, loading: true } }
+    case type.PUBLIC_INFORMATION_SUCCESS:
+      return { ...state, public_information: { ...state.public_information, loading: false, data: action.payload } }
+    case type.PUBLIC_INFORMATION_ERROR:
+      return { ...state, public_information: { ...state.public_information, loading: false, error: action.payload } }
     case type.OPEN_DIALOG:
       return { ...state, dialog_open: false, dialog_data: action.payload };
+
+
+    case type.USER_LOGIN_LOADING:
+      return { ...state, useLogged_in: { ...state.useLogged_in, loading: true } }
     case type.USER_LOGIN:
-      return { ...state, useLogged_in: action.payload };
+      return { ...state, useLogged_in: { ...state.useLogged_in, loading: false, data: action.payload } }
+    case type.USER_LOGIN_ERROR:
+      return { ...state, useLogged_in: { ...state.useLogged_in, loading: false, error: action.payload } }
+      
+// -------------------------------> OTP
+    case type.SUCCESS_OTP_LOADING:
+      return { ...state, otp_resend: { ...state.otp_resend, loading: true } };
+    case type.SUCCESS_OTP:
+      return { ...state, otp_resend: { ...state.data, loading: false, data: action.payload } };
+    case type.FAIL_OTP:
+      return { ...state, otp_resend: { ...state.data, loading: false, error: action.payload } };
+
+
     case type.OPEN_CHECKOUT_LIST:
       return { ...state, open_check: { ...state.open_check, data_success: action.payload, open: true } };
     case type.CLOSE_CHECKOUT_LIST:
       return { ...state, open_check: { ...state.open_check, data_fail: action.payload, open: false } };
     case type.ACTIVATE_USER:
-      return { ...state, active_user: action.payload };
+      return { ...state, active_user: { ...state.active_user, loading: true, data: action.payload } }
+    case type.ACTIVATE_USER_ERROR:
+      return { ...state, active_user: { ...state.active_user, loading: true, error: action.payload } }
+    case type.ACTIVATE_USER_LOADING:
+      return { ...state, active_user: { ...state.active_user, loading: true, error: action.payload } }
+
+    // return { ...state, active_user: action.payload };
     case type.STORE_ID:
       return { ...state, user_id: action.payload };
     case type.USER_SIGNUP:
       return { ...state, useSign_Up: action.payload };
-    case type.SUCCESS_OTP:
-      return { ...state, otp_resend: action.payload };
-    case type.FAIL_OTP:
-      return { ...state, otp_resend: action.payload };
+
     case type.UNKNOWN_USER_SUCCESS:
       return { ...state, unknown_user_success_error: action.payload };
     case type.UNKNOWN_USER_ERROR:
@@ -188,19 +225,28 @@ const rootReducer = (state = initialState, action) => {
 
     case type.OPEN_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: true, open_address_data: action.payload };
-    case type.ADD_OR_UPDATE_ITEM:
-      return { ...state }
     // unknown bag ----------------------------------------------------------------------------------------------------->
 
     case type.GET_ALL_CART_DATA:
       return { ...state, card_data: action.payload };
-    case type.GET_ALL_CART_DATA_ERROR:
-      return { ...state, card_data_error: action.payload };
     case type.UPDATE_IN_BAG:
       return { ...state, card_data: action.payload };
+    case type.GET_ALL_CART_DATA_ERROR:
+      return { ...state, card_data_error: action.payload };
 
     // unknown bag ----------------------------------------------------------------------------------------------------->
 
+
+    // coupons------------------------------------------------------------------------------------------------------------>
+    case type.POST_COUPON_CODE_SUCCESS:
+      return { ...state, coupons: { ...state.coupons, post_coupon_success: action.payload } }
+    case type.POST_COUPON_CODE_FAIL:
+      return { ...state, coupons: { ...state.coupons, post_coupon_fail: action.payload } }
+    case type.GET_ALL_COUPONS_SUCCESS:
+      return { ...state, coupons: { ...state.coupons, get_coupon_success: action.payload } }
+    case type.GET_ALL_COUPONS_FAIL:
+      return { ...state, coupons: { ...state.coupons, get_coupon_fail: action.payload } }
+    // coupons------------------------------------------------------------------------------------------------------------>
     case type.CLOSE_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: false, open_address_data: action.payload };
     case type.OPEN_DELETE_ADDRESS_DIALOG:
@@ -241,9 +287,11 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, all_address_dialog: true };
     case type.HIDE_ALL_ADDRESS:
       return { ...state, all_address_dialog: false };
+
     case type.OPEN_SCHEDULE_DIALOG:
-      return { ...state, open_schedule: true };
+      return { ...state, open_schedule: true, reschedule: action.payload };
     case type.CLOSE_SCHEDULE_DIALOG:
+
       return { ...state, open_schedule: false };
     case type.OPEN_PROFILE_EDIT:
       return { ...state, profile_edit: true };
@@ -256,6 +304,8 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, selected_date_time: action.payload };
     case type.OPEN_AGREE_BOX:
       return { ...state, agree_box: true };
+    case type.SHOW_ORDER_IN_DETAILS_SUCCESS:
+      return { ...state, show_in_details_checkout: action.payload };
     case type.CLOSE_AGREE_BOX:
       return { ...state, agree_box: false };
     case type.OPEN_T_C_DIALOG:
@@ -266,12 +316,26 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, help_dialog: true };
     case type.CLOSE_HELP:
       return { ...state, help_dialog: false };
+    case type.STORE_PATHNAME:
+      return { ...state, pathname: action.payload };
 
     case type.PROCEED_TO_PAY_OPEN:
       return { ...state, proceed_to_pay: true };
     case type.PROCEED_TO_PAY_CLOSE:
       return { ...state, proceed_to_pay: false };
+    case type.ADD_IN_FETCH_POST:
+      return { ...state, update_in_post: state.update_in_post + 1 };
+    case type.SUB_IN_FETCH_POST:
+      return { ...state, update_in_post: state.update_in_post - 1 };
+    // ////////////////////////////////////
+    case type.STORE_CART_COUNT:
+      return { ...state, cart_count: action.payload };
 
+    case type.CONFIRM_LOGOUT_TRUE:
+      return { ...state, sign_out: true };
+    case type.CONFIRM_LOGOUT_FALSE:
+      return { ...state, sign_out: false };
+    // ////////////////////////////////////
     case type.APPLY_COUPON_ON_CLICK:
       return { ...state, apply_onClick_coupon: action.payload };
     case type.READY_FOR_CHECK_OUT_DATA:
@@ -296,6 +360,23 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state, check_out_data: { ...state.check_out_data, check_out_get_list_success: action.payload }
       }
+    case type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_success: action.payload }
+      }
+    case type.CANCEL_BOOKING_SUCCESS:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_success: action.payload }
+      }
+    case type.CANCEL_BOOKING_FAIL:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_fail: action.payload }
+      }
+    case type.RESCHEDULE_BOOKING_DATA_FAIL:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_fail: action.payload }
+      }
+
     case type.CHECKED_OUT_LIST_FAIL:
       return {
         ...state, check_out_data: { ...state.check_out_data, check_out_get_list_fail: action.payload }

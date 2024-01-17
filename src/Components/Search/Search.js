@@ -58,8 +58,6 @@ export default function Search(props) {
         }
     }, [])
 
-    console.log(searched_quarry)
-
     const customTheme = (outerTheme) =>
         createTheme({
             components: {

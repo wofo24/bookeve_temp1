@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import Coupon from '../Components/Coupon'
+import CircularProgress from '@mui/material-next/CircularProgress';
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from '@mui/material';
@@ -10,7 +10,7 @@ import { CardMedia } from '@mui/material';
 import empty_cart from '../images/empty_cart.png'
 import Proceed_to_pay from '../Components/Dialog/Proceed_to_pay';
 import { useSelector, useDispatch } from 'react-redux';
-import { store_data_for_check_out, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
+import { store_data_for_check_out, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -25,14 +25,26 @@ export default function Cart() {
   const dispatch = useDispatch()
   const buttonStyles = useSelector((state) => state?.apply_new_theme)
   const selected_address = useSelector((state) => state.selected_address)
-  const selected_date_time = useSelector((state) => state.selected_date_time)
+  const selected_date_time_var = useSelector((state) => state.selected_date_time)
+  const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
+  const posts = useSelector((state) => state.posts)
+  const update_in_post = useSelector((state) => state.update_in_post)
   const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
+  const check_out_data = useSelector(state => state.check_out_data)
   const card_data = useSelector((state) => state.card_data)
-  const card_data_error = useSelector((state) => state.card_data_error)
+  const [data, setData] = React.useState()
+  const [disable, setDisable] = React.useState(true)
+  const [Load, setLoad] = useState(false)
+
   const totalPackagePrice = []
+  const token = Cookies.get('token')
 
   const handleOpen = () => {
-    dispatch(open_coupon_dialog())
+    if (token) {
+      dispatch(open_coupon_dialog())
+    } else {
+      navigate('/login')
+    }
   }
   const show_allAddress = () => {
     if (Array.isArray(card_data) && card_data.length > 0) {
@@ -43,33 +55,106 @@ export default function Cart() {
       }
     }
     else {
-      alert('You have no any package in your Cart!')
+      dispatch(show_message(true, 'Add packages first!', 'error'))
     }
   }
   const openSchedule = () => {
-    dispatch(open_schedule_dialog())
+    if (Array.isArray(card_data) && card_data.length > 0) {
+      if (Cookies.get('token')) {
+        dispatch(open_schedule_dialog())
+      } else {
+        navigate('/login')
+      }
+    }
+    else {
+      dispatch(show_message(true, 'Add packages first!', 'error'))
+    }
+
   }
 
   const handleIncrease = (id) => {
     dispatch(increment_in_bag(id))
-    window.location.reload(true)
+    dispatch(add_fetch_post())
+    dispatch(get_all_cart_data())
+    setLoad(true)
   };
 
   const handelDecrease = (id) => {
+    dispatch(add_fetch_post())
     dispatch(decrement_in_bag(id))
-    window.location.reload(true)
+    dispatch(get_all_cart_data())
+    setLoad(true)
   }
 
   useEffect(() => {
-    dispatch(get_all_cart_data())
-  }, [dispatch])
+    setTimeout(() => {
+      dispatch(get_all_cart_data())
+      setLoad(false)
+    }, 1000);
+  }, [dispatch, update_in_post, posts])
 
+  useEffect(() => { dispatch(store_pathname(window.location.pathname)) }, [])
 
 
   useEffect(() => {
     const ready_for_check_out = Array.isArray(card_data) && card_data.length > 0 ? card_data?.map((item) => ({ "id": item.package_id, "quantity": item.quantity })) : []
     dispatch(store_data_for_check_out(ready_for_check_out))
   }, [card_data])
+
+  const dateObject = new Date(selected_date_time_var);
+  const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+  const formattedDate = dateObject.toLocaleDateString('en-US', options);
+
+  React.useEffect(() => {
+    const dat = check_out_data?.cart_item_for_check_out_address_id?.map((item) => item)
+    const data = {
+      "address": dat[0]?.id,
+      "appointment_date": selected_date_time_var,
+      ...(Coupon_Code_value ? { "coupon": Coupon_Code_value } : {}),
+      "packages": check_out_data.cart_item_for_check_out_bag_data
+    };
+
+    setData(data)
+  }, [selected_address, selected_date_time_var])
+
+
+  const HandleCheckOut = () => {
+    if (selected_address) {
+      if (selected_date_time_var) {
+        dispatch(checked_out_call(data))
+      }
+      else {
+        dispatch(show_message(true, 'Please select address!', 'error'))
+      }
+    } else {
+      dispatch(show_message(true, 'Please select schedule!', 'error'))
+    }
+  }
+  React.useEffect(() => {
+    if (check_out_data?.check_out_success.success) {
+      dispatch(clear_all_cart_data())
+      dispatch(selected_date_time())
+      setTimeout(() => {
+        navigate('/successful')
+        window.location.reload(true)
+      }, 500);
+    }
+
+  }, [check_out_data?.check_out_success])
+
+  const clear_cart = () => {
+    dispatch(add_fetch_post())
+    dispatch(clear_all_cart_data())
+  }
+  useEffect(() => {
+    if (selected_address) {
+      if (selected_date_time_var) {
+        setDisable(false)
+      }
+    }
+
+  }, [selected_address, selected_date_time_var])
+
 
   return (
     <div>
@@ -100,41 +185,57 @@ export default function Cart() {
                     </Box>
                   </Grid>
                   <Grid container xs={5} justifyContent="flex-end">
-                    <Button color='error' onClick={() => dispatch(clear_all_cart_data())}>
+                    <Button color='error' onClick={() => clear_cart()}>
                       <span style={{ textUnderlinePosition: 'under', borderBottom: '1px solid red', textTransform: 'capitalize', fontSize: '15px' }}> Clear Cart</span>
                     </Button>
                   </Grid>
                 </Grid>
-                <hr />
-                {Array.isArray(card_data) && card_data.length > 0 ? (
+                {Array.isArray(card_data) && card_data?.length > 0 ? (
 
                   card_data?.map((item) => {
-                    const total_price = item.original_price * item.quantity;
+                    const total_price = item?.original_price * item?.quantity;
                     totalPackagePrice.push(total_price);
-                    if (item.quantity !== 0) {
+                    if (item?.quantity !== 0) {
                       return (
                         <Grid container mt={2} mb={1} key={item.id}>
+                          <hr />
                           <Grid xs={6}>
                             <Typography>{item?.package}</Typography>
                             <Typography>Price: &#8377; {total_price}</Typography>
                           </Grid>
-                          <Grid xs={6} textAlign={'end'}>
-                            <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
-                              {item?.quantity <= 1 ? (
-                                <DeleteIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id)} />
-                              ) : (
-                                <RemoveIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id)} />
-                              )}
-                              {item?.quantity}
-                              <AddIcon sx={{ mx: 1 }} onClick={() => handleIncrease(item.package_id)} />
-                            </Button>
-                          </Grid>
+                          {Load ?
+                            <Grid xs={6} textAlign={'end'}>
+                              <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
+                                <CircularProgress
+                                  color="tertiary"
+                                  variant="indeterminate"
+                                  sx={{
+                                    width: '24px',
+                                    height: '24px',
+                                  }}
+                                />
+                              </Button>
+                            </Grid>
+                            :
+                            <Grid xs={6} textAlign={'end'}>
+                              <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
+                                {item?.quantity <= 1 ? (
+                                  <DeleteIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id)} />
+                                ) : (
+                                  <RemoveIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id)} />
+                                )}
+                                {item?.quantity}
+                                <AddIcon sx={{ mx: 1 }} onClick={() => handleIncrease(item.package_id)} />
+                              </Button>
+                            </Grid>
+                          }
+
                         </Grid>
                       );
                     }
                   })
                 ) : (
-                  <Box>
+                  <Box my={1.5}>
                     <CardMedia
                       component="img"
                       alt="green iguana"
@@ -143,34 +244,39 @@ export default function Cart() {
                     <Typography color={'error'} variant='h6' mt={2} textAlign={"center"}>Empty Cart</Typography>
                   </Box>
                 )}
-                <hr />
-                <Grid container>
-                  <Grid xs={6}>Item total</Grid>
-                  <Grid xs={6} textAlign={'end'}> &#8377;{totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)}</Grid>
-                </Grid>
-                <Grid container>
-                  <Grid xs={6}>Item discount</Grid>
-                  <Grid xs={6} textAlign={'end'}>  &#8377; --</Grid>
-                </Grid>
-                <Grid container>
-                  <Grid xs={6}>Tax and fee</Grid>
-                  <Grid xs={6} textAlign={'end'}> &#8377; --</Grid>
-                </Grid>
-                <hr />
-                <Grid container>
-                  <Grid xs={6}><b>
-                    <Typography>
+                {Array.isArray(card_data) && card_data.length > 0 &&
+                  <>
+                    <hr />
+                    <Grid container>
+                      <Grid xs={6}>Item total</Grid>
+                      <Grid xs={6} textAlign={'end'}> &#8377;{totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)}</Grid>
+                    </Grid>
+                    <Grid container>
+                      <Grid xs={6}>Item discount</Grid>
+                      <Grid xs={6} textAlign={'end'}>  &#8377; --</Grid>
+                    </Grid>
+                    <Grid container>
+                      <Grid xs={6}>Tax and fee</Grid>
+                      <Grid xs={6} textAlign={'end'}> &#8377; --</Grid>
+                    </Grid>
+                    <hr />
+                    <Grid container>
+                      <Grid xs={6}><b>
+                        <Typography>
 
-                      Total
-                    </Typography>
-                  </b>
+                          Total
+                        </Typography>
+                      </b>
 
-                  </Grid>
-                  <Grid xs={6} textAlign={'end'}><b><Typography>
-                    &#8377; {(totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)).toLocaleString('en-IN')}
+                      </Grid>
+                      <Grid xs={6} textAlign={'end'}><b><Typography>
+                        &#8377; {(totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)).toLocaleString('en-IN')}
 
-                  </Typography></b></Grid>
-                </Grid>
+                      </Typography></b></Grid>
+                    </Grid>
+                  </>
+                }
+
               </Card>
               {Coupon_Code_value && (
                 <Box sx={{
@@ -224,9 +330,16 @@ export default function Cart() {
               )}
 
               <Box px={4} pb={4} pt={2}>
-                <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={show_allAddress}>
-                  Proceed
-                </Button>
+                {Array.isArray(card_data) && card_data.length > 0 ? (
+                  <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={show_allAddress}>
+                    Proceed
+                  </Button>
+                ) : (
+                  <Button variant='contained' disabled fullWidth >
+                    Proceed
+                  </Button>
+                )}
+
               </Box>
               <Proceed_to_pay />
             </>
@@ -257,7 +370,7 @@ export default function Cart() {
                       </Grid>
                       <Grid xs={10}>
                         <Typography><b>Sending booking details to</b></Typography>
-                        <span>+91 8423174102</span>
+                        <span>+91 {get_my_profile_success_error?.phone_number ? get_my_profile_success_error?.phone_number : 'Please login first!'}</span>
                       </Grid>
                     </Grid>
                     <hr />
@@ -266,26 +379,58 @@ export default function Cart() {
                         <FmdGoodIcon />
                       </Grid>
                       <Grid xs={10}>
-                        <Typography><b>Address</b>: {selected_address}</Typography>
+                        <Typography mt={.2}><b>Address :</b> {selected_address}  </Typography>
+                      </Grid>
+                      <Grid xs={1}>
+                        <Typography>{selected_address && <Button onClick={show_allAddress} sx={{ textTransform: 'capitalize', textAlign: 'end' }}>Edit</Button>} </Typography>
                       </Grid>
                     </Grid>
                     <Box>
                       <hr />
-                      <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth size='large' onClick={show_allAddress}> Select an Address</Button>
-                      <hr />
+                      {selected_address ? "" :
+                        <>
+                          <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth size='large' onClick={show_allAddress}> Select an Address</Button>
+                          <hr />
+                        </>
+                      }
+
                     </Box>
                     <Grid container my={1}>
                       <Grid xs={1} textAlign={'center'}>
                         <AccessTimeFilledIcon />
                       </Grid>
                       <Grid xs={10}>
-                        <Typography><b>Slot</b> {selected_date_time} </Typography>
+                        <Typography><b>Slot :</b> {formattedDate} </Typography>
+                      </Grid>
+                      <Grid xs={1}>
+                        <Typography>{formattedDate !== 'Invalid Date' && <Button onClick={openSchedule} sx={{ textTransform: 'capitalize', textAlign: 'end' }}>Edit</Button>} </Typography>
                       </Grid>
                     </Grid>
                     <Box>
                       <hr />
-                      <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth size='large' onClick={openSchedule}> Slot</Button>
-                      <hr />
+                      {formattedDate !== 'Invalid Date' ? "" :
+                        <>
+                          {selected_address &&
+                            <>
+                              <Button
+                            style={{
+                              background: buttonStyles.buttonColor,
+                              color: buttonStyles.buttonText,
+                            }}
+                            variant='contained'
+                            fullWidth
+                            size='large'
+                            onClick={openSchedule}
+                          >
+                            Slot
+                          </Button>
+                            </>
+                          }
+                         
+                        </>
+                      }
+
+
                     </Box>
                     <Grid container my={3}>
                       <Grid xs={1} textAlign={'center'}>
@@ -297,7 +442,13 @@ export default function Cart() {
                     </Grid>
                     <Box>
                       <hr />
-                      <Button onClick={() => navigate('/payment')} style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth size='large'> Payment</Button>
+                      <Button onClick={HandleCheckOut}
+                        style={{
+                          background: disable ? '#D1D1D1' : buttonStyles.buttonColor,
+                          color: disable ? 'white' : buttonStyles.buttonText,
+                        }}
+                        disabled={disable}
+                        variant='contained' fullWidth size='large'> Payment</Button>
                       <hr />
                     </Box>
                     <Box >

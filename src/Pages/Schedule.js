@@ -45,6 +45,7 @@ export default function Schedule() {
     const year = currentDate.getFullYear();
     const month2 = currentDate.getMonth();
     const lastDateOfJuly2023 = getLastDateOfMonth(year, month2);
+    
     const [selectedMonth, setSelectedMonth] = useState(() => {
         const current = selectedDate.getDate()
         if (lastDateOfJuly2023 === current) {

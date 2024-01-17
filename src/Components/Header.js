@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
@@ -18,36 +17,61 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { Link } from 'react-router-dom';
 import StoreRoundedIcon from '@mui/icons-material/StoreRounded';
 import { useSelector, useDispatch } from 'react-redux';
-import { get_public_information } from '../Redux/actions/actions';
+import { get_my_profile, store_count, open_sign_out_dialog } from '../Redux/actions/actions';
 import Media from 'react-media';
+import Cookies from 'js-cookie';
 
 export default function Header() {
-    const pages = ['All orders', 'Address', 'Sign out'];
-    const settings = ['Search', 'Offers', 'Profile', 'Cart'];
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [anchorElUser, setAnchorElUser] = React.useState(null);
     const navigate = useNavigate()
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const public_info = useSelector((state) => state?.public_information?.data)
-    const error = useSelector((state) => state.error)
-    const open = Boolean(anchorEl);
     const dispatch = useDispatch()
+    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const card_data = useSelector((state) => state.card_data)
+    const cart_count = useSelector((state) => state.cart_count)
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const public_info = useSelector((state) => state?.public_information?.data?.data)
+    const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
+    // const active_user = useSelector((state) => state.active_user)
+    const token = Cookies.get('token')
+    const open = Boolean(anchorEl);
+
+    useEffect(() => {
+        let count = 0; 
+        if (Array.isArray(card_data)) {
+            card_data.forEach((item) => {
+                count += +item.quantity;
+            });
+            dispatch(store_count(count))
+        }
+    }, [card_data]);
+
+
+    // console.log(active_user, 'this is active use')
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
+    useEffect(() => {
+        dispatch(get_my_profile())
+    }, [token])
+
+    // const handleOpenNavMenu = (event) => {
+    //     setAnchorElNav(event.currentTarget);
+    // };
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
-    useEffect(() => {
-        dispatch(get_public_information())
-    }, [])
+    const HandleLogOut = () => {
+        // const Logout = () => {
+
+        dispatch(open_sign_out_dialog())
+
+
+        // }
+    }
 
     return (
         <>
@@ -66,8 +90,8 @@ export default function Header() {
                     }}>
                         <Container maxWidth="xl">
                             <Toolbar disableGutters sx={{ m: 'auto' }}>
-                                <Box sx={{ height: '40px', width: '40px', display: { xs: 'flex', md: 'none' } }}>
-                                    {public_info && public_info.company_logo ? (<img src={public_info.company_logo} style={{ height: '40px', width: '40px', marginRight: '9px' }} />) :
+                                <Box onClick={() => navigate('/')} sx={{ height: '40px', width: '40px', display: { xs: 'flex', md: 'none' } }}>
+                                    {public_info && public_info?.company_logo ? (<img src={public_info?.company_logo} style={{ height: '40px', width: '40px', marginRight: '9px' }} />) :
                                         (
                                             <>
                                                 <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -97,7 +121,7 @@ export default function Header() {
                                 </Typography>
                                 <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: buttonStyles.icons_Color }}>
 
-                                    <Menu
+                                    {/* <Menu
                                         id="menu-appbar"
                                         anchorEl={anchorElNav}
                                         anchorOrigin={{
@@ -118,8 +142,8 @@ export default function Header() {
                                         }}
                                     >
                                         <Button color='success' onClick={() => navigate('/indexTheme')}>Try Theme</Button>
-                                    </Menu>
-                                    <IconButton
+                                    </Menu> */}
+                                    {/* <IconButton
                                         size="large"
                                         aria-label="account of current user"
                                         aria-controls="menu-appbar"
@@ -128,11 +152,11 @@ export default function Header() {
                                         color="inherit"
                                     >
                                         <MenuIcon />
-                                    </IconButton>
+                                    </IconButton> */}
                                 </Box>
                                 <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Box sx={{ height: '40px', width: '40px' }}>
+                                        <Box onClick={() => navigate('/')} sx={{ height: '40px', width: '40px' }}>
                                             {public_info && public_info.company_logo ? (<img src={public_info.company_logo} style={{ height: '50px', width: '50px', marginRight: '9px' }} />) :
                                                 (
                                                     <>
@@ -170,13 +194,12 @@ export default function Header() {
                                         >
                                             <Button
                                                 onClick={handleCloseNavMenu}
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/search' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '25px', textTransform: 'capitalize', alignItems: 'center' }}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/search' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize', alignItems: 'center' }}
                                             >
                                                 <SearchRoundedIcon fontSize='large' sx={{ mx: 1 }} /> Search
                                             </Button>
                                         </Link>
-
-                                        <Link
+                                        {token ? <Link
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <Button
@@ -186,29 +209,41 @@ export default function Header() {
                                                 aria-expanded={open ? 'true' : undefined}
                                                 onClick={handleClick}
 
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/profile' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '25px', textTransform: 'capitalize' }}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/profile' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
                                             >
-                                                <AccountCircleOutlinedIcon fontSize='large' sx={{ mx: 1 }} />  Ashu
+                                                <AccountCircleOutlinedIcon fontSize='large' sx={{ mx: 1 }} />{get_my_profile_success_error?.name}
                                             </Button>
-                                        </Link>
+                                        </Link> :
+                                            <>
+                                                <Link to={'/login'}
+                                                    style={{ textDecoration: 'none' }}
+                                                >
+                                                    <Button
+                                                        id="basic-button"
 
-
+                                                        sx={{ mx: 3, my: 2, color: window.location.pathname === '/profile' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
+                                                    >
+                                                        <AccountCircleOutlinedIcon fontSize='large' sx={{ mx: 1 }} />  Login
+                                                    </Button>
+                                                </Link>
+                                            </>
+                                        }
                                         <Link
-                                            // key={page}
                                             to={`/cart`}
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <Button
                                                 onClick={handleCloseNavMenu}
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/cart' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '25px', textTransform: 'capitalize' }}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/cart' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
                                             >
-                                                <Badge badgeContent={4} color="success">
+                                                <Badge badgeContent={cart_count} color="success">
                                                     <LocalMallOutlinedIcon fontSize='large' sx={{ mx: 1, mt: .2 }} />  Cart
                                                 </Badge>
                                             </Button>
                                         </Link>
                                     </Box>
                                 </Box>
+
                                 <Box>
                                     <Menu
 
@@ -228,7 +263,7 @@ export default function Header() {
                                             }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }}  >Profile</MenuItem></Link>
                                             <Link to='/all-booking' style={{ textDecoration: 'none', color: 'inherit', }}>  <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }} >My Booking</MenuItem></Link>
                                             <Link to='/indexTheme' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }} >Theme</MenuItem></Link>
-                                            <Link to='/' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500, color: 'red' }} >Logout</MenuItem></Link>
+                                            <Link to='#' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={HandleLogOut} style={{ fontSize: '20px', fontWeight: 500, color: 'red' }} >Logout</MenuItem></Link>
                                         </Box>
                                     </Menu>
                                 </Box>
@@ -255,7 +290,7 @@ export default function Header() {
                         <Container maxWidth="xl">
                             <Toolbar disableGutters >
                                 <Box sx={{ height: '40px', width: '40px', display: { xs: 'flex', md: 'none' } }}>
-                                    {public_info && public_info.company_logo ? (<img src={public_info.company_logo} style={{ height: '40px', width: '40px', marginRight: '9px' }} />) :
+                                    {public_info && public_info?.company_logo ? (<img src={public_info.company_logo} style={{ height: '40px', width: '40px', marginRight: '9px' }} />) :
                                         (
                                             <>
                                                 <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -284,7 +319,7 @@ export default function Header() {
                                 </Typography>
                                 <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: buttonStyles.icons_Color }}>
 
-                                    <Menu
+                                    {/* <Menu
                                         id="menu-appbar"
                                         anchorEl={anchorElNav}
                                         anchorOrigin={{
@@ -315,7 +350,7 @@ export default function Header() {
                                         color="inherit"
                                     >
                                         <MenuIcon />
-                                    </IconButton>
+                                    </IconButton> */}
                                 </Box>
                                 <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

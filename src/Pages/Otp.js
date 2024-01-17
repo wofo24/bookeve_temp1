@@ -9,7 +9,7 @@ import { Container } from '@mui/system';
 import Cookies from 'js-cookie';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
-
+import Loading from '../Components/LoadingIcon/Loading'
 export default function Otp() {
 
     const customTheme = (outerTheme) =>
@@ -77,9 +77,12 @@ export default function Otp() {
     const outerTheme = useTheme();
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     const user_id = useSelector((state) => state.user_id)
-    const active_user_Response = useSelector((state) => state.active_user)
-    const otp_resend_response = useSelector((state) => state.otp_resend)
-    const [formData, setFormData] = useState({ otp: '5555' })
+    const active_user_Response = useSelector((state) => state.active_user.data)
+    const loading = useSelector((state) => state.active_user.loading)
+    const otp_resend_response = useSelector((state) => state.otp_resend.data)
+    const loading_oto_send = useSelector((state) => state.otp_resend.loading)
+    const pathname = useSelector((state) => state.pathname)
+    const [formData, setFormData] = useState([])
     const [formErrors, setFormErrors] = useState({ "error": undefined });
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -95,25 +98,29 @@ export default function Otp() {
             dispatch(activate(formData, user_id))
         }
         else {
-            console.log(formData, user_id, 'user id form data')
-        }
-    };
-    const handleReSendOTP = (event) => {
-        event.preventDefault();
-        if (user_id !== undefined) {
-            dispatch(re_send_otp(user_id))
-        }
-        else {
-            alert('fail resend otp')
-            console.log(user_id, 'not any user id')
+            // console.log(formData, user_id, 'user id form data')
         }
     };
 
+    const handleReSendOTP = (event) => {
+        event.preventDefault();
+        if (user_id !== undefined) {
+            dispatch(re_send_otp(user_id, formData))
+        }
+        else {
+            alert('fail resend otp')
+
+        }
+    };
 
     useEffect(() => {
         if (active_user_Response?.success === true) {
             Cookies.set('token', active_user_Response?.data?.access);
-            navigate('/');
+            Cookies.remove('unknown_user_token')
+            setTimeout(() => {
+                // window.location.reload(true)
+                navigate(`${pathname ? pathname : '/'}`);
+            }, 1000);
         } else {
             setFormErrors({ 'error': active_user_Response.error });
         }
@@ -121,14 +128,14 @@ export default function Otp() {
 
     useEffect(() => {
         if (otp_resend_response?.success === true) {
-            console.log(otp_resend_response.data)
-            // Cookies.set('token', otp_resend_response?.data?.access);
             navigate('/');
         }
-    }, [otp_resend_response]);
+    }, []);
 
     return (
         <div>
+            {loading || loading_oto_send && <Loading />}
+            {/* {loading_oto_send && <Loading />} */}
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -207,7 +214,7 @@ export default function Otp() {
                         color: buttonStyles.child_div_text,
                     }}>
                         <Box>
-                            <Typography textAlign='left'  fontSize={46}>OTP</Typography>
+                            <Typography textAlign='left' fontSize={46}>OTP</Typography>
                             <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>
                                 <span className='ThemeColorYellow'>
                                     Welcome Back!

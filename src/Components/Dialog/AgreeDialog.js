@@ -7,13 +7,12 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { useDispatch, useSelector } from 'react-redux'
-import { open_agree_dialog, close_agree_dialog } from '../../Redux/actions/actions';
+import { close_agree_dialog } from '../../Redux/actions/actions';
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function AlertDialogSlide() {
-  // const [open, setOpen] = React.useState(false);
   const open = useSelector((state) => state.agree_box)
   const dispatch = useDispatch()
   const buttonStyles = useSelector((state) => state.apply_new_theme)

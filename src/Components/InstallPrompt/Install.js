@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,13 +22,6 @@ const InstallPrompt = () => {
         setState({ ...state, open: false });
     };
 
-    const buttons = (
-        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Button onClick={handleClick({ vertical: 'top', horizontal: 'center' })}>
-                Install App
-            </Button>
-        </Box>
-    );
 
     const [promptEvent, setPromptEvent] = useState(null);
     const value = localStorage.getItem('trig')
@@ -42,10 +36,6 @@ const InstallPrompt = () => {
         } else {
             console.log('nothing')
         }
-
-
-
-
     }, []);
 
     const handleInstallClick = () => {
@@ -91,19 +81,19 @@ const InstallPrompt = () => {
     }, []);
 
     return (
-        <>
-            <Box sx={{ width: 500, zIndex: 99999 }}>
-                {!installed ? (<Snackbar
-                    action={action}
-                    anchorOrigin={{ vertical, horizontal }}
-                    open={open}
-                    onClose={handleClose}
-                    message="Install app"
-                    key={vertical + horizontal}
-                />) : null}
 
-            </Box>
-        </>
+        <Box sx={{ width: 500, zIndex: 99999 }}>
+            {!installed ? (<Snackbar
+                action={action}
+                anchorOrigin={{ vertical, horizontal }}
+                open={open}
+                onClose={handleClose}
+                message="Install app"
+                key={vertical + horizontal}
+            />) : null}
+
+        </Box>
+
     );
 };
 

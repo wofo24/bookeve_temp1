@@ -16,7 +16,6 @@ export default function Open_delete() {
   const handleDelete = () => {
     dispatch(delete_address(address_id))
     dispatch(closeDelete_Address())
-
   };
   const handleClose = () => {
     dispatch(closeDelete_Address())

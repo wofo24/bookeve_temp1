@@ -1,11 +1,7 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-// import {useDispatch, useSelector} from 'react-redux'
 import Cookies from 'js-cookie';
-import Location from './Tracker/Location';
-import axios from 'axios';
 import Open_delete from './Components/Dialog/Open_delete';
-import DeviceInfo from './Tracker/DeviceInfo';
 import Header from './Components/Header';
 import DialogComponent from './Components/Dialog/DialogComponent'
 import Repeat from './Components/Dialog/Repeat';
@@ -38,7 +34,8 @@ import ViewT_C from './Components/Dialog/ViewT_C'
 import Help from './Components/Dialog/Help';
 import Snack from './Components/SnackBar/Snack'
 import Search_page from './Components/Search/Search_page';
-import { Unknown_user_entered } from './Redux/actions/actions';
+import { Unknown_user_entered, get_public_information } from './Redux/actions/actions';
+import Logout from './Components/Dialog/Logout';
 const Cart = React.lazy(() => import('./Pages/Cart'))
 const Signup = React.lazy(() => import('./Pages/Signup'))
 const Login = React.lazy(() => import('./Pages/Login'))
@@ -50,23 +47,30 @@ const Address = React.lazy(() => import('./Pages/Address'))
 const Payment = React.lazy(() => import('./Pages/Payment'))
 
 function App() {
-
   const New_themes = useSelector((state) => state.apply_new_theme)
-
-  const dispatch = useDispatch()
+  const pathname = useSelector((state) => state.pathname)
   const unknown_user_token = Cookies.get('unknown_user_token')
   const token = Cookies.get('token')
+  const dispatch = useDispatch()
+
 
   useEffect(() => {
     if (unknown_user_token || token) {
       if (token) {
-        Cookies.remove('unknown_user_token')
+        Cookies.remove('unknown_user_token');
+
       }
     } else {
-      dispatch(Unknown_user_entered())
+      dispatch(Unknown_user_entered());
     }
-  }, [token, unknown_user_token])
 
+
+  }, [token, unknown_user_token, dispatch]);
+
+  useEffect(() => {
+    dispatch(get_public_information())
+  }, [])
+  console.log(New_themes, 'this is new theme')
   return (
     <body style={New_themes} >
       <style>{New_themes.keyframesStyle}</style>
@@ -75,6 +79,7 @@ function App() {
         <DialogComponent />
         <DetailsDlg />
         <Repeat />
+        <Logout/>
         <Open_delete />
         <Add_address />
         <All_Address />
@@ -118,29 +123,31 @@ function App() {
                   <Route path="/booking-details" element={<Booking_details />} />
                   <Route path="/all-booking" element={<All_Bookings />} />
                 </Routes>
-              ) : <Container>
-                <Routes>
-                  <Route path="/" element={<Suspense fallback={<div><Loading /></div>}><Home /></Suspense>} />
-                  <Route path="/cart" element={<Suspense fallback={<div><Loading /></div>}><Cart /></Suspense>} />
-                  <Route path="/signup" element={<Suspense fallback={<div><Loading /></div>}><Signup /></Suspense>} />
-                  <Route path="/login" element={<Suspense fallback={<div><Loading /></div>}><Login /></Suspense>} />
-                  <Route path="/otp" element={<Suspense fallback={<div><Loading /></div>}><Otp /></Suspense>} />
-                  <Route path="/profile" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Profile} /></Suspense>} />
-                  <Route path="/schedule" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Schedule} /></Suspense>} />
-                  <Route path="/address" element={<Suspense fallback={<div><Loading /></div>}><Address /></Suspense>} />
-                  <Route path="/payment" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Payment} /></Suspense>} />
-                  <Route path="/coupon" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Coupon} /></Suspense>} />
-                  <Route path="/successful" element={<Suspense fallback={<div><Loading /></div>}><Protected component={SuccessFull} /></Suspense>} />
-                  <Route path="/track-order" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Track_order} /></Suspense>} />
-                  <Route path="/address-profile" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Address_profile} /></Suspense>} />
-                  <Route path="/all-order" element={<Suspense fallback={<div><Loading /></div>}><Protected component={All_order} /></Suspense>} />
-                  <Route path="/indexTheme" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Index} /></Suspense>} />
-                  <Route path="/package-view" element={<PackageView />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/all-booking" element={<All_Bookings />} />
-                  <Route path="/booking-details" element={<Booking_details />} />
-                </Routes>
-              </Container>}
+              ) :
+
+                <Container>
+                  <Routes>
+                    <Route path="/" element={<Suspense fallback={<div><Loading /></div>}><Home /></Suspense>} />
+                    <Route path="/cart" element={<Suspense fallback={<div><Loading /></div>}><Cart /></Suspense>} />
+                    <Route path="/signup" element={<Suspense fallback={<div><Loading /></div>}><Signup /></Suspense>} />
+                    <Route path="/login" element={<Suspense fallback={<div><Loading /></div>}><Login /></Suspense>} />
+                    <Route path="/otp" element={<Suspense fallback={<div><Loading /></div>}><Otp /></Suspense>} />
+                    <Route path="/profile" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Profile} /></Suspense>} />
+                    <Route path="/schedule" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Schedule} /></Suspense>} />
+                    <Route path="/address" element={<Suspense fallback={<div><Loading /></div>}><Address /></Suspense>} />
+                    <Route path="/payment" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Payment} /></Suspense>} />
+                    <Route path="/coupon" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Coupon} /></Suspense>} />
+                    <Route path="/successful" element={<Suspense fallback={<div><Loading /></div>}><Protected component={SuccessFull} /></Suspense>} />
+                    <Route path="/track-order" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Track_order} /></Suspense>} />
+                    <Route path="/address-profile" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Address_profile} /></Suspense>} />
+                    <Route path="/all-order" element={<Suspense fallback={<div><Loading /></div>}><Protected component={All_order} /></Suspense>} />
+                    <Route path="/indexTheme" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Index} /></Suspense>} />
+                    <Route path="/package-view" element={<PackageView />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/all-booking" element={<All_Bookings />} />
+                    <Route path="/booking-details" element={<Booking_details />} />
+                  </Routes>
+                </Container>}
             </>
           )}
         </Media>

@@ -38,14 +38,13 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function All_Address() {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const [selectedAddress, setSelectedAddress] = useState('');
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     const open = useSelector((state) => state.all_address_dialog)
     const all_address = useSelector((state) => state.all_address)
     const textStyle = useSelector((state) => state.apply_new_theme)
-    const selected = useSelector((state) => state.selected_address)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const [selectedAddress, setSelectedAddress] = useState('');
 
     const handleClose = () => {
         dispatch(hide_all_address())
@@ -66,7 +65,7 @@ export default function All_Address() {
     const handelSelect_address = () => {
         if (selectedAddress) {
             dispatch(selected_address(selectedAddress))
-            dispatch(open_schedule_dialog())
+            dispatch(open_schedule_dialog([], { reschedule: false, title: "Select date & Time" }))
             handleClose()
         }
         else {
@@ -75,8 +74,12 @@ export default function All_Address() {
     }
 
     useEffect(() => {
-        dispatch(get_all_address())
-    }, [all_address?.posted_address_result])
+        if (open) {
+            dispatch(get_all_address())
+        }
+
+        console.log(all_address?.delete_address_result, 'delete result')
+    }, [all_address?.posted_address_result, all_address?.delete_address_result])
 
     useEffect(() => {
         if (all_address?.all_address?.data?.length > 0) {
@@ -93,14 +96,19 @@ export default function All_Address() {
     }, [selectedAddress])
 
     useEffect(() => {
-        dispatch(selected_address(selectedAddress))
-    }, [])
+        if (open) {
+            dispatch(get_all_address())
+            dispatch(selected_address(selectedAddress))
+        }
+    }, [open])
 
     useEffect(() => {
         if (all_address?.all_address?.data?.length > 0) {
             setSelectedAddress(all_address.all_address.data[0]?.address);
         }
     }, [all_address]);
+
+    console.log(all_address.all_address, 'this is all address')
 
     return (
         <div>
@@ -160,7 +168,7 @@ export default function All_Address() {
                                                         <Grid container mx={1}>
                                                             <Grid xs={9} p={1}>
                                                                 <FormLabel id="demo-radio-buttons-group-label" sx={{ display: 'flex' }}>
-                                                                    <Box py={7}>
+                                                                    <Box py={1}>
                                                                         <FormControlLabel
                                                                             control={
                                                                                 <Radio checked={selectedAddress === item?.address}
@@ -172,22 +180,19 @@ export default function All_Address() {
 
                                                                     </Box>
                                                                     <Box py={1}>
-                                                                        <Typography fontWeight={500}>House Number: {item.house_no}</Typography>
-                                                                        <Typography fontWeight={500}>City: {item.city}</Typography>
-                                                                        <Typography fontWeight={500}>State: {item.state}</Typography>
-                                                                        <Typography fontWeight={500}>Mobile number: {item.mobile_number}</Typography>
-                                                                        <Typography fontWeight={500}>Address Type: {item.address_type}</Typography>
-                                                                        <Typography fontWeight={500}>Postal Code: {item.postal_code}</Typography>
+                                                                        <Typography fontWeight={500}>{item.address_type}: {item.address}</Typography>
                                                                     </Box>
                                                                 </FormLabel>
                                                             </Grid>
-                                                            <Grid xs={3} p={1} py={5} >
-                                                                <Button sx={{ width: '7px' }} fullWidth onClick={() => handle_Delete_Dialog(item.id)} variant="contained" startIcon={<DeleteIcon />} style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} autoFocus >
-                                                                </Button>
+                                                            <Grid xs={2} p={1} py={0} >
+                                                                <DeleteIcon style={{ color: buttonStyles.buttonColor }} onClick={() => handle_Delete_Dialog(item.id)} />
+                                                                {/* <Button sx={{ width: '7px' }} fullWidth  variant="contained" startIcon={} style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} autoFocus >
+                                                                </Button> */}
                                                                 <br />
                                                                 <br />
-                                                                <Button fullWidth sx={{ width: '7px' }} variant="contained" style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} autoFocus onClick={() => handleClickOpen(item)} startIcon={<EditIcon />}>
-                                                                </Button>
+                                                                <EditIcon style={{ color: buttonStyles.buttonColor }} onClick={() => handleClickOpen(item)} />
+                                                                {/* <Button fullWidth sx={{ width: '7px' }} variant="contained" autoFocus onClick={() => handleClickOpen(item)} startIcon={}>
+                                                                </Button> */}
                                                             </Grid>
                                                         </Grid>
                                                     </Card>
@@ -245,47 +250,46 @@ export default function All_Address() {
                                 </IconButton>
                                 <DialogContent dividers>
                                     <Container sx={{ marginTop: '20px', width: 550, px: 50 }} >
-                                        {all_address?.all_address?.data?.map((item, index) => (
-                                            <Card sx={{ my: 2, borderRadius: '10px' }}>
-                                                <Grid container mx={1}>
-                                                    <Grid xs={10} p={1}>
-                                                        <FormLabel id="demo-radio-buttons-group-label" sx={{ display: 'flex' }}>
-                                                            <Box mt={3}>
-                                                                <FormControl sx={{ display: 'flex' }}>
-                                                                    <RadioGroup
-                                                                        aria-labelledby="demo-radio-buttons-group-label"
-                                                                        value={selectedAddress}
-                                                                        onChange={handleChange}
-                                                                        name="radio-buttons-group"
-                                                                    >
-                                                                        <FormControlLabel value={`${item.house_num},${item.city},${item.state},${item.address_type}`} control={<Radio />} />
-                                                                    </RadioGroup>
-                                                                </FormControl>
-                                                            </Box>
-                                                            <Box>
-                                                                <Typography fontWeight={500}>House Number: {item.house_num}</Typography>
-                                                                <Typography fontWeight={500}>City: {item.city}</Typography>
-                                                                <Typography fontWeight={500}>State: {item.state}</Typography>
-                                                                <Typography fontWeight={500}>Address Type: {item.address_type}</Typography>
-                                                            </Box>
-                                                        </FormLabel>
+                                        <RadioGroup
+                                            aria-labelledby="demo-radio-buttons-group-label"
+                                            value={selectedAddress}
+                                            onChange={handleChange}
+                                            name="radio-buttons-group"
+                                        >
+                                            {all_address?.all_address?.count ? all_address?.all_address?.data?.map((item, index) => (
+                                                <Card sx={{ my: 1, borderRadius: '10px' }} key={item.id}>
+                                                    <Grid container mx={1}>
+                                                        <Grid xs={9} p={1}>
+                                                            <FormLabel id="demo-radio-buttons-group-label" sx={{ display: 'flex' }}>
+                                                                <Box py={1}>
+                                                                    <FormControlLabel
+                                                                        control={
+                                                                            <Radio checked={selectedAddress === item?.address}
+                                                                                sx={{ color: buttonStyles.buttonColor, '&.Mui-checked': { color: buttonStyles.buttonColor } }}
+                                                                                value={item?.address}
+                                                                            />
+                                                                        }
+                                                                    />
+
+                                                                </Box>
+                                                                <Box py={1}>
+                                                                    <Typography fontWeight={500}>{item.address_type}: {item.address}</Typography>
+                                                                </Box>
+                                                            </FormLabel>
+                                                        </Grid>
+                                                        <Grid xs={2} p={1} py={0} >
+                                                            <DeleteIcon style={{ color: buttonStyles.buttonColor }} onClick={() => handle_Delete_Dialog(item.id)} />
+                                                            <br />
+                                                            <br />
+                                                            <EditIcon style={{ color: buttonStyles.buttonColor }} onClick={() => handleClickOpen(item)} />
+
+                                                        </Grid>
                                                     </Grid>
-
-                                                    <Grid xs={2} p={2} >
-                                                        {/* <Button  variant="contained" startIcon={} style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} autoFocus >
-                                                        </Button> */}
-                                                        <DeleteIcon onClick={handle_Delete_Dialog} style={{ color: buttonStyles.buttonColor }} />
-                                                        <br />
-                                                        <br />
-                                                        {/* <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} startIcon={ }>
-                                                        </Button> */}
-                                                        <EditIcon autoFocus onClick={handleClickOpen} style={{ color: buttonStyles.buttonColor }} />
-
-
-                                                    </Grid>
-                                                </Grid>
-                                            </Card>
-                                        ))}
+                                                </Card>
+                                            )) : <Box textAlign={'center'} py={2}>
+                                                <Typography color={'error'} variant='subtitle'>No any address!</Typography>
+                                            </Box>}
+                                        </RadioGroup>
                                         <Box mx={10}>
                                             <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor, }} fullWidth onClick={handleClickOpen} variant='outlined' sx={{ my: 1 }}>Add Address <AddIcon /> </Button>
 

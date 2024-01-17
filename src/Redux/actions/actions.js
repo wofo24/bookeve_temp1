@@ -6,17 +6,21 @@ import Cookies from 'js-cookie';
 export const fetchPosts = () => {
   const unknown_token = Cookies.get('unknown_user_token')
   const token = Cookies.get('token')
-
   const config = {
     method: 'get',
     url: `${Root_url}/web/v1/category-packages/?status=True&home=True`,
     params: {
-      token: unknown_token ? unknown_token : token,
-    }
-  };
+      token: unknown_token,
+    },
+    headers: {}
 
+  };
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return async (dispatch) => {
     try {
+      dispatch({ type: type.FETCH_LOADING });
       const response = await axios(config);
       const filter_Data = response?.data?.data?.filter((item) => (item?.packages && item?.packages.length > 0));
 
@@ -34,6 +38,7 @@ export const get_public_information = () => {
   };
 
   return async (dispatch) => {
+    dispatch({ type: type.PUBLIC_INFORMATION_LOADING })
     try {
       const response = await axios(config);
       dispatch({ type: type.PUBLIC_INFORMATION_SUCCESS, payload: response.data });
@@ -41,10 +46,6 @@ export const get_public_information = () => {
       dispatch({ type: type.PUBLIC_INFORMATION_ERROR, payload: error });
     }
   };
-}
-export const add_package_count = (data) => {
-  return { type: type.ADD_OR_UPDATE_ITEM, payload: data };
-
 }
 
 export const incrementPackageCount = (packageId) => {
@@ -62,15 +63,17 @@ export const login = (data) => {
     data: data
   };
   return async (dispatch) => {
+    dispatch({ type: type.USER_LOGIN_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.USER_LOGIN, payload: response.data });
     } catch (error) {
-      dispatch({ type: type.USER_LOGIN, payload: error.response.data.error });
+      dispatch({ type: type.USER_LOGIN_ERROR, payload: error.response.data.error });
     }
   };
 
 };
+
 export const signup = (data) => {
   const config = {
     method: 'post',
@@ -89,21 +92,19 @@ export const signup = (data) => {
 
 export const activate = (data, id) => {
   const unknown_token = Cookies.get('unknown_user_token')
-  const token = Cookies.get('token')
-  console.log(token, 'Token', unknown_token, 'unknown token')
   const config = {
     method: 'post',
     url: `${Root_url}/web/v1/auth/${id}/activate/`,
     data: data,
     params: {
-      token: unknown_token ? unknown_token : token,
+      token: unknown_token,
     }
   };
-
   return async (dispatch) => {
     try {
+      dispatch({ type: type.ACTIVATE_USER_LOADING });
       const response = await axios(config);
-
+      Cookies.remove('unknown_user_token')
       dispatch({ type: type.ACTIVATE_USER, payload: response.data });
     } catch (error) {
       dispatch({ type: type.ACTIVATE_USER, payload: error.response.data.error });
@@ -113,12 +114,11 @@ export const activate = (data, id) => {
 
 export const re_send_otp = (id) => {
   const config = {
-    method: 'post',
-    url: `${Root_url}/web/v1/auth/${id}/activate/`,
-    data: { otp: '5555' }
+    method: 'get',
+    url: `${Root_url}/web/v1/auth/${id}/resend_otp/`,
   };
-  console.log(config, 'config')
   return async (dispatch) => {
+    dispatch({ type: type.SUCCESS_OTP_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.SUCCESS_OTP, payload: response.data });
@@ -143,7 +143,8 @@ export const Unknown_user_entered = () => {
   };
 };
 
-export const get_my_profile = (token) => {
+export const get_my_profile = () => {
+  const token = Cookies.get('token')
   const config = {
     method: 'get',
     url: `${Root_url}/web/v1/user-details/my_profile/`,
@@ -151,8 +152,6 @@ export const get_my_profile = (token) => {
       'Authorization': `Bearer ${token}`
     }
   };
-
-  console.log(config, 'this is')
 
   return async (dispatch) => {
     try {
@@ -198,7 +197,7 @@ export const openDialog = (data) => {
 
 export const update_in_bag = (data) => {
   const unknown_token = Cookies.get('unknown_user_token')
-  const token = Cookies.get('unknown_user_token')
+  const token = Cookies.get('token')
   const config = {
     method: 'post',
     url: `${Root_url}/web/v1/cart/`,
@@ -219,19 +218,21 @@ export const update_in_bag = (data) => {
 
 export const increment_in_bag = (id) => {
   const unknown_token = Cookies.get('unknown_user_token')
-  const token = Cookies.get('unknown_user_token')
+  const token = Cookies.get('token')
   const config = {
     method: 'get',
     url: `${Root_url}/web/v1/cart/package/${id}/increment/`,
     params: {
-      token: token ? token : unknown_token,
+      token: unknown_token,
     },
+    headers: {},
   };
-
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return async (dispatch) => {
     try {
       const response = await axios(config);
-      // console.log(response, 'this is response')
       dispatch({ type: type.UPDATE_IN_BAG, payload: response.data });
     } catch (error) {
       dispatch({ type: type.UPDATE_IN_BAG, payload: error.response.data.error });
@@ -241,35 +242,44 @@ export const increment_in_bag = (id) => {
 
 export const decrement_in_bag = (id) => {
   const unknown_token = Cookies.get('unknown_user_token')
-  const token = Cookies.get('unknown_user_token')
+  const token = Cookies.get('token')
   const config = {
     method: 'get',
     url: `${Root_url}/web/v1/cart/package/${id}/decrement/`,
     params: {
-      token: token ? token : unknown_token,
+      token: unknown_token,
     },
+    headers: {},
   };
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return async (dispatch) => {
     try {
       const response = await axios(config);
-      // console.log(response, 'this is response')
       dispatch({ type: type.UPDATE_IN_BAG, payload: response.data });
     } catch (error) {
       dispatch({ type: type.UPDATE_IN_BAG, payload: error.response.data.error });
     }
   };
 };
+export const get_all_cart_data = () => {
+  const unknown_token = Cookies.get('unknown_user_token');
+  const token = Cookies.get('token');
 
-export const get_all_cart_data = (h) => {
-  const unknown_token = Cookies.get('unknown_user_token')
-  const token = Cookies.get('token')
-  const config = {
+  let config = {
     method: 'get',
     url: `${Root_url}/web/v1/cart/`,
     params: {
-      token: token ? token : unknown_token,
+      token: unknown_token,
     },
+    headers: {},
   };
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return async (dispatch) => {
     try {
       const response = await axios(config);
@@ -287,15 +297,61 @@ export const clear_all_cart_data = () => {
     method: 'get',
     url: `${Root_url}/web/v1/cart/clear_cart/`,
     params: {
-      token: token ? token : unknown_token,
+      token: unknown_token,
     },
+    headers: {}
   };
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return async (dispatch) => {
     try {
       const response = await axios(config);
       dispatch({ type: type.GET_ALL_CART_DATA, payload: response?.data?.data?.cart_cart_item });
     } catch (error) {
       dispatch({ type: type.GET_ALL_CART_DATA, payload: error.response.data });
+    }
+  };
+};
+
+export const reschedule_booking_date = (id, data) => {
+  const firstItem = id && id.length > 0 ? id[0] : null;
+  const token = Cookies.get('token')
+  const config = {
+    method: 'patch',
+    url: `${Root_url}/web/v1/checkout/${firstItem}/reschedule/`,
+    headers: { 'Authorization': 'Bearer ' + token },
+    data: { "appointment_date": data }
+  };
+  return async (dispatch) => {
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY, payload: response?.data?.data?.cart_cart_item });
+    } catch (error) {
+      console.error('Error:', error.response.data);
+      dispatch({ type: type.RESCHEDULE_BOOKING_DATA_FAIL, payload: error.response.data });
+    }
+
+  };
+};
+
+export const booking_cancel = (id) => {
+  const firstItem = id && id.length > 0 ? id[0] : null;
+  const token = Cookies.get('token')
+  const config = {
+    method: 'patch',
+    url: `${Root_url}/web/v1/checkout/${firstItem}/mark_cancel/`,
+    headers: {
+      'Authorization': 'Bearer ' + token
+    },
+  };
+  return async (dispatch) => {
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.CANCEL_BOOKING_SUCCESS, payload: response?.data?.data?.cart_cart_item });
+    } catch (error) {
+      dispatch({ type: type.CANCEL_BOOKING_FAIL, payload: error?.response?.data });
     }
   };
 };
@@ -321,6 +377,7 @@ export const closeView = () => {
 };
 
 export const protectRoute = (data) => {
+  // console.log(data)
   return { type: type.PROTECTED_ROUTE, payload: data };
 };
 
@@ -396,15 +453,13 @@ export const delete_address = (id) => {
     }
   };
 
-  console.log(config)
   return async (dispatch) => {
     try {
-      const response = await axios(config);
-      console.log(response, 'this is')
-      dispatch({ type: type.POST_ADDRESS, payload: response.data });
+      await axios(config);
+      dispatch({ type: type.DELETE_ADDRESS, payload: true });
     } catch (error) {
       console.log(error)
-      dispatch({ type: type.POST_ADDRESS, payload: error });
+      dispatch({ type: type.DELETE_ADDRESS, payload: error });
     }
   };
 };
@@ -607,6 +662,7 @@ export const get_all_theme = () => {
   return async (dispatch) => {
     try {
       const response = await axios(config);
+
       dispatch({ type: type.GET_THEMES, payload: response.data.data });
     } catch (error) {
       dispatch({ type: type.GET_THEMES, payload: error.message });
@@ -635,8 +691,9 @@ export const hide_all_address = () => {
   return { type: type.HIDE_ALL_ADDRESS };
 };
 
-export const open_schedule_dialog = () => {
-  return { type: type.OPEN_SCHEDULE_DIALOG };
+export const open_schedule_dialog = (id, name) => {
+  const data = { id, name }
+  return { type: type.OPEN_SCHEDULE_DIALOG, payload: data };
 };
 
 export const close_schedule_dialog = () => {
@@ -700,8 +757,23 @@ export const open_check_out = (data) => {
   return { type: type.OPEN_CHECKOUT_LIST, payload: data };
 };
 
+export const to_show_in_details_checkout = (data) => {
+  return { type: type.SHOW_ORDER_IN_DETAILS_SUCCESS, payload: data };
+};
+// /////////////////////////////////////////////////////////////////////////////
 export const close_check_out = () => {
   return { type: type.CLOSE_CHECKOUT_LIST };
+};
+export const store_pathname = (path) => {
+  return { type: type.STORE_PATHNAME, payload: path };
+};
+
+export const add_fetch_post = () => {
+  return { type: type.ADD_IN_FETCH_POST };
+};
+
+export const sub_fetch_post = () => {
+  return { type: type.SUB_IN_FETCH_POST };
 };
 
 
@@ -714,7 +786,6 @@ export const store_data_for_check_out_address_id = (data) => {
 };
 
 export const checked_out_call = (data) => {
-  console.log(data)
   const token = Cookies.get('token')
   const config = {
     method: 'post',
@@ -735,11 +806,11 @@ export const checked_out_call = (data) => {
 
 };
 
-export const checked_out_get = () => {
+export const checked_out_get = (offset, limit) => {
   const token = Cookies.get('token')
   const config = {
     method: 'get',
-    url: `${Root_url}/web/v1/checkout/`,
+    url: `${Root_url}/web/v1/checkout/?offset=${offset}&limit=${limit}`,
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -752,10 +823,89 @@ export const checked_out_get = () => {
       dispatch({ type: type.CHECKED_OUT_LIST_FAIL, payload: error });
     }
   };
+};
+
+
+export const get_all_coupons = (id) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'get',
+    url: `${Root_url}/web/v1/coupons/`,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    params: {
+      "packages": id
+    }
+  };
+  return async (dispatch) => {
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.GET_ALL_COUPONS_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.GET_ALL_COUPONS_FAIL, payload: error });
+    }
+  };
+
+};
+
+export const post_coupon_code = (code, data) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'post',
+    url: `${Root_url}/web/v1/coupons/apply_coupon/?coupon_code=${code}`,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+  return async (dispatch) => {
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.POST_COUPON_CODE_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.POST_COUPON_CODE_FAIL, payload: error });
+    }
+  };
+
+};
+
+export const store_count = (data) => {
+  return { type: type.STORE_CART_COUNT, payload: data }
 
 };
 
 
+export const open_sign_out_dialog = () => {
+  return { type: type.CONFIRM_LOGOUT_TRUE }
+
+};
+
+
+export const close_sign_out_dialog = () => {
+  return { type: type.CONFIRM_LOGOUT_FALSE }
+
+};
+
+
+// export const PAGINATION_API_CALL_SUCCESS = (offset, limit) => {
+//   const token = Cookies.get('token')
+//   const config = {
+//     method: 'post',
+//     url: `${Root_url}/web/v1/checkout/?offset=${offset}&limit=${limit}`,
+//     headers: {
+//       'Authorization': `Bearer ${token}`
+//     }
+//   }
+//   return async (dispatch) => {
+//     try {
+//       const response = await axios(config);
+//       dispatch({ type: type.PAGINATION_API_CALL_SUCCESS, payload: response?.data });
+//     } catch (error) {
+//       dispatch({ type: type.PAGINATION_API_CALL_FAIL, payload: error });
+//     }
+//   };
+
+// };
 
 export const show_message = (value, message, messageType) => {
   return { type: type.SHOW_MESSAGE, payload: { open: value, message: message, MessageType: messageType } };

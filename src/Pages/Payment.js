@@ -11,7 +11,7 @@ import { Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Media from 'react-media';
-import { checked_out_call, clear_all_cart_data } from '../Redux/actions/actions';
+import { checked_out_call, clear_all_cart_data, selected_date_time } from '../Redux/actions/actions';
 
 export default function Payment() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -33,18 +33,31 @@ export default function Payment() {
   }, [])
 
   const submitData = () => {
-    console.log(data, 'this is')
     dispatch(checked_out_call(data))
   }
 
   React.useEffect(() => {
+    // navigate('/successful', { replace: true, state: null });
+    window.history.replaceState(null, '/', window.location.href);
+    console.log(window.history)
+}, []);
+
+  React.useEffect(() => {
+    navigate( { state: null });
+}, []);
+  
+  React.useEffect(() => {
     if (check_out_data?.check_out_success.success) {
       dispatch(clear_all_cart_data())
-      navigate('/successful')
+      dispatch(selected_date_time())
+      setTimeout(() => {
+        navigate('/successful')
+        window.location.reload(true)
+      }, 1000);
     }
 
   }, [check_out_data?.check_out_success])
-  console.log(check_out_data)
+
   const navigate = useNavigate()
 
   const handleListItemClick = (index) => {

@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import Loading from '../Components/LoadingIcon/Loading';
 
 export default function Login() {
     const location = useLocation();
@@ -21,7 +22,8 @@ export default function Login() {
     });
     const outerTheme = useTheme();
     const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const positive_response = useSelector((state) => state.useLogged_in)
+    const positive_response = useSelector((state) => state.useLogged_in.data)
+    const loading = useSelector((state) => state.useLogged_in.loading)
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined });
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -122,6 +124,7 @@ export default function Login() {
 
     return (
         <div>
+            {loading&&<Loading/>}
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -172,7 +175,7 @@ export default function Login() {
                                             </ThemeProvider>
 
                                         </Grid>
-                                        <Grid item xs={6} textAlign='left' >
+                                        <Grid item xs={12} textAlign='left' >
                                             <Box>
                                                 <Typography style={{ cursor: 'pointer', fontSize: '12px' }} variant='paragraph'> Don't Have an account ? </Typography>
                                                 <Link to="/signup" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
@@ -180,13 +183,13 @@ export default function Login() {
                                                 </Link>
                                             </Box>
                                         </Grid>
-                                        <Grid item xs={6} textAlign='right' >
+                                        {/* <Grid item xs={6} textAlign='right' >
                                             <Box>
                                                 <Link to="/otp" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
                                                     Forgot Password ?
                                                 </Link>
                                             </Box>
-                                        </Grid>
+                                        </Grid> */}
 
                                         <Grid item xs={12} py={2} textAlign='center'>
                                             {/* <Button style={{ brder: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }}>No</Button> */}

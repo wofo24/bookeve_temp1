@@ -16,26 +16,29 @@ import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import '../Css/SwiperHome.css';
 import StarsSharpIcon from '@mui/icons-material/StarsSharp';
 import TrendingUpSharpIcon from '@mui/icons-material/TrendingUpSharp';
 import Testimonial from '../Components/Testimonial';
+import Loading from '../Components/LoadingIcon/Loading';
 import Cookies from 'js-cookie';
+import { get_all_cart_data } from '../Redux/actions/actions';
 
 export default function Home() {
-  const posts = useSelector((state) => state?.posts);
+  const posts = useSelector((state) => state?.posts?.data);
+  const loading = useSelector((state) => state?.posts?.loading);
   const query = useSelector((state) => state.search_item);
   const card_data = useSelector((state) => state.card_data);
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const unknown_user_success_error = useSelector((state) => state.unknown_user_success_error)
-
+  const update_in_post = useSelector((state) => state.update_in_post)
   useEffect(() => {
     if (unknown_user_success_error.success) {
       Cookies.set('unknown_user_token', unknown_user_success_error.data.token)
     }
   }, [unknown_user_success_error])
+
   const handle_click = (item) => {
     navigate('/package-view', { state: { data: item } })
   }
@@ -51,26 +54,17 @@ export default function Home() {
         setShowSearch(true);
       }
     }
-  }, [query]);
+  }, [query]);  
 
 
-  // useEffect(() => {
-  //   if (text.length > 0) {
-  //     const demo = { "packages": text };
-  //     dispatch(update_in_bag(demo));
-  //   }
-  // }, [text, dispatch]);
-
-  // console.log(bag_packages, 'from home p=bag package')
-  // useEffect(() => {
-  //   dispatch(fetchPosts());
-  // }, [dispatch,]);
   useEffect(() => {
     dispatch(fetchPosts());
+
   }, [dispatch, card_data]);
 
-  console.log(posts)
-  // 
+  useEffect(() => {
+    dispatch(get_all_cart_data())
+  }, [update_in_post])
 
   return (
     <div>
@@ -144,12 +138,13 @@ export default function Home() {
                   >
                     {(matches) => (
                       matches.small && (
-                        <>
+                        <div>
+                          {loading&&<Typography><Loading/></Typography>}
                           <CategoryItems />
                           {posts?.map((item, index) => (
                             <Category data={item} key={index} />
                           ))}
-                        </>
+                        </div>
                       )
                     )}
 
@@ -186,19 +181,19 @@ export default function Home() {
                               className="mySwiper1"
                             >
 
-                              {posts.map((item) => {
+                              {posts?.map((item) => {
                                 return (
                                   <SwiperSlide onClick={() => handle_click(item)} style={{ height: '211px', width: '320px' }} >
                                     <Card sx={{ borderRadius: '25px', background: '#ffff', height: '211px', width: '310px' }}>
                                       <div class="highlight red-bg ribbon">
                                         Best Seller
                                       </div>
-                                      <Box sx={{ background: 'gray', height: '67%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px' }}>
-                                        <img src='./' alt='image' />
+                                      <Box sx={{ background: 'gray', height: '67%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px', overflow: 'hidden' }}>
+                                        <img src={item.icon} alt='image' />
                                       </Box>
                                       <Box sx={{ height: '33%', borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', background: 'white' }}>
                                         <Box textAlign='left' pt={1} >
-                                          <Typography sx={{ ml: 1 }}>Main heading</Typography>
+                                          <Typography sx={{ ml: 1 }}>{item.category}</Typography>
                                           <Box sx={{ display: 'flex' }}>
                                             <StarsSharpIcon fontSize='small' sx={{ color: 'green', ml: 1, mt: .2 }} /> <Typography sx={{ ml: .5 }}>2.8 (20)</Typography>
                                           </Box>
@@ -233,21 +228,22 @@ export default function Home() {
                               className="mySwiper1"
                             >
 
-                              {posts.map((item) => {
+                              {posts?.map((item) => {
+                                console.log(item, 'this home')
                                 return (
                                   <SwiperSlide onClick={() => handle_click(item)} style={{ height: '211px', width: '320px' }} >
-                                    <Card sx={{ borderRadius: '25px', background: '#ffff', height: '211px', width: '300px' }}>
-                                      <div className="highlight red-bg ribbon">
+                                    <Card sx={{ borderRadius: '25px', background: '#ffff', height: '211px', width: '310px' }}>
+                                      <div class="highlight red-bg ribbon">
                                         Best Seller
                                       </div>
-                                      <Box sx={{ background: 'gray', height: '67%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px' }}>
-                                        <img src='./' alt='image' />
+                                      <Box sx={{ background: 'gray', height: '67%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px', overflow: 'hidden' }}>
+                                        <img src={item.icon} alt='image' />
                                       </Box>
                                       <Box sx={{ height: '33%', borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', background: 'white' }}>
                                         <Box textAlign='left' pt={1} >
-                                          <Typography sx={{ color: 'red', ml: 1 }}>Main heading</Typography>
+                                          <Typography sx={{ ml: 1 }}>{item.category}</Typography>
                                           <Box sx={{ display: 'flex' }}>
-                                            <StarsSharpIcon fontSize='small' sx={{ color: 'green', ml: 1, mt: .2 }} /> <Typography sx={{ color: 'green', ml: .5 }}>2.8 (20)</Typography>
+                                            <StarsSharpIcon fontSize='small' sx={{ color: 'green', ml: 1, mt: .2 }} /> <Typography sx={{ ml: .5 }}>2.8 (20)</Typography>
                                           </Box>
                                           <Typography textAlign='end' sx={{ color: 'black', ml: 1, mt: -3, mr: 2, fontSize: 'large' }}>
                                             &#8377; 999

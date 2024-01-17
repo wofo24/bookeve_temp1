@@ -4,9 +4,10 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import img from '../images/imagesSampleIMage.png'
+import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { add_package, increment_in_bag, decrement_in_bag, fetchPosts, show_message, incrementPackageCount, decrementPackageCount, openDialog, openRepeat, openView } from '../Redux/actions/actions';
+import { add_package, add_fetch_post, increment_in_bag, decrement_in_bag, fetchPosts, show_message, incrementPackageCount, decrementPackageCount, openDialog, openRepeat, openView } from '../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -15,13 +16,14 @@ export default function Package({ item }) {
   const dispatch = useDispatch()
   const buttonStyles = useSelector((state) => state.apply_new_theme)
   const card_data = useSelector((state) => state.card_data)
+  const update_in_post = useSelector((state) => state.update_in_post)
   const [show_btn, setShow_btn] = useState(false)
   const [Load, setLoad] = useState(false)
 
 
 
   const Increment = (id) => {
-    console.log('call from add')
+    dispatch(add_fetch_post());
     if (item.variants) {
       if (item.quanitity === 0) {
         dispatch(openDialog(item))
@@ -37,9 +39,8 @@ export default function Package({ item }) {
     }
   }
 
-
-
   const Decrement = () => {
+    dispatch(add_fetch_post());
     dispatch(decrement_in_bag(item.id));
     dispatch(show_message(true, 'Package removed!', 'warning'))
   }
@@ -51,21 +52,23 @@ export default function Package({ item }) {
     setLoad(true)
   }
 
-    useEffect(() => {
-    if (item?.quanitity >= 1 || item.quanitity === 0) {
+  useEffect(() => {
+    if (item?.quanitity >= 1 || item?.quanitity === 0) {
       Show_btn_();
       setLoad(false)
     }
     else {
-      setLoad(false)
       setShow_btn(false)
+      setLoad(false)
 
     }
-  }, [item?.quanitity]);
+  }, [item.quanitity]);
 
   const open_view = (data) => {
     dispatch(openView(data))
   }
+
+  // console.log(item)
 
   return (
     <Box my={1.5} sx={{ backgroundColor: 'transparent' }}>
@@ -89,21 +92,26 @@ export default function Package({ item }) {
               <Typography component="div" sx={{ color: 'black', }} >
                 {item?.package_name}
               </Typography>
-              <Typography variant="subtitle1" fontSize={'14px'} color="text.secondary" component="div">
-                Price:  &#8377; {item?.original_price}
+              <Typography component="div" sx={{ color: 'black', fontSize: '13px', color: 'gray', py:.4 }} >
+                <Box sx={{borderBottom:'1px dotted', width:135, }}> 
+                <StarsRoundedIcon  sx={{ mt: -.5, fontSize:'18px' }} /> 3.9 (123 reviews)
+                </Box>
+              </Typography>
+              <Typography variant="subtitle1" fontSize={'14px'}  component="div">
+                &#8377;{parseFloat(item?.original_price)} &#x2666; {item.duration} min
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" component="div">
                 {item.offer ? (`Off: ${item?.packageDiscount}%`) : ''}
               </Typography>
-              <Typography variant="subtitle1" fontSize={'15px'} color="text.secondary" component="div">
-                Duration : {item.duration} min
+              {/* <Typography variant="subtitle1" fontSize={'15px'} color="text.secondary" component="div">
+                Duration :min
+              </Typography> */}
+              <Typography color="text.secondary" sx={{ fontSize: '12px' }}>
+               {item?.package_detail.split(' ').slice(0, 4).join(' ')} ...
               </Typography>
               <Typography color="text.secondary" sx={{ fontSize: '12px', }}>
-                Description: {item?.package_detail.split(' ').slice(0, 3).join(' ')} ...
               </Typography>
-              <Typography color="text.secondary" sx={{ fontSize: '12px', }}>
-              </Typography>
-              <Box pt={2}>
+              <Box pt={1}>
                 <Typography sx={{ textTransform: 'capitalize', color: buttonStyles.icons_Color }} variant='text' onClick={() => open_view(item)}>View details</Typography>
               </Box>
             </Box>
@@ -112,9 +120,9 @@ export default function Package({ item }) {
             <Box sx={{ maxWidth: '150px', maxHeight: '130px', overflow: 'hidden', borderRadius: '10px' }}>
               <CardMedia
                 component="img"
-                sx={{ maxWidth: '150px', maxHeight: '135px', m: 'auto', }}
-                image={img}
-                alt="Live from space album cover"
+                sx={{ width: '130px', height: '135px', m: 'auto', }}
+                image={item.icon === null ? img : item.icon}
+                alt="Not Found!"
               />
             </Box>
             <Box mt={-1}>
@@ -193,7 +201,7 @@ export default function Package({ item }) {
                         width: '24px',
                         height: '24px',
                         //  px: 1
-                        mx:.45
+                        mx: .45
                       }}
                     /> : 'Add'}
                   </Button>)

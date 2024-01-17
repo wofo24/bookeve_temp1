@@ -12,10 +12,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
-// import { openView, closeView } from '../Redux/actions/actions';
-import { add_package, show_message, openView, closeView, incrementPackageCount } from '../../Redux/actions/actions';
+import { add_package, show_message, closeView, incrementPackageCount } from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
-import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Theme_Button from '../Theme/Theme_Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -32,14 +30,19 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
+
 export default function ViewDialog() {
-    const open = useSelector((state) => state.view_open);
+
     const dispatch = useDispatch()
     const [selectedValue, setSelectedValue] = React.useState("");
+    const open = useSelector((state) => state.view_open);
     const view_data = useSelector((state) => state.view_data);
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     const textStyle = useSelector((state) => state.apply_new_theme)
 
+    const handleClose = () => {
+        dispatch(closeView())
+    };
 
     const handleChange = (event) => {
         const value = event.target.value;
@@ -52,11 +55,6 @@ export default function ViewDialog() {
         });
     };
 
-    console.log(selectedValue, 'selected value')
-    const handleClose = () => {
-        dispatch(closeView())
-    };
-
     const add_item = () => {
         if (selectedValue || view_data?.variants == []) {
             dispatch(incrementPackageCount(view_data.packageId))
@@ -66,6 +64,11 @@ export default function ViewDialog() {
 
         }
     }
+
+    React.useEffect(() => {
+        console.log(view_data?.package_detail?.split(','))
+    }, [])
+
 
     return (
         <div>
@@ -105,7 +108,7 @@ export default function ViewDialog() {
                                             <Typography fontSize={'large'}>Description:</Typography>
                                             <Grid container alignItems="center">
                                                 <Grid item xs={12} pl={1}>
-                                                    <span>{view_data.packageDescription}</span>
+                                                    <span>{view_data.package_detail}</span>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -158,15 +161,15 @@ export default function ViewDialog() {
                             onClose={handleClose}
                             aria-labelledby="customized-dialog-title"
                             open={open}
-                            PaperProps={{ style: { borderTopLeftRadius: '15px', borderTopRightRadius:'15px', zIndex: '99999', marginTop: '550px', } }}
+                            PaperProps={{ style: { borderTopLeftRadius: '15px', borderTopRightRadius: '15px', zIndex: '99999', marginTop: '550px', } }}
                             fullScreen
                             TransitionComponent={Transition}
                         >
-                            <Box>
+                            <Box  >
 
 
                                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                    <Typography sx={{ fontFamily: textStyle.fontFamily }}><b>About package</b></Typography>
+                                    <Typography sx={{ fontFamily: textStyle.fontFamily }}><b>Details</b></Typography>
                                 </DialogTitle>
                                 <IconButton
                                     aria-label="close"
@@ -181,47 +184,66 @@ export default function ViewDialog() {
                                     <CloseIcon />
                                 </IconButton>
                                 {/* <hr/> */}
-                                <DialogContent dividers>
-                                    <Box minHeight={350}>
-                                        <Box>
-                                            <Grid item xs={12} sx={{ mt: .5, mb: 3 }}>
-                                                <Typography fontSize={'large'}>Description:</Typography>
-                                                <Grid container alignItems="center">
-                                                    <Grid item xs={12} pl={1}>
-                                                        <span>{view_data.packageDescription}</span>
-                                                    </Grid>
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
+                                {/* <DialogContent dividers sx={{ border: '2px solid', background: '#E7E7E7', }} > */}
+                                <Box minHeight={350} sx={{ background: '#E7E7E7', pt: 1 }}>
+                                    <Box xs={12} sx={{ background: "#fff", mt: 1, pt:1 }}>
 
-                                        <Box sx={{ flexGrow: 1 }}>
-                                            <FormControl fullWidth>
-                                                <RadioGroup
-                                                    aria-labelledby="demo-radio-buttons-group-label"
-                                                    defaultValue={0}
-                                                    name="radio-buttons-group"
-                                                    value={selectedValue}
-                                                >
-                                                    <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
-                                                    <Grid container my={2} px={2}>
-                                                        {view_data?.variants?.map((item, index) => (
-                                                            <Grid item xs={12} key={index}>
-                                                                <Grid container alignItems="center">
-                                                                    <Grid item xs={8} textAlign='start'>
-                                                                        <FormControlLabel onChange={handleChange} value={item.variantId} control={<Checkbox defaultChecked />} label={`${item.variantName}`} />
-                                                                    </Grid>
-                                                                    <Grid item xs={4} textAlign='end'>
-                                                                        <Typography>&#8377; {item.variantPrice}</Typography>
-                                                                    </Grid>
+                                        <Grid container alignItems="center">
+                                            <Grid item xs={12} pl={1}>
+                                                <Typography variant='subtitle'>
+
+                                                    <div>
+                                                        <ul>
+
+                                                            {view_data?.package_detail?.split(',').map((item) => (
+                                                                <li>{item}</li>
+                                                            ))
+                                                            }
+                                                        </ul>
+                                                    </div>
+
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+
+                                    </Box>
+                                    
+                                    <Box xs={12} sx={{ background: "#fff", mt: 1, p:2 }}>
+
+                                      <Typography sx={{fontSize:'20px'}}>&#9733; <span style={{fontSize:'16px'}}>4.85</span></Typography>
+
+                                    </Box>
+                                    
+
+
+                                    <Box sx={{ flexGrow: 1 }}>
+                                        <FormControl fullWidth>
+                                            <RadioGroup
+                                                aria-labelledby="demo-radio-buttons-group-label"
+                                                defaultValue={0}
+                                                name="radio-buttons-group"
+                                                value={selectedValue}
+                                            >
+                                                <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
+                                                <Grid container my={2} px={2}>
+                                                    {view_data?.variants?.map((item, index) => (
+                                                        <Grid item xs={12} key={index}>
+                                                            <Grid container alignItems="center">
+                                                                <Grid item xs={8} textAlign='start'>
+                                                                    <FormControlLabel onChange={handleChange} value={item.variantId} control={<Checkbox defaultChecked />} label={`${item.variantName}`} />
+                                                                </Grid>
+                                                                <Grid item xs={4} textAlign='end'>
+                                                                    <Typography>&#8377; {item.variantPrice}</Typography>
                                                                 </Grid>
                                                             </Grid>
-                                                        ))}
-                                                    </Grid>
-                                                </RadioGroup>
-                                            </FormControl>
-                                        </Box>
+                                                        </Grid>
+                                                    ))}
+                                                </Grid>
+                                            </RadioGroup>
+                                        </FormControl>
                                     </Box>
-                                </DialogContent >
+                                </Box>
+                                {/* </DialogContent > */}
                                 <DialogActions fullScreen>
                                     <Button fullWidth size='large' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} onClick={add_item}>Add</Button>
                                 </DialogActions>
