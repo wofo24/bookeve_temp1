@@ -25,10 +25,10 @@ export default function Login() {
     const positive_response = useSelector((state) => state.useLogged_in.data)
     const loading = useSelector((state) => state.useLogged_in.loading)
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined });
+    const [hasNavigated, setHasNavigated] = useState(false);
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-    // console.log(buttonStyles, 'this is buttton')
 
     const handleChange = (event) => {
         const { value, name } = event.target
@@ -101,26 +101,25 @@ export default function Login() {
                 },
             },
         });
-
-    useEffect(() => {
-        if (positive_response?.success === true) {
-            dispatch(store_id(parseInt(positive_response?.data?.phone_number)));
-            navigate('/otp')
-        }
-        else {
-            if (positive_response) {
-                positive_response?.phone_number?.map((item) => {
-                    if (item === "User with mobile no doesn't exist.") {
-                        setTimeout(() => {
-                            navigate('/signup', { state: { formData } })
-                        }, 2000);
-                    }
+       
+        useEffect(() => {
+            if (positive_response?.success === true && !hasNavigated) {
+                dispatch(store_id(parseInt(positive_response?.data?.phone_number)));
+                navigate('/otp');
+                setHasNavigated(true); 
+            } else {
+                if (positive_response) {
+                    positive_response?.phone_number?.map((item) => {
+                        if (item === "User with mobile no doesn't exist.") {
+                            setTimeout(() => {
+                                navigate('/signup', { state: { formData } });
+                            }, 2000);
+                        }
+                    });
                 }
-                )
+                setFormErrors({ 'phone_number': positive_response.phone_number });
             }
-            setFormErrors({ 'phone_number': positive_response.phone_number })
-        }
-    }, [positive_response]);
+        }, [positive_response, hasNavigated]);
 
     return (
         <div>

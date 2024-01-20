@@ -17,7 +17,7 @@ import Media from 'react-media';
 import { signup, store_id, activate } from '../Redux/actions/actions';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
-
+import Loading from '../Components/LoadingIcon/Loading'
 export default function Signup() {
 
     const customTheme = (outerTheme) =>
@@ -85,12 +85,14 @@ export default function Signup() {
     const outerTheme = useTheme();
     const location = useLocation();
     const data = location?.state?.formData;
-    const [showPassword, setShowPassword] = React.useState(false);
+    // const [showPassword, setShowPassword] = React.useState(false);
     const [formData, setFormData] = useState({ "phone_number": data?.phone_number })
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    // const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const signup_response = useSelector((state) => state.useSign_Up)
+    const signup_response = useSelector((state) => state.useSign_Up.data)
+    const loading = useSelector((state) => state.useSign_Up.loading)
+    const error = useSelector((state) => state.useSign_Up.error)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined, 'name': undefined });
@@ -114,20 +116,21 @@ export default function Signup() {
             navigate('/otp');
         }
         else {
-            if (signup_response) {
-                signup_response?.phone_number?.map((item) => {
+            if (error) {
+                error?.phone_number?.map((item) => {
                     if (item === 'User with this phone number already exists.') {
                         navigate('/login', { state: { formData } })
                     }
                 })
 
             }
-            setFormErrors({ "phone_number": signup_response.phone_number })
+            setFormErrors({ "phone_number": error.phone_number })
         }
-    }, [signup_response]);
+    }, [signup_response, error]);
 
     return (
         <div>
+            {loading&&<Loading/>}
             <Media
                 queries={{
                     small: '(max-width: 768px)',

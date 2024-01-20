@@ -21,11 +21,12 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card, Grid } from '@mui/material';
 import Bookings from '../../Components/Bookings';
 import Address from '../../Pages/Address'
-import { get_my_profile, open_profile_dialog,open_sign_out_dialog } from '../../Redux/actions/actions';
+import { get_my_profile, open_profile_dialog, open_sign_out_dialog } from '../../Redux/actions/actions';
 import Media from 'react-media';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useEffect } from 'react';
+import Loading from '../../Components/LoadingIcon/Loading';
 
 
 function TabPanel(props) {
@@ -62,10 +63,12 @@ function a11yProps(index) {
 }
 
 export default function Profile() {
-  const navigate = useNavigate()
-  const token = Cookies.get('token')
   const buttonStyles = useSelector((state) => state.apply_new_theme)
-  const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
+  const get_my_profile_success_error1 = useSelector((state) => state.get_my_profile_update_success_error)
+  const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
+  const loading = useSelector((state) => state.get_my_profile_success_error?.data?.loading)
+  const error = useSelector((state) => state.get_my_profile_success_error?.data?.error)
+  const loading1 = useSelector((state) => state.get_my_profile_success_error?.data?.loading)
   const pages = ['Orders', 'Address',];
   const style = { textDecoration: 'none', color: 'black', ':hover': { color: 'red' } }
   const [value, setValue] = React.useState(0);
@@ -83,19 +86,14 @@ export default function Profile() {
 
   useEffect(() => {
     dispatch(get_my_profile())
-    // console.log('my profile called')
   }, [])
 
 
-  const Logout = () => {
-   
-      dispatch(open_sign_out_dialog())
-   
-   
-  }
+  const Logout = () => { dispatch(open_sign_out_dialog()) }
 
   return (
     <div>
+      {loading || loading1 && <Loading />}
       <Media
         queries={{
           small: '(max-width: 768px)',

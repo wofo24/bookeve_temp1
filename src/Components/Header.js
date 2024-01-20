@@ -26,11 +26,11 @@ export default function Header() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const card_data = useSelector((state) => state.card_data)
+    const card_data = useSelector((state) => state.card_data.data)
     const cart_count = useSelector((state) => state.cart_count)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const public_info = useSelector((state) => state?.public_information?.data?.data)
-    const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
+    const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
     // const active_user = useSelector((state) => state.active_user)
     const token = Cookies.get('token')
     const open = Boolean(anchorEl);

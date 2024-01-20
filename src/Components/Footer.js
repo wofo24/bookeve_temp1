@@ -80,7 +80,7 @@ export default function Footer() {
                         <hr />
                         <Grid container >
                             <Grid item xs={12} lg={6} sm={12}>
-                                <Box mt={5} >
+                                <Box mt={1} >
                                     <Box textAlign='center'>
                                         <Typography variant='h4' fontWeight={700}>{public_info?.business_name}</Typography> <br />
                                         <Typography variant='h5'>{public_info?.address}</Typography>
@@ -90,7 +90,7 @@ export default function Footer() {
                                 </Box>
                             </Grid>
                             <Grid item xs={12} lg={6} sm={12}>
-                                <Box sx={{ mb: 8, fontFamily: buttonStyles.fontFamily, display: 'flex', justifyContent: 'center' }} mt={10} mx={2} >
+                                <Box sx={{ mb: 8, fontFamily: buttonStyles.fontFamily, display: 'flex', justifyContent: 'center' }} mt={3} mx={2} >
                                     <Box>
                                         <Typography variant='h5' sx={{ fontWeight: 600, fontFamily: buttonStyles.fontFamily, textAlign: 'center' }}>
                                             Contact with us on-

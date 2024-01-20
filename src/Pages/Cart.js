@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+// import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CircularProgress from '@mui/material-next/CircularProgress';
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { Link, useNavigate } from 'react-router-dom';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { CardMedia } from '@mui/material';
 import empty_cart from '../images/empty_cart.png'
 import Proceed_to_pay from '../Components/Dialog/Proceed_to_pay';
 import { useSelector, useDispatch } from 'react-redux';
-import { store_data_for_check_out, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
+import { store_data_for_check_out, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -20,6 +22,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Small_Cart from '../Components/Small_Cart';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Cookies from 'js-cookie';
+import Loading from '../Components/LoadingIcon/Loading';
 export default function Cart() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -30,8 +33,10 @@ export default function Cart() {
   const posts = useSelector((state) => state.posts)
   const update_in_post = useSelector((state) => state.update_in_post)
   const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
+  const coupons = useSelector((state) => state.coupons)
   const check_out_data = useSelector(state => state.check_out_data)
-  const card_data = useSelector((state) => state.card_data)
+  const loading = useSelector((state) => state.coupons.loading)
+  const card_data = useSelector((state) => state?.card_data?.data)
   const [data, setData] = React.useState()
   const [disable, setDisable] = React.useState(true)
   const [Load, setLoad] = useState(false)
@@ -130,6 +135,7 @@ export default function Cart() {
       dispatch(show_message(true, 'Please select schedule!', 'error'))
     }
   }
+
   React.useEffect(() => {
     if (check_out_data?.check_out_success.success) {
       dispatch(clear_all_cart_data())
@@ -146,6 +152,7 @@ export default function Cart() {
     dispatch(add_fetch_post())
     dispatch(clear_all_cart_data())
   }
+
   useEffect(() => {
     if (selected_address) {
       if (selected_date_time_var) {
@@ -155,9 +162,19 @@ export default function Cart() {
 
   }, [selected_address, selected_date_time_var])
 
+  useEffect(() => {
+    if (coupons?.post_coupon_success?.success) {
+      dispatch(close_coupon_dialog())
+    }
+  }, [coupons?.post_coupon_success?.success])
+
+  // console.log(, 'this is data')
+  console.log(coupons?.post_coupon_success, 'this is data')
+
 
   return (
     <div>
+      {loading&&<Loading/>}
       <Media
         queries={{
           small: '(max-width: 768px)',
@@ -278,52 +295,57 @@ export default function Cart() {
                 }
 
               </Card>
-              {Coupon_Code_value && (
-                <Box sx={{
+              {coupons?.post_coupon_success?.success && (
+                <Card sx={{
                   my: 2,
                   mx: 3,
                   borderRadius: '10px',
                   backdropFilter: `blur(10px)`,
-                  background: '#22bb33',
+                  background: '#ffff',
                   color: 'black', p: 1
                 }}  >
                   <Grid container p={0}>
-                    <Grid item xs={2} pt={.1}>
-                      <CheckCircleOutlineIcon fontSize='large' sx={{ color: '#e3f2fd' }} />
+                    <Grid item xs={1} pt={.1}>
+                      <CheckCircleRoundedIcon fontSize='small' sx={{ color: '#00E311' }} />
                     </Grid>
-                    <Grid item xs={7}>
-                      <Box sx={{ color: '#e3f2fd' }}>
-                        <Typography><b>{Coupon_Code_value}</b> applied</Typography>
-                        <Typography sx={{ fontSize: '10px' }}>-&#8377;1200 (30% off)</Typography>
+                    <Grid item xs={9}>
+                      <Box sx={{ color: 'black' }}>
+                        <Typography variant='subtitle' fontSize={'13px'}>
+                          {coupons?.post_coupon_success?.data?.result?.message}
+                        </Typography> <br />
+                        <Typography onClick={handleOpen} variant='subtitle' color={"gray"}>View all coupons <ArrowRightIcon sx={{ marginLeft: -1.5 }} color={'error'} /></Typography>
                       </Box>
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={2}>
                       <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'right' }}>
-                        <Button color='error' onClick={() => dispatch(click_to_apply_coupon(''))}>Remove</Button>
+                        <Button color='error' sx={{ textTransform: 'capitalize' }} onClick={() => {
+                          dispatch(click_to_apply_coupon(''))
+                          window.location.reload(true)
+                        }}>Remove</Button>
                       </Box>
                     </Grid>
 
                   </Grid>
-                </Box>
+                </Card>
               )}
-              {!Coupon_Code_value && (
+              {coupons?.post_coupon_success.length === 0 && (
                 <Card sx={{
                   my: 2, mx: 3,
                   borderRadius: '10px',
                   backdropFilter: buttonStyles.child_backdropFilter,
-                  background: buttonStyles.child_bg,
+                  background: 'WHITE',
                   color: buttonStyles.child_div_text,
 
                 }} elevation={2} onClick={handleOpen}  >
                   <Grid container sx={{ p: 1 }}>
-                    <Grid item xs={2}>
-                      <img width="40" style={{ marginTop: '2px' }} height="40" src="https://img.icons8.com/material/24/discount--v1.png" alt="discount--v1" />
+                    <Grid item xs={1}>
+                      <img width="25" style={{ marginTop: '2px' }} height="25" src="https://img.icons8.com/material/24/discount--v1.png" alt="discount--v1" />
                     </Grid>
-                    <Grid item xs={8} textAlign="left">
-                      <Button size='large' variant='text' sx={{ marginTop: '3px' }} >Apply Coupon</Button>
+                    <Grid item xs={9}>
+                      <Typography size='large' variant='text' sx={{color:'black', mx:1}}>View all coupons</Typography>
                     </Grid>
                     <Grid item xs={2} textAlign="right">
-                      <ArrowForwardIosIcon sx={{ marginTop: '13px' }} />
+                      <ArrowForwardIosIcon fontSize='small' sx={{fontWeight:800, color:'gray'}}/>
                     </Grid>
                   </Grid>
                 </Card>
@@ -413,20 +435,20 @@ export default function Cart() {
                           {selected_address &&
                             <>
                               <Button
-                            style={{
-                              background: buttonStyles.buttonColor,
-                              color: buttonStyles.buttonText,
-                            }}
-                            variant='contained'
-                            fullWidth
-                            size='large'
-                            onClick={openSchedule}
-                          >
-                            Slot
-                          </Button>
+                                style={{
+                                  background: buttonStyles.buttonColor,
+                                  color: buttonStyles.buttonText,
+                                }}
+                                variant='contained'
+                                fullWidth
+                                size='large'
+                                onClick={openSchedule}
+                              >
+                                Slot
+                              </Button>
                             </>
                           }
-                         
+
                         </>
                       }
 

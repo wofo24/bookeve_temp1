@@ -107,9 +107,6 @@ export default function CategoryItems() {
 
     // }
 
-    useEffect(() => {
-    }, [active_check])
-
 
     return (
         <>

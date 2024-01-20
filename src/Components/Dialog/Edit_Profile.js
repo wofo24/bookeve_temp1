@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import FormControl from '@mui/material/FormControl';
-import { close_profile_dialog, update_my_profile } from '../../Redux/actions/actions';
+import { close_profile_dialog, update_my_profile, get_my_profile } from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import Media from 'react-media';
 import Cookies from 'js-cookie';
@@ -24,6 +24,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Loading from '../LoadingIcon/Loading';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -105,14 +106,27 @@ export default function Edit_Profile() {
     const open = useSelector((state) => state.profile_edit);
     const textStyle = useSelector((state) => state.apply_new_theme)
     const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
+    const get_my_profile_success_error1 = useSelector((state) => state.get_my_profile_update_success_error)
+    const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
+    const loading = useSelector((state) => state.get_my_profile_update_success_error?.loading)
+    const error = useSelector((state) => state.get_my_profile_update_success_error?.error)
     const [formData, setFormData] = useState([])
 
+    
     const Date1 = (event) => {
         const myDate = new Date(event.$d);
         const formattedDate = dayjs(myDate).format('YYYY-MM-DD');
         setFormData({ ...formData, "dob": formattedDate })
     }
+
+    useEffect(() => {
+        if(open){
+            dispatch(get_my_profile())
+            setTimeout(() => {
+                handleClose()
+            }, 2000);
+        }
+      }, [get_my_profile_success_error1])
 
     const handleChange = (event) => {
         const { value, name } = event.target
@@ -126,14 +140,15 @@ export default function Edit_Profile() {
 
     const handleSubmit = () => {
         dispatch(update_my_profile(token, formData))
-        setTimeout(() => {
-            window.location.reload(true)
-        }, 3000);
+        // setTimeout(() => {
+        //     window.location.reload(true)
+        // }, 3000);
     }
 
-
+    console.log(loading, 'edit')
     return (
         <div>
+            {loading && <Loading />}
             <Media queries={{
                 small: '(max-width: 768px)',
                 medium: '(min-width: 769px) and (max-width: 1024px)',
@@ -194,7 +209,7 @@ export default function Edit_Profile() {
                                                         {/* </Grid> */}
                                                     </Grid>
                                                     <Grid xs={12} mt={3} >
-                                                        <Button fullWidth type='submit' onClick={handleSubmit} size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Update</Button>
+                                                        <Button fullWidth type='submit' onClick={handleSubmit} size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} > "Update"</Button>
                                                     </Grid>
                                                 </Grid>
                                             </ThemeProvider>
@@ -225,57 +240,60 @@ export default function Edit_Profile() {
                             PaperProps={{ style: { borderRadius: '15px', zIndex: '99999', marginTop: '500px' } }}
                             fullScreen
                         >
-                            <Box>
-                                <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                    <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Edit profile</b></Typography>
-                                </DialogTitle>
-                                <IconButton
-                                    aria-label="close"
-                                    onClick={handleClose}
-                                    sx={{
-                                        position: 'absolute',
-                                        right: 8,
-                                        top: 8,
-                                        color: (theme) => theme.palette.grey[500],
-                                    }}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                                <DialogContent >
-                                    <Box minHeight={350}>
-                                        <FormControl margin='none'>
-                                            <ThemeProvider theme={customTheme(outerTheme)}>
-                                                <Grid container spacing={2}>
-                                                    <Grid item xs={12} mt={2} px={2}>
-                                                        <TextField defaultValue={get_my_profile_success_error?.name} onChange={handleChange} name='name' fullWidth label="Name*" id="fullWidth" />
-                                                    </Grid>
-                                                    <Grid item xs={12} mt={2} p={2}>
-                                                        <TextField defaultValue={get_my_profile_success_error?.email_id} fullWidth label="Email *" onChange={handleChange} name='email_id' variant="outlined" />
-                                                    </Grid>
-                                                    <Grid item xs={12} mt={2} p={2}>
-                                                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                                            <DemoContainer components={['DatePicker', 'DatePicker']}>
-                                                                <DatePicker label="DOB" onChange={Date1} defaultValue={dayjs('2022-04-17')} />
-                                                                {/* <DatePicker 
+                            {loading ? <Loading /> :
+
+                                <Box>
+                                    <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                        <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Edit profile</b></Typography>
+                                    </DialogTitle>
+                                    <IconButton
+                                        aria-label="close"
+                                        onClick={handleClose}
+                                        sx={{
+                                            position: 'absolute',
+                                            right: 8,
+                                            top: 8,
+                                            color: (theme) => theme.palette.grey[500],
+                                        }}
+                                    >
+                                        <CloseIcon />
+                                    </IconButton>
+                                    <DialogContent >
+                                        <Box minHeight={350}>
+                                            <FormControl margin='none'>
+                                                <ThemeProvider theme={customTheme(outerTheme)}>
+                                                    <Grid container spacing={2}>
+                                                        <Grid item xs={12} mt={2} px={2}>
+                                                            <TextField defaultValue={get_my_profile_success_error?.name} onChange={handleChange} name='name' fullWidth label="Name*" id="fullWidth" />
+                                                        </Grid>
+                                                        <Grid item xs={12} mt={2} p={2}>
+                                                            <TextField defaultValue={get_my_profile_success_error?.email_id} fullWidth label="Email *" onChange={handleChange} name='email_id' variant="outlined" />
+                                                        </Grid>
+                                                        <Grid item xs={12} mt={2} p={2}>
+                                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                                <DemoContainer components={['DatePicker', 'DatePicker']}>
+                                                                    <DatePicker label="DOB" onChange={Date1} defaultValue={dayjs('2022-04-17')} />
+                                                                    {/* <DatePicker 
                                                                     label="Date of Birth"
                                                                     value={formData.dob}
                                                                     onChange={Date1}
                                                                     placeholder={'DOB'}
                                                                 /> */}
-                                                            </DemoContainer>
-                                                        </LocalizationProvider>
-                                                        {/* <TextField id="fullWidth" type='date' label='Date of birth' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" /> */}
+                                                                </DemoContainer>
+                                                            </LocalizationProvider>
+                                                            {/* <TextField id="fullWidth" type='date' label='Date of birth' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" /> */}
+                                                        </Grid>
                                                     </Grid>
-                                                </Grid>
 
-                                            </ThemeProvider>
-                                        </FormControl>
-                                    </Box>
-                                </DialogContent>
-                                <DialogActions >
-                                    <Button fullWidth size='large' onClick={handleSubmit} variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} > update</Button>
-                                </DialogActions>
-                            </Box>
+                                                </ThemeProvider>
+                                            </FormControl>
+                                        </Box>
+                                    </DialogContent>
+                                    <DialogActions >
+                                        <Button fullWidth size='large' onClick={handleSubmit} variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} > {loading ? <Loading /> : "Update"}</Button>
+                                    </DialogActions>
+                                </Box>
+                            }
                         </Dialog>
                     </>
                 )}

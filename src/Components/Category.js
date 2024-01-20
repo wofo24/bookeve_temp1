@@ -19,7 +19,7 @@ export default function Category({ data }) {
         {(matches) => (
           <>
             {matches.large && (
-             <Typography  fontSize={'27px'} my={1} sx={{ color: buttonStyles.color, fontFamily: buttonStyles.fontFamily }}>{data.category}</Typography>
+             <Typography  fontSize={'27px'} my={1} sx={{ color: "black", fontFamily: buttonStyles.fontFamily }}>{data.category}</Typography>
            )}
             {matches.small && (
              <Typography variant='h5' sx={{ color: buttonStyles.color, fontFamily: buttonStyles.fontFamily }}>{data.category}</Typography>

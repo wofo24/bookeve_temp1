@@ -47,7 +47,7 @@ const clamp = (value) => Math.max(0, value);
 const isBetween = (value, floor, ceil) => value >= floor && value <= ceil;
 
 export default function PackageView() {
-    const posts = useSelector((state) => state.posts);
+    const posts = useSelector((state) => state.posts.data);
     const category_id_toShow = useSelector((state) => state.category_id_to_show_its_package);
     const style = useSelector((state) => state.apply_new_theme);
     const update_in_fetch = useSelector((state) => state.update_in_post);

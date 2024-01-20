@@ -11,12 +11,13 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import { Paper } from '@mui/material';
 import Cookies from 'js-cookie';
 import { Link, useNavigate } from 'react-router-dom';
+
 export default function Proceed_to_pay() {
     const navigate = useNavigate()
     const selected_address = useSelector(state => state.selected_address)
     const selected_date_time_var = useSelector(state => state.selected_date_time)
     const all_address = useSelector((state) => state.all_address_dialog)
-    const card_data = useSelector((state) => state.card_data)
+    const card_data = useSelector((state) => state.card_data.data)
     const open_schedule = useSelector((state) => state.open_schedule)
     const buttonStyles = useSelector((state) => state?.apply_new_theme)
     const [show, setShow] = useState(false)
@@ -31,7 +32,6 @@ export default function Proceed_to_pay() {
     const handleEditSchedule = () => {
         dispatch(open_schedule_dialog())
     }
-
     const handleClose = () => {
         dispatch(proceed_to_pay_close())
         navigate('/payment')

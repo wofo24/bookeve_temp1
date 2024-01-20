@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, Grid, Typography } from '@mui/material'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Card } from '@mui/material';
 import CircularProgress from '@mui/material-next/CircularProgress';
 import { useNavigate } from 'react-router-dom';
@@ -17,13 +19,17 @@ import { Link } from 'react-router-dom'
 export default function Small_Cart() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const card_data = useSelector((state) => state.card_data)
+    const card_data = useSelector((state) => state.card_data.data)
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
+    const coupons = useSelector((state) => state.coupons)
     const update_in_post = useSelector((state) => state.update_in_post)
+    const loading = useSelector((state) => state.coupons.loading)
+    // const card_data = useSelector((state) => state?.card_data?.data)
     const posts = useSelector((state) => state?.posts);
     const [disable, setDisable] = React.useState(true)
     const [Load, setLoad] = useState(false)
+    const [saved_amount, setSaved_amount] = useState(false)
     const [id, setId] = useState()
     const totalPackagePrice = []
     const handleOpen = () => {
@@ -78,6 +84,23 @@ export default function Small_Cart() {
         }
 
     }, [card_data])
+
+    // const content = ?.match(/\d+/);
+    const data = coupons?.post_coupon_success?.data?.result?.message
+    const newData = data?.split(" ")
+    // console.log(newData)
+
+    
+    useEffect(() => {
+        if (newData) {
+            newData?.map((item) => {
+              console.log(item)
+            })
+        }
+    }, [coupons?.post_coupon_success])
+    // console.log(parseInt(coupons?.post_coupon_success?.data?.result?.message))
+    // console.log(card_data, 'this is card')
+
 
 
     return (
@@ -186,6 +209,7 @@ export default function Small_Cart() {
                                                     <Typography color={'error'} variant='h6' mt={-0} textAlign={"center"}>Empty Cart</Typography>
                                                 </Box>
                                             )}
+
                                         </Box>
 
                                         {/* <Grid sx={{ background: '#22bb33', mt: 2 }}>
@@ -215,99 +239,99 @@ export default function Small_Cart() {
 
                                     </Card>
 
-                                    {Coupon_Code_value && (
+                                    {coupons?.post_coupon_success?.success && (
                                         <Card sx={{
                                             my: 2,
+                                            mx: 0,
                                             borderRadius: '10px',
                                             backdropFilter: `blur(10px)`,
-                                            background: '#22bb33',
+                                            background: '#ffff',
                                             color: 'black', p: 1
                                         }}  >
                                             <Grid container p={0}>
-                                                <Grid item xs={2} pt={.1}>
-                                                    <CheckCircleOutlineIcon fontSize='large' sx={{ color: '#e3f2fd' }} />
+                                                <Grid item xs={1} pt={.1}>
+                                                    <CheckCircleRoundedIcon fontSize='small' sx={{ color: '#00E311' }} />
                                                 </Grid>
-                                                <Grid item xs={7}>
-                                                    <Box sx={{ color: '#e3f2fd' }}>
-                                                        <Typography><b>{Coupon_Code_value}</b> applied</Typography>
-                                                        <Typography sx={{ fontSize: '10px' }}>-&#8377;1200 (30% off)</Typography>
+                                                <Grid item xs={9}>
+                                                    <Box sx={{ color: 'black' }}>
+                                                        <Typography variant='subtitle' fontSize={'13px'}>
+                                                            {coupons?.post_coupon_success?.data?.result?.message}
+                                                        </Typography> <br />
+                                                        <Typography onClick={handleOpen} variant='subtitle' color={"gray"}>View all coupons <ArrowRightIcon sx={{ marginLeft: -1.5 }} color={'error'} /></Typography>
                                                     </Box>
                                                 </Grid>
-                                                <Grid item xs={3}>
+                                                <Grid item xs={2}>
                                                     <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'right' }}>
-                                                        <Button color='error' onClick={() => dispatch(click_to_apply_coupon(''))}>Remove</Button>
+                                                        <Button color='error' sx={{ textTransform: 'capitalize' }} onClick={() => {
+                                                            dispatch(click_to_apply_coupon(''))
+                                                            window.location.reload(true)
+                                                        }}>Remove</Button>
                                                     </Box>
                                                 </Grid>
 
                                             </Grid>
                                         </Card>
                                     )}
-                                    {!Coupon_Code_value && (<Card sx={{
-                                        my: 1, borderRadius: '10px',
-                                        backdropFilter: `blur(10px)`,
-                                        background: ' rgb(255 255 255 / 0.6)',
-                                        color: 'black', p: 2
-                                    }} onClick={handleOpen}  >
-                                        <Grid container p={1}>
-                                            <Grid item xs={2}>
-                                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                                    <img width="30" style={{ marginTop: '0px' }} height="30" src="https://img.icons8.com/material/24/discount--v1.png" alt="discount--v1" />
-                                                </Box>
-                                            </Grid>
-                                            <Grid item xs={6}>
-                                                <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'left' }}>
-                                                    <Box>
-                                                        <Typography ><b>Coupon offer's</b></Typography>
-                                                        <span>Get 150 off</span>
-                                                    </Box>
-                                                </Box>
-                                            </Grid>
-                                            <Grid item xs={4} p={1} >
-                                                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                                                    <Typography>Offers</Typography> <ArrowForwardIosIcon />
-                                                </Box>
-                                            </Grid>
-                                        </Grid>
-                                    </Card>)}
+                                    {coupons?.post_coupon_success.length === 0 && (
+                                        <Card sx={{
+                                            my: 2, mx: 0,
+                                            borderRadius: '10px',
+                                            backdropFilter: buttonStyles.child_backdropFilter,
+                                            background: 'WHITE',
+                                            color: buttonStyles.child_div_text,
 
+                                        }} elevation={2} onClick={handleOpen}  >
+                                            <Grid container sx={{ p: 1 }}>
+                                                <Grid item xs={1}>
+                                                    <img width="25" style={{ marginTop: '2px' }} height="25" src="https://img.icons8.com/material/24/discount--v1.png" alt="discount--v1" />
+                                                </Grid>
+                                                <Grid item xs={9}>
+                                                    <Typography size='large' variant='text' sx={{ color: 'black', mx: 1 }}>View all coupons</Typography>
+                                                </Grid>
+                                                <Grid item xs={2} textAlign="right">
+                                                    <ArrowForwardIosIcon fontSize='small' sx={{ fontWeight: 800, color: 'gray' }} />
+                                                </Grid>
+                                            </Grid>
+                                        </Card>
+                                    )}
                                     {Array.isArray(card_data) && card_data.length > 0 &&
-                                    <Card sx={{
-                                        borderRadius: '10px',
-                                        backdropFilter: `blur(10px)`,
-                                        background: ' rgb(255 255 255 / 0.6)',
-                                        color: 'black', p: 2
-                                    }} p={1}>
-                                        <Typography mb={1}>Payment Summary</Typography>
-                                        <Grid container>
-                                            <Grid xs={6}>Item total</Grid>
-                                            <Grid xs={6} textAlign={'end'}> &#8377;{totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)}</Grid>
-                                        </Grid>
-                                        <Grid container>
-                                            <Grid xs={6}>Item discount</Grid>
-                                            <Grid xs={6} textAlign={'end'}>  &#8377; --</Grid>
-                                        </Grid>
-                                        <Grid container>
-                                            <Grid xs={6}>Tax and fee</Grid>
-                                            <Grid xs={6} textAlign={'end'}> &#8377; --</Grid>
-                                        </Grid>
-                                        <hr />
-                                        <Grid container>
-                                            <Grid xs={6}><b>
-                                                <Typography>
-
-                                                    Total
-                                                </Typography>
-                                            </b>
-
+                                        <Card sx={{
+                                            borderRadius: '10px',
+                                            backdropFilter: `blur(10px)`,
+                                            background: ' rgb(255 255 255 / 0.6)',
+                                            color: 'black', p: 2
+                                        }} p={1}>
+                                            <Typography mb={1}>Payment Summary</Typography>
+                                            <Grid container>
+                                                <Grid xs={6}>Item total</Grid>
+                                                <Grid xs={6} textAlign={'end'}> &#8377;{totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)}</Grid>
                                             </Grid>
-                                            <Grid xs={6} textAlign={'end'}><b><Typography>
-                                                &#8377; {(totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)).toLocaleString('en-IN')}
+                                            <Grid container>
+                                                <Grid xs={6}>Item discount</Grid>
+                                                <Grid xs={6} textAlign={'end'}>  &#8377; --</Grid>
+                                            </Grid>
+                                            <Grid container>
+                                                <Grid xs={6}>Tax and fee</Grid>
+                                                <Grid xs={6} textAlign={'end'}> &#8377; --</Grid>
+                                            </Grid>
+                                            <hr />
+                                            <Grid container>
+                                                <Grid xs={6}><b>
+                                                    <Typography>
 
-                                            </Typography></b></Grid>
-                                        </Grid>
-                                    </Card>
+                                                        Total
+                                                    </Typography>
+                                                </b>
+
+                                                </Grid>
+                                                <Grid xs={6} textAlign={'end'}><b><Typography>
+                                                    &#8377; {(totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)).toLocaleString('en-IN')}
+
+                                                </Typography></b></Grid>
+                                            </Grid>
+                                        </Card>
                                     }
-                                    
+
                                 </Box>
 
                             </Grid>

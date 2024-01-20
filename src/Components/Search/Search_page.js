@@ -47,12 +47,12 @@ export default function Search_page() {
     const buttonStyles = useSelector((state) => state.apply_new_theme)
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true);
-    const query = useSelector((state) => state?.search_item);
+    const query = useSelector((state) => state?.search_item.data);
     // const searched_quarry = useSelector((state) => state?.searched_quarry);
 
 
     const dispatch = useDispatch()
-    const posts = useSelector((state) => state?.posts);
+    const posts = useSelector((state) => state?.posts?.data);
     const [queries_Recent, setQueries_Recent] = useState('')
 
     useEffect(() => {

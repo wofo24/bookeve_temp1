@@ -81,11 +81,12 @@ export const signup = (data) => {
     data: data
   };
   return async (dispatch) => {
+    dispatch({ type: type.USER_SIGNUP_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.USER_SIGNUP, payload: response.data });
     } catch (error) {
-      dispatch({ type: type.USER_SIGNUP, payload: error.response.data.error });
+      dispatch({ type: type.USER_SIGNUP_ERROR, payload: error.response.data.error });
     }
   };
 };
@@ -107,7 +108,7 @@ export const activate = (data, id) => {
       Cookies.remove('unknown_user_token')
       dispatch({ type: type.ACTIVATE_USER, payload: response.data });
     } catch (error) {
-      dispatch({ type: type.ACTIVATE_USER, payload: error.response.data.error });
+      dispatch({ type: type.ACTIVATE_USER_ERROR, payload: error.response.data.error });
     }
   };
 };
@@ -122,6 +123,7 @@ export const re_send_otp = (id) => {
     try {
       const response = await axios(config);
       dispatch({ type: type.SUCCESS_OTP, payload: response.data });
+
     } catch (error) {
       dispatch({ type: type.FAIL_OTP, payload: error });
     }
@@ -154,6 +156,7 @@ export const get_my_profile = () => {
   };
 
   return async (dispatch) => {
+    dispatch({ type: type.GET_MY_PROFILE_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.GET_MY_PROFILE_SUCCESS, payload: response.data });
@@ -174,6 +177,7 @@ export const update_my_profile = (token, data) => {
   };
 
   return async (dispatch) => {
+    dispatch({ type: type.UPDATE_MY_PROFILE_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.UPDATE_MY_PROFILE_SUCCESS, payload: response?.data });
@@ -194,28 +198,6 @@ export const openDialog = (data) => {
   return { type: type.OPEN_DIALOG, payload: data };
 };
 
-
-export const update_in_bag = (data) => {
-  const unknown_token = Cookies.get('unknown_user_token')
-  const token = Cookies.get('token')
-  const config = {
-    method: 'post',
-    url: `${Root_url}/web/v1/cart/`,
-    data: data,
-    params: {
-      token: token ? token : unknown_token,
-    },
-  };
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      // dispatch({ type: type.UPDATE_IN_BAG, payload: response.data });
-    } catch (error) {
-      // dispatch({ type: type.UPDATE_IN_BAG, payload: error.response.data.error });
-    }
-  };
-};
-
 export const increment_in_bag = (id) => {
   const unknown_token = Cookies.get('unknown_user_token')
   const token = Cookies.get('token')
@@ -231,11 +213,12 @@ export const increment_in_bag = (id) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return async (dispatch) => {
+    dispatch({ type: type.UPDATE_IN_BAG_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.UPDATE_IN_BAG, payload: response.data });
     } catch (error) {
-      dispatch({ type: type.UPDATE_IN_BAG, payload: error.response.data.error });
+      dispatch({ type: type.GET_ALL_CART_DATA_ERROR, payload: error.response.data.error });
     }
   };
 };
@@ -255,14 +238,16 @@ export const decrement_in_bag = (id) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return async (dispatch) => {
+    dispatch({ type: type.UPDATE_IN_BAG_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.UPDATE_IN_BAG, payload: response.data });
     } catch (error) {
-      dispatch({ type: type.UPDATE_IN_BAG, payload: error.response.data.error });
+      dispatch({ type: type.GET_ALL_CART_DATA_ERROR, payload: error.response.data.error });
     }
   };
 };
+
 export const get_all_cart_data = () => {
   const unknown_token = Cookies.get('unknown_user_token');
   const token = Cookies.get('token');
@@ -281,6 +266,7 @@ export const get_all_cart_data = () => {
   }
 
   return async (dispatch) => {
+    dispatch({ type: type.UPDATE_IN_BAG_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.GET_ALL_CART_DATA, payload: response?.data?.data?.cart_cart_item });
@@ -306,6 +292,7 @@ export const clear_all_cart_data = () => {
   }
 
   return async (dispatch) => {
+    dispatch({ type: type.UPDATE_IN_BAG_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.GET_ALL_CART_DATA, payload: response?.data?.data?.cart_cart_item });
@@ -325,6 +312,7 @@ export const reschedule_booking_date = (id, data) => {
     data: { "appointment_date": data }
   };
   return async (dispatch) => {
+    dispatch({ type: type.RESCHEDULE_BOOKING_DATA_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY, payload: response?.data?.data?.cart_cart_item });
@@ -347,6 +335,7 @@ export const booking_cancel = (id) => {
     },
   };
   return async (dispatch) => {
+    dispatch({ type: type.CANCEL_BOOKING_LOADING });
     try {
       const response = await axios(config);
       dispatch({ type: type.CANCEL_BOOKING_SUCCESS, payload: response?.data?.data?.cart_cart_item });
@@ -355,6 +344,212 @@ export const booking_cancel = (id) => {
     }
   };
 };
+
+export const get_all_address = () => async (dispatch) => {
+  const token = Cookies.get('token')
+  try {
+    dispatch({ type: type.ADDRESS_LOADING });
+    const { data } = await axios.get(`${Root_url}/web/v1/user-address-details/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    });
+    dispatch({ type: type.GET_ALL_ADDRESS, payload: data });
+  } catch (error) {
+    dispatch({ type: type.GET_ALL_ADDRESS, payload: error });
+  }
+};
+
+export const post_address = (data) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'post',
+    url: `${Root_url}/web/v1/user-address-details/`,
+    data: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  return async (dispatch) => {
+    dispatch({ type: type.ADDRESS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.POST_ADDRESS, payload: response.data });
+    } catch (error) {
+      dispatch({ type: type.POST_ADDRESS, payload: error });
+    }
+  };
+};
+
+export const update_address = (data) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'put',
+    url: `${Root_url}/web/v1/user-address-details/${data?.id}/`,
+    data: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  return async (dispatch) => {
+    dispatch({ type: type.ADDRESS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.POST_ADDRESS, payload: response.data });
+    } catch (error) {
+      console.log(error)
+      dispatch({ type: type.POST_ADDRESS, payload: error });
+    }
+  };
+};
+
+export const delete_address = (id) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'delete',
+    url: `${Root_url}/web/v1/user-address-details/${id}/`,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  };
+
+  return async (dispatch) => {
+    dispatch({ type: type.ADDRESS_LOADING });
+    try {
+      await axios(config);
+      dispatch({ type: type.DELETE_ADDRESS, payload: true });
+    } catch (error) {
+      console.log(error)
+      dispatch({ type: type.DELETE_ADDRESS, payload: error });
+    }
+  };
+};
+
+
+export const get_search_item = (Query, search_type) => {
+  const config = {
+    method: 'get',
+    url: `${Root_url}/web/v1/search/?search_type=${search_type}&search=${Query}`,
+  };
+  return async (dispatch) => {
+    dispatch({ type: type.SEARCH_ITEM_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.SEARCH_ITEM, payload: response.data.data });
+      dispatch({ type: type.SEARCHED_QUARRY, payload: Query });
+    } catch (error) {
+      dispatch({ type: type.FETCH_ERROR, payload: error.message });
+    }
+  };
+};
+export const get_all_theme = () => {
+
+  const config = {
+    method: 'get',
+    url: `${Root_url}/web/v1/theme-configuration/`
+  }
+  return async (dispatch) => {
+    dispatch({ type: type.GET_THEMES_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.GET_THEMES, payload: response.data.data });
+    } catch (error) {
+      dispatch({ type: type.GET_THEMES_ERROR, payload: error.message });
+    }
+  };
+};
+
+
+export const checked_out_call = (data) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'post',
+    url: `${Root_url}/web/v1/checkout/`,
+    data: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  return async (dispatch) => {
+    dispatch({ type: type.CHECKED_OUT_SUCCESS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.CHECKED_OUT_SUCCESS, payload: response.data });
+    } catch (error) {
+      dispatch({ type: type.CHECKED_OUT_FAIL, payload: error });
+    }
+  };
+
+};
+
+export const checked_out_get = (offset, limit) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'get',
+    url: `${Root_url}/web/v1/checkout/?offset=${offset}&limit=${limit}`,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  return async (dispatch) => {
+    dispatch({ type: type.CHECKED_OUT_SUCCESS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.CHECKED_OUT_LIST_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.CHECKED_OUT_LIST_FAIL, payload: error });
+    }
+  };
+};
+
+
+export const get_all_coupons = (id) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'get',
+    url: `${Root_url}/web/v1/coupons/select`,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    params: {
+      "packages": id
+    }
+  };
+  return async (dispatch) => {
+    dispatch({ type: type.GET_ALL_COUPONS_SUCCESS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.GET_ALL_COUPONS_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.GET_ALL_COUPONS_FAIL, payload: error });
+    }
+  };
+
+};
+
+export const post_coupon_code = (code, data) => {
+  // console.log(code, 'coupon code in action')
+  const token = Cookies.get('token')
+  const config = {
+    method: 'post',
+    url: `${Root_url}/web/v1/coupons/apply_coupon/?coupon_code=${code}`,
+    data: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+  return async (dispatch) => {
+    dispatch({ type: type.GET_ALL_COUPONS_SUCCESS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.POST_COUPON_CODE_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.POST_COUPON_CODE_FAIL, payload: error });
+    }
+  };
+
+};
+
 
 export const closeDialog = () => {
   return { type: type.CLOSE_DIALOG };
@@ -387,82 +582,6 @@ export const add_package = (package_id, add_on_id) => {
 };
 
 
-export const get_all_address = () => async (dispatch) => {
-  const token = Cookies.get('token')
-  try {
-    const { data } = await axios.get(`${Root_url}/web/v1/user-address-details/`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
-    });
-
-    dispatch({ type: type.GET_ALL_ADDRESS, payload: data });
-  } catch (error) {
-    dispatch({ type: type.GET_ALL_ADDRESS, payload: error });
-  }
-};
-
-export const post_address = (data) => {
-  const token = Cookies.get('token')
-  const config = {
-    method: 'post',
-    url: `${Root_url}/web/v1/user-address-details/`,
-    data: data,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      dispatch({ type: type.POST_ADDRESS, payload: response.data });
-    } catch (error) {
-      dispatch({ type: type.POST_ADDRESS, payload: error });
-    }
-  };
-};
-
-export const update_address = (data) => {
-  const token = Cookies.get('token')
-  const config = {
-    method: 'put',
-    url: `${Root_url}/web/v1/user-address-details/${data?.id}/`,
-    data: data,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      dispatch({ type: type.POST_ADDRESS, payload: response.data });
-    } catch (error) {
-      console.log(error)
-      dispatch({ type: type.POST_ADDRESS, payload: error });
-    }
-  };
-};
-
-export const delete_address = (id) => {
-  const token = Cookies.get('token')
-  const config = {
-    method: 'delete',
-    url: `${Root_url}/web/v1/user-address-details/${id}/`,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  };
-
-  return async (dispatch) => {
-    try {
-      await axios(config);
-      dispatch({ type: type.DELETE_ADDRESS, payload: true });
-    } catch (error) {
-      console.log(error)
-      dispatch({ type: type.DELETE_ADDRESS, payload: error });
-    }
-  };
-};
 
 export const openAdd_Address = (data) => {
   // console.log(data, 'this is data')
@@ -508,22 +627,6 @@ export const get_all_ordered_data_error = (data) => {
   return { type: type.GET_ORDER_DATA_ERROR, payload: data };
 };
 
-export const get_search_item = (Query, search_type) => {
-  const config = {
-    method: 'get',
-    url: `${Root_url}/web/v1/search/?search_type=${search_type}&search=${Query}`,
-  };
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      dispatch({ type: type.SEARCH_ITEM, payload: response.data.data });
-      dispatch({ type: type.SEARCHED_QUARRY, payload: Query });
-    } catch (error) {
-      dispatch({ type: type.FETCH_ERROR, payload: error.message });
-    }
-  };
-};
-
 export const get_search_type = (search_type) => {
 
   return { type: type.GET_SEARCH_TYPE, payload: search_type }
@@ -534,140 +637,6 @@ export const theme_change = (style) => {
 export const empty_quarry = (empty) => {
 
   return { type: type.EMPTY_QUARRY, payload: empty };
-};
-export const get_all_theme = () => {
-  // const themes = [
-  //   {
-  //     background: `linear-gradient(199deg, #558bc7, #f4f735)`,
-  //     animation: `first 10s linear infinite`,
-  //     OAnimation: `first 10s linear infinite`,
-  //     WebkitAnimation: `first 10s linear infinite`,
-  //     MozAnimation: `first 10s linear infinite`,
-  //     backgroundSize: '600% 600%',
-  //     backgroundPosition: '50% 50%',
-  //     fontFamily: 'monospace',
-  //     child_div_text: 'black',
-  //     child_bg: 'rgba(200, 200, 200, 1)',
-  //     color: 'white',
-  //     buttonColor: 'red',
-  //     buttonText: 'white',
-  //     icons_Color: 'blue',
-  //     theme_name: 'Minimal',
-  //     keyframesStyle: `
-  //     @-webkit-keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   @-moz-keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   @-o-keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   @keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   `},
-  //   {
-  //     background: 'linear-gradient(4deg, #acffea, #ffffff, #28ff41)',
-  //     animation: `first 10s linear infinite`,
-  //     OAnimation: `first 10s linear infinite`,
-  //     WebkitAnimation: `first 10s linear infinite`,
-  //     MozAnimation: `first 10s linear infinite`,
-  //     fontFamily: 'Times New Roman',
-  //     backgroundSize: '600% 600%',
-  //     backgroundPosition: '50% 50%',
-  //     child_div_text: 'black',
-  //     child_bg: 'rgba(200, 200, 200, 1)',
-  //     color: 'green',
-  //     buttonColor: 'red',
-  //     buttonText: 'white',
-  //     icons_Color: 'red',
-  //     text_color: '#87697asd',
-  //     text_style: '#5435asdf',
-  //     theme_name: 'Gradient',
-  //     keyframesStyle: `
-  //     @-moz-keyframes AnimationName {
-  //       0%{background-position:61% 0%}
-  //       50%{background-position:40% 100%}
-  //       100%{background-position:61% 0%}
-  //   }
-  //   @-o-keyframes AnimationName {
-  //       0%{background-position:61% 0%}
-  //       50%{background-position:40% 100%}
-  //       100%{background-position:61% 0%}
-  //   }
-  //   @keyframes AnimationName {
-  //       0%{background-position:61% 0%}
-  //       50%{background-position:40% 100%}
-  //       100%{background-position:61% 0%}
-  //   }
-  //   `,
-  //   },
-  //   {
-  //     fontFamily: 'Comic Sans MS, Comic Sans, cursive',
-  //     background: 'radial-gradient(#08ffbf 5%, #ffc208 17%, #ff3b3b 30%, white 62%)',
-  //     animation: `first 10s linear infinite`,
-  //     OAnimation: `first 10s linear infinite`,
-  //     WebkitAnimation: `first 10s linear infinite`,
-  //     MozAnimation: `first 10s linear infinite`,
-  //     backgroundSize: '600% 600%',
-  //     backgroundPosition: '50% 50%',
-  //     child_bg: 'rgba(200, 200, 200, 1)',
-  //     background_color: '#akjf',
-  //     child_div_text: 'gray',
-  //     child_bg: 'rgba(200, 200, 200, 1)',
-  //     color: 'white',
-  //     buttonColor: 'gray',
-  //     buttonText: 'white',
-  //     icons_Color: 'blue',
-  //     text_color: 'white',
-  //     text_style: '#5435asdf',
-  //     theme_name: 'Minimal2',
-  //     keyframesStyle: `
-  //     @-webkit-keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   @-moz-keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   @-o-keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   @keyframes first {
-  //       0%{background-position:52% 0%}
-  //       50%{background-position:49% 100%}
-  //       100%{background-position:52% 0%}
-  //   }
-  //   `,
-  //   }
-  // ]
-  const config = {
-    method: 'get',
-    url: `${Root_url}/web/v1/theme-configuration/`
-  }
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-
-      dispatch({ type: type.GET_THEMES, payload: response.data.data });
-    } catch (error) {
-      dispatch({ type: type.GET_THEMES, payload: error.message });
-    }
-  };
 };
 
 export const apply_new_theme = (style) => {
@@ -785,89 +754,6 @@ export const store_data_for_check_out_address_id = (data) => {
   return { type: type.READY_FOR_CHECK_OUT_DATA_ADDRESS_ID, payload: data };
 };
 
-export const checked_out_call = (data) => {
-  const token = Cookies.get('token')
-  const config = {
-    method: 'post',
-    url: `${Root_url}/web/v1/checkout/`,
-    data: data,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      dispatch({ type: type.CHECKED_OUT_SUCCESS, payload: response.data });
-    } catch (error) {
-      dispatch({ type: type.CHECKED_OUT_FAIL, payload: error });
-    }
-  };
-
-};
-
-export const checked_out_get = (offset, limit) => {
-  const token = Cookies.get('token')
-  const config = {
-    method: 'get',
-    url: `${Root_url}/web/v1/checkout/?offset=${offset}&limit=${limit}`,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  };
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      dispatch({ type: type.CHECKED_OUT_LIST_SUCCESS, payload: response?.data });
-    } catch (error) {
-      dispatch({ type: type.CHECKED_OUT_LIST_FAIL, payload: error });
-    }
-  };
-};
-
-
-export const get_all_coupons = (id) => {
-  const token = Cookies.get('token')
-  const config = {
-    method: 'get',
-    url: `${Root_url}/web/v1/coupons/`,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
-    params: {
-      "packages": id
-    }
-  };
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      dispatch({ type: type.GET_ALL_COUPONS_SUCCESS, payload: response?.data });
-    } catch (error) {
-      dispatch({ type: type.GET_ALL_COUPONS_FAIL, payload: error });
-    }
-  };
-
-};
-
-export const post_coupon_code = (code, data) => {
-  const token = Cookies.get('token')
-  const config = {
-    method: 'post',
-    url: `${Root_url}/web/v1/coupons/apply_coupon/?coupon_code=${code}`,
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  }
-  return async (dispatch) => {
-    try {
-      const response = await axios(config);
-      dispatch({ type: type.POST_COUPON_CODE_SUCCESS, payload: response?.data });
-    } catch (error) {
-      dispatch({ type: type.POST_COUPON_CODE_FAIL, payload: error });
-    }
-  };
-
-};
 
 export const store_count = (data) => {
   return { type: type.STORE_CART_COUNT, payload: data }
