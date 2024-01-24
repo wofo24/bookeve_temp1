@@ -58,8 +58,9 @@ const initialState = {
     check_out_success: [],
     check_out_fail: [],
     check_out_get_list_success: [],
+    cancel_booking_check_out_get_list_success: [],
+    reschedule_check_out_get_list_success: [],
     check_out_get_list_fail: [],
-
   },
   search_item: {
     query: '',
@@ -73,8 +74,27 @@ const initialState = {
     post_coupon_success: [],
     post_coupon_fail: [],
   },
+  review: {
+    loading: false,
+    get_review_success: [],
+    get_review_error: [],
+    post_review_success: [],
+    post_review_error: [],
+    put_review_success: [],
+    put_review_error: [],
+  },
+  all_address: {
+    all_address: [],
+    posted_address_result: [],
+    delete_address_result: [],
+    update_address_result: [],
+  },
+  package_review: {
+    loading: false,
+    data: [],
+    error: []
+  },
   themeLoading: false,
-
   error: null,
   dialog_open: false,
   repeat_open: false,
@@ -86,15 +106,9 @@ const initialState = {
   view_data: [],
   protected_routes: [],
   packages: [],
-  all_address: {
-    all_address: [],
-    posted_address_result: [],
-    delete_address_result: [],
-    update_address_result: [],
-  },
+
   open_address_data: [],
   all_ordered: [],
-
   button_style: [],
   all_theme: [],
   coupon_dialog: false,
@@ -142,7 +156,6 @@ const initialState = {
   searched_quarry: '',
   address_id: [],
   proceed_to_pay: false,
-
   open_check: {
     data_success: [],
     data_fail: [],
@@ -150,7 +163,6 @@ const initialState = {
   },
   reschedule: [],
   show_in_details_checkout: [],
-
   pathname: '',
   update_in_post: 0,
   cart_count: 0,
@@ -294,7 +306,7 @@ const rootReducer = (state = initialState, action) => {
     case type.GET_ALL_CART_DATA_ERROR:
       return { ...state, card_data: { ...state.card_data, loading: false, error: action.payload } };
 
-    // unknown bag ----------------------------------------------------------------------------------------------------->
+    // Reschedule Booking checkout ----------------------------------------------------------------------------------------------------->
 
     case type.RESCHEDULE_BOOKING_DATA_LOADING:
       return {
@@ -302,7 +314,7 @@ const rootReducer = (state = initialState, action) => {
       }
     case type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY:
       return {
-        ...state, check_out_data: { ...state.check_out_data, loading: false, check_out_get_list_success: action.payload }
+        ...state, check_out_data: { ...state.check_out_data, loading: false, reschedule_check_out_get_list_success: action.payload }
       }
     case type.RESCHEDULE_BOOKING_DATA_FAIL:
       return {
@@ -317,7 +329,7 @@ const rootReducer = (state = initialState, action) => {
       }
     case type.CANCEL_BOOKING_SUCCESS:
       return {
-        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_success: action.payload, loading: false }
+        ...state, check_out_data: { ...state.check_out_data, cancel_booking_check_out_get_list_success: action.payload, loading: false }
       }
     case type.CANCEL_BOOKING_FAIL:
       return {
@@ -373,6 +385,14 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, coupons: { ...state.coupons, get_coupon_fail: action.payload, loading: false } }
 
     // coupons------------------------------------------------------------------------------------------------------------>
+    // PAckage Review------------------------------------------------------------------------------------------------------------>
+    case type.GET_ALL_PACKAGE_REVIEWS_LOADING:
+      return { ...state, package_review: { ...state.package_review, loading: true } }
+    case type.GET_ALL_PACKAGE_REVIEWS_SUCCESS:
+      return { ...state, package_review: { ...state.package_review, data: action.payload, loading: false } }
+    case type.GET_ALL_PACKAGE_REVIEWS_ERROR:
+      return { ...state, package_review: { ...state.package_review, error: action.payload, loading: false } }
+    // PAckage Review------------------------------------------------------------------------------------------------------------>
     case type.CLOSE_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: false, open_address_data: action.payload };
     case type.OPEN_DELETE_ADDRESS_DIALOG:
@@ -451,7 +471,28 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, sign_out: true };
     case type.CONFIRM_LOGOUT_FALSE:
       return { ...state, sign_out: false };
-    // ////////////////////////////////////
+
+    // //////////////////////////////////// Review module --------->
+    case type.GET_ALL_REVIEWS_LOADING:
+      return { ...state, review: { ...state.review, loading: true } }
+    case type.GET_ALL_REVIEWS_SUCCESS:
+      return { ...state, review: { ...state.review, get_review_success: action.payload, loading: false } }
+    case type.GET_ALL_REVIEWS_ERROR:
+      return { ...state, review: { ...state.review, get_review_error: action.payload, loading: false } }
+    case type.POST_REVIEWS_LOADING:
+      return { ...state, review: { ...state.review, loading: true } }
+    case type.POST_REVIEWS_SUCCESS:
+      return { ...state, review: { ...state.review, post_review_success: action.payload, loading: false } }
+    case type.POST_REVIEWS_ERROR:
+      return { ...state, review: { ...state.review, post_review_success: action.payload, loading: false } }
+
+    case type.PUT_REVIEWS_LOADING:
+      return { ...state, review: { ...state.review, loading: true } }
+    case type.PUT_REVIEWS_SUCCESS:
+      return { ...state, review: { ...state.review, put_review_success: action.payload, loading: false } }
+    case type.PUT_REVIEWS_ERROR:
+      return { ...state, review: { ...state.review, put_review_success: action.payload, loading: false } }
+    // //////////////////////////////////// -------->
     case type.APPLY_COUPON_ON_CLICK:
       return { ...state, apply_onClick_coupon: action.payload };
     case type.READY_FOR_CHECK_OUT_DATA:

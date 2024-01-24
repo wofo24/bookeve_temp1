@@ -20,7 +20,7 @@ import Loading from '../Components/LoadingIcon/Loading';
 export default function Address(props) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const all_address = useSelector((state) => state.all_address)
     const [selectedAddress, setSelectedAddress] = useState('');
     const loading = useSelector((state) => state.all_address.loading)

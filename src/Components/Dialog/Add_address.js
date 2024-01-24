@@ -28,8 +28,8 @@ export default function Add_address() {
     const [formData, setFormData] = useState({ "address_type": 'home' })
     const [formErrors, setFormErrors] = useState({});
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const textStyle = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
+    const textStyle = useSelector((state) => state.all_theme)
     const openAdd = useSelector((state) => state.open_add_dialog)
     const all_address = useSelector((state) => state.all_address)
     const open_address_data = useSelector((state) => state.open_address_data)

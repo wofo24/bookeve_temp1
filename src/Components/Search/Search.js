@@ -22,7 +22,7 @@ export default function Search(props) {
     const dispatch = useDispatch();
     const searched_quarry = useSelector((state) => state.searched_quarry)
     const inputRef = useRef(null);
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const [queries, setQueries] = useState(props.queries_Recent ? props.queries_Recent : searched_quarry)
     const navigate = useNavigate()
 

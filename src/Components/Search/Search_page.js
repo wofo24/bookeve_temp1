@@ -44,7 +44,7 @@ CustomTabPanel.propTypes = {
 
 export default function Search_page() {
 
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const navigate = useNavigate()
     const [loading, setLoading] = useState(true);
     const query = useSelector((state) => state?.search_item.data);

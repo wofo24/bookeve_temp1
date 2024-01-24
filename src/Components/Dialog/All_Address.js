@@ -42,11 +42,11 @@ export default function All_Address() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [selectedAddress, setSelectedAddress] = useState('');
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const open = useSelector((state) => state.all_address_dialog)
     const all_address = useSelector((state) => state.all_address)
     const loading = useSelector((state) => state.all_address.loading)
-    const textStyle = useSelector((state) => state.apply_new_theme)
+    const textStyle = useSelector((state) => state.all_theme)
 
     const handleClose = () => {
         dispatch(hide_all_address())

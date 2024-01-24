@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 export default function Navigation() {
     // const buttonStyles = useSelector((state) => state.button_style)
     const cart_count = useSelector((state) => state.cart_count)
-    const buttonStyles = useSelector((state) => state?.apply_new_theme)
+    const buttonStyles = useSelector((state) => state?.all_theme)
     // const update_in_post = useSelector((state) => state.update_in_post)
     const [value, setValue] = React.useState(1);
     const dispatch = useDispatch()

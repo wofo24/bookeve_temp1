@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function SuccessFull() {
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const navigate = useNavigate();
 
   

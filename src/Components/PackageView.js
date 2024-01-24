@@ -49,7 +49,7 @@ const isBetween = (value, floor, ceil) => value >= floor && value <= ceil;
 export default function PackageView() {
     const posts = useSelector((state) => state.posts.data);
     const category_id_toShow = useSelector((state) => state.category_id_to_show_its_package);
-    const style = useSelector((state) => state.apply_new_theme);
+    const style = useSelector((state) => state.all_theme);
     const update_in_fetch = useSelector((state) => state.update_in_post);
     const [choice, setChoice] = useState(category_id_toShow);
     const [filtered_Array, setFiltered_Array] = useState([])

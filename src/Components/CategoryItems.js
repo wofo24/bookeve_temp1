@@ -81,7 +81,7 @@ export default function CategoryItems() {
         navigate('/package-view')
     }
 
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const public_info = useSelector((state) => state?.public_information?.data)
     const [active_check, setActive_check] = useState(() => (public_info?.services_mode === 'home_services' ? false : true))
     const error = useSelector((state) => state.error)

@@ -26,7 +26,7 @@ export default function Schedule() {
     const On_handleSubmit = () => {
         dispatch(get_schedule())
     }
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
 
     const navigate = useNavigate()
     const [value, setValue] = React.useState(null);

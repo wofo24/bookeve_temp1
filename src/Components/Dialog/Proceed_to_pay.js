@@ -19,7 +19,7 @@ export default function Proceed_to_pay() {
     const all_address = useSelector((state) => state.all_address_dialog)
     const card_data = useSelector((state) => state.card_data.data)
     const open_schedule = useSelector((state) => state.open_schedule)
-    const buttonStyles = useSelector((state) => state?.apply_new_theme)
+    const buttonStyles = useSelector((state) => state?.all_theme)
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
     useEffect(() => {

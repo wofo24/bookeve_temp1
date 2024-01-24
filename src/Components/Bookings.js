@@ -14,32 +14,32 @@ import Loading from './LoadingIcon/Loading';
 export default function Bookings() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const buttonStyles = useSelector((state) => state?.apply_new_theme)
-    const [load, setLoad] = useState(false)
+    const buttonStyles = useSelector((state) => state?.all_theme)
+
     const data = useSelector(state => state.check_out_data)
     const loading = useSelector(state => state.check_out_data.loading)
-    const [page, setPage] = React.useState(10);
+    const [page, setPage] = React.useState(1);
 
-    useEffect(() => {
-        dispatch(checked_out_get(0, 10))
-    }, [])
 
-    useEffect(() => {
-        setLoad(false)
-    }, [data])
+
 
     const ShowDetailsFunction = (item) => {
         dispatch(to_show_in_details_checkout(item))
         navigate('/booking-details')
     }
+
+    useEffect(() => {
+        dispatch(checked_out_get(0, 10))
+
+    }, [])
+
     const handleChange = (event, value) => {
+        const data = `${value - 1}${0}`
         setPage(value);
-        setLoad(true)
-        dispatch(checked_out_get(0, value))
+        dispatch(checked_out_get(parseInt(data), 10))
     };
 
-    // console.log()
-
+    console.log(data?.check_out_get_list_success?.data, 'this is ddata')
 
     return (
         <>
@@ -79,9 +79,9 @@ export default function Bookings() {
                                         </Grid>
                                     </Grid>
                                     <hr style={{ border: '1px solid' }} />
-                                    {load ? <Loading /> :
+                                    {loading ? <Loading /> :
                                         <Box mx={10} mt={2}>
-                                            <Typography variant='h5' mb={2}><b>Categories</b></Typography>
+                                            {/* <Typography variant='h5' mb={2}><b>Categories</b></Typography> */}
                                             {data?.check_out_get_list_success?.data?.map((item, index) => {
                                                 return (
                                                     <>
@@ -92,7 +92,17 @@ export default function Bookings() {
                                                                     <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
                                                                         <Box>
                                                                             <Typography sx={{ color: '#4CAF50' }} fontSize={'13px'}><b>BOOKED </b></Typography>
-                                                                            <span style={{ fontSize: '13px' }}><b>Category name & more</b></span>
+                                                                            <span style={{ fontSize: '13px' }}><b>
+                                                                                {
+                                                                                    item?.packages.map((item2, index) => {
+                                                                                        if (index === 0) {
+                                                                                            return item2?.package_name
+                                                                                        }
+                                                                                    })
+                                                                                }
+                                                                                {item.packages.length > 1 && ` & ${item.packages.length - 1} More`}
+
+                                                                            </b></span>
                                                                             <Typography style={{ fontSize: '11px' }}><b>Price:</b> &#8377; <span> {item.total_price}</span></Typography>
                                                                             <Typography style={{ fontSize: '11px' }}><b>Time:</b> {item.appointment_date}</Typography>
                                                                         </Box>
@@ -114,7 +124,7 @@ export default function Bookings() {
                                     <hr style={{ border: '1px solid', marginTop: '30px' }} />
                                     <Box sx={{ display: 'flex', placeContent: 'center' }}>
                                         <Stack spacing={2}>
-                                            <Pagination count={data?.check_out_get_list_success?.count} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
+                                            <Pagination count={Math.ceil(data?.check_out_get_list_success?.count / 10)} defaultPage={1} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
                                         </Stack>
 
                                     </Box>
@@ -155,9 +165,9 @@ export default function Bookings() {
                                         </Grid>
                                     </Grid>
                                     <hr style={{ border: '.5px solid' }} />
-                                    {load ? <Loading /> :
+                                    {loading ? <Loading /> :
                                         <Box mx={1} mt={2}>
-                                            <Typography variant='h5'><b>Category</b></Typography>
+                                            {/* <Typography variant='h5'><b>Category</b></Typography> */}
                                             {data?.check_out_get_list_success?.data?.map((item) => (
                                                 <Box sx={{ border: '1px solid black', borderRadius: '10px', p: 2 }} mt={3} >
                                                     <Grid container onClick={() => ShowDetailsFunction(item)}>
@@ -181,10 +191,13 @@ export default function Bookings() {
                                             ))}
 
                                             <hr style={{ border: '1px solid', marginTop: '30px' }} />
-                                            
-                                            <Stack spacing={2}>
-                                                <Pagination count={data?.check_out_get_list_success?.count} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
-                                            </Stack>
+
+                                            <Box sx={{ display: 'flex', placeContent: 'center' }}>
+                                                <Stack spacing={2}>
+                                                    <Pagination count={Math.ceil(data?.check_out_get_list_success?.count / 10)} defaultPage={1} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
+                                                </Stack>
+
+                                            </Box>
                                         </Box>}
 
 

@@ -61,8 +61,6 @@ export default function Protected(props) {
             console.warn('Token not found in cookies.');
         }
     }, [token]);
-
-
     useEffect(() => {
         if (!props?.protected) {
             dispatch(store_pathname(location.pathname))

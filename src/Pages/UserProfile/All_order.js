@@ -7,7 +7,7 @@ import { get_all_ordered_data, get_all_ordered_data_error } from '../../Redux/ac
 import { useSelector, useDispatch } from 'react-redux';
 export default function All_order() {
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const buttonStyles = useSelector((state) => state.all_theme)
   const all_orders = useSelector((state) => state.all_orders)
   const error = useSelector((state) => state.error)
   React.useEffect(() => {

@@ -75,7 +75,7 @@ export default function Otp() {
             },
         });
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const error = useSelector((state) => state.active_user.error)
     const user_id = useSelector((state) => state.user_id)
     const active_user_Response = useSelector((state) => state.active_user.data)

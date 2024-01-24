@@ -89,7 +89,7 @@ export default function Signup() {
     const [formData, setFormData] = useState({ "phone_number": data?.phone_number })
     // const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const signup_response = useSelector((state) => state.useSign_Up.data)
     const loading = useSelector((state) => state.useSign_Up.loading)
     const error = useSelector((state) => state.useSign_Up.error)

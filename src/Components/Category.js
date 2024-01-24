@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material'
 import Media from 'react-media';
 import { useSelector, useDispatch } from 'react-redux';
 export default function Category({ data }) {
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const buttonStyles = useSelector((state) => state.all_theme)
   const text = useSelector((state) => state.text)
 
   return (

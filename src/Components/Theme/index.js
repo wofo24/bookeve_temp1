@@ -8,7 +8,7 @@ export default function Index() {
   const dispatch = useDispatch()
   const buttonStyles = useSelector((state) => state.button_style)
   const themes = useSelector((state) => state.all_theme)
-  const New_themes = useSelector((state) => state.apply_new_theme)
+  const New_themes = useSelector((state) => state.all_theme)
   const theme = [themes?.theme_configuration]
 
   const [buttonStyle, setButtonStyle] = useState({

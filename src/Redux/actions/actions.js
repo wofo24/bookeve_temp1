@@ -52,10 +52,10 @@ export const incrementPackageCount = (packageId) => {
   return { type: type.INCREMENT, payload: packageId };
 };
 
-
 export const decrementPackageCount = (packageId) => {
   return { type: type.DECREMENT, payload: packageId };
 };
+
 export const login = (data) => {
   const config = {
     method: 'post',
@@ -129,6 +129,7 @@ export const re_send_otp = (id) => {
     }
   };
 };
+
 export const Unknown_user_entered = () => {
   const config = {
     method: 'get',
@@ -187,8 +188,6 @@ export const update_my_profile = (token, data) => {
     }
   };
 };
-
-
 
 export const store_id = (id) => {
   return { type: type.STORE_ID, payload: id };
@@ -315,7 +314,7 @@ export const reschedule_booking_date = (id, data) => {
     dispatch({ type: type.RESCHEDULE_BOOKING_DATA_LOADING });
     try {
       const response = await axios(config);
-      dispatch({ type: type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY, payload: response?.data?.data?.cart_cart_item });
+      dispatch({ type: type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY, payload: response?.data });
     } catch (error) {
       console.error('Error:', error.response.data);
       dispatch({ type: type.RESCHEDULE_BOOKING_DATA_FAIL, payload: error.response.data });
@@ -338,7 +337,7 @@ export const booking_cancel = (id) => {
     dispatch({ type: type.CANCEL_BOOKING_LOADING });
     try {
       const response = await axios(config);
-      dispatch({ type: type.CANCEL_BOOKING_SUCCESS, payload: response?.data?.data?.cart_cart_item });
+      dispatch({ type: type.CANCEL_BOOKING_SUCCESS, payload: response?.data });
     } catch (error) {
       dispatch({ type: type.CANCEL_BOOKING_FAIL, payload: error?.response?.data });
     }
@@ -425,7 +424,6 @@ export const delete_address = (id) => {
   };
 };
 
-
 export const get_search_item = (Query, search_type) => {
   const config = {
     method: 'get',
@@ -442,6 +440,7 @@ export const get_search_item = (Query, search_type) => {
     }
   };
 };
+
 export const get_all_theme = () => {
 
   const config = {
@@ -452,13 +451,13 @@ export const get_all_theme = () => {
     dispatch({ type: type.GET_THEMES_LOADING });
     try {
       const response = await axios(config);
-      dispatch({ type: type.GET_THEMES, payload: response.data.data });
+      // console.log(response.data.data.theme_configuration, 'this is response')
+      dispatch({ type: type.GET_THEMES, payload: response.data.data.theme_configuration });
     } catch (error) {
       dispatch({ type: type.GET_THEMES_ERROR, payload: error.message });
     }
   };
 };
-
 
 export const checked_out_call = (data) => {
   const token = Cookies.get('token')
@@ -502,7 +501,6 @@ export const checked_out_get = (offset, limit) => {
   };
 };
 
-
 export const get_all_coupons = (id) => {
   const token = Cookies.get('token')
   const config = {
@@ -528,7 +526,6 @@ export const get_all_coupons = (id) => {
 };
 
 export const post_coupon_code = (code, data) => {
-  // console.log(code, 'coupon code in action')
   const token = Cookies.get('token')
   const config = {
     method: 'post',
@@ -550,6 +547,84 @@ export const post_coupon_code = (code, data) => {
 
 };
 
+export const get_all_reviews = () => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'get',
+    url: `${Root_url}/web/v1/review/`,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+  return async (dispatch) => {
+    dispatch({ type: type.GET_ALL_REVIEWS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.GET_ALL_REVIEWS_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.GET_ALL_REVIEWS_ERROR, payload: error });
+    }
+  };
+};
+
+export const post_review = (data) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'post',
+    url: `${Root_url}/web/v1/review/`,
+    data: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+  return async (dispatch) => {
+    dispatch({ type: type.POST_REVIEWS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.POST_REVIEWS_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.POST_REVIEWS_ERROR, payload: error });
+    }
+  };
+};
+
+export const put_review = (data) => {
+  const token = Cookies.get('token')
+  const config = {
+    method: 'put',
+    url: `${Root_url}/web/v1/review/`,
+    data: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  }
+  return async (dispatch) => {
+    dispatch({ type: type.PUT_REVIEWS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.PUT_REVIEWS_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.PUT_REVIEWS_ERROR, payload: error });
+    }
+  };
+};
+
+export const get_all_package_all_review = (id) => {
+  const config = {
+    method: 'get',
+    url: `${Root_url}/web/v1/packages/${id}/reviews/?&offset=0&limit=10`,
+  }
+  
+  return async (dispatch) => {
+    dispatch({ type: type.GET_ALL_PACKAGE_REVIEWS_LOADING });
+    try {
+      const response = await axios(config);
+      dispatch({ type: type.GET_ALL_PACKAGE_REVIEWS_SUCCESS, payload: response?.data });
+    } catch (error) {
+      dispatch({ type: type.GET_ALL_PACKAGE_REVIEWS_ERROR, payload: error });
+    }
+  };
+};
 
 export const closeDialog = () => {
   return { type: type.CLOSE_DIALOG };
@@ -581,13 +656,9 @@ export const add_package = (package_id, add_on_id) => {
   return { type: type.ADD_PACKAGE, payload: package1 };
 };
 
-
-
 export const openAdd_Address = (data) => {
-  // console.log(data, 'this is data')
   return { type: type.OPEN_ADDRESS_ADD_DIALOG, payload: data };
 };
-
 
 export const closeAdd_Address = (data) => {
   return { type: type.CLOSE_ADDRESS_ADD_DIALOG, payload: data };
@@ -612,9 +683,11 @@ export const closeDelete_Address = (data) => {
 export const show_this_category_package = (data) => {
   return { type: type.SHOW_THIS_CATEGORY, payload: data };
 };
+
 export const apply_coupon = (data) => {
   return { type: type.APPLY_COUPON, payload: data };
 };
+
 export const get_schedule = (data) => {
   return { type: type.GET_SCHEDULE, payload: data };
 };
@@ -631,9 +704,11 @@ export const get_search_type = (search_type) => {
 
   return { type: type.GET_SEARCH_TYPE, payload: search_type }
 }
+
 export const theme_change = (style) => {
   return { type: type.BUTTON_THEME, payload: style };
 };
+
 export const empty_quarry = (empty) => {
 
   return { type: type.EMPTY_QUARRY, payload: empty };
@@ -677,7 +752,6 @@ export const close_profile_dialog = () => {
   return { type: type.CLOSE_PROFILE_EDIT };
 };
 
-
 export const selected_address = (data) => {
   return { type: type.SELECTED_ADDRESS, payload: data };
 };
@@ -694,6 +768,7 @@ export const open_agree_dialog = () => {
 export const close_agree_dialog = () => {
   return { type: type.CLOSE_AGREE_BOX };
 };
+
 export const open_t_c_dialog = () => {
   return { type: type.OPEN_T_C_DIALOG };
 };
@@ -733,6 +808,7 @@ export const to_show_in_details_checkout = (data) => {
 export const close_check_out = () => {
   return { type: type.CLOSE_CHECKOUT_LIST };
 };
+
 export const store_pathname = (path) => {
   return { type: type.STORE_PATHNAME, payload: path };
 };
@@ -745,7 +821,6 @@ export const sub_fetch_post = () => {
   return { type: type.SUB_IN_FETCH_POST };
 };
 
-
 export const store_data_for_check_out = (data) => {
   return { type: type.READY_FOR_CHECK_OUT_DATA, payload: data };
 };
@@ -754,44 +829,20 @@ export const store_data_for_check_out_address_id = (data) => {
   return { type: type.READY_FOR_CHECK_OUT_DATA_ADDRESS_ID, payload: data };
 };
 
-
 export const store_count = (data) => {
   return { type: type.STORE_CART_COUNT, payload: data }
 
 };
-
 
 export const open_sign_out_dialog = () => {
   return { type: type.CONFIRM_LOGOUT_TRUE }
 
 };
 
-
 export const close_sign_out_dialog = () => {
   return { type: type.CONFIRM_LOGOUT_FALSE }
 
 };
-
-
-// export const PAGINATION_API_CALL_SUCCESS = (offset, limit) => {
-//   const token = Cookies.get('token')
-//   const config = {
-//     method: 'post',
-//     url: `${Root_url}/web/v1/checkout/?offset=${offset}&limit=${limit}`,
-//     headers: {
-//       'Authorization': `Bearer ${token}`
-//     }
-//   }
-//   return async (dispatch) => {
-//     try {
-//       const response = await axios(config);
-//       dispatch({ type: type.PAGINATION_API_CALL_SUCCESS, payload: response?.data });
-//     } catch (error) {
-//       dispatch({ type: type.PAGINATION_API_CALL_FAIL, payload: error });
-//     }
-//   };
-
-// };
 
 export const show_message = (value, message, messageType) => {
   return { type: type.SHOW_MESSAGE, payload: { open: value, message: message, MessageType: messageType } };

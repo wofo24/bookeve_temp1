@@ -12,7 +12,7 @@ import { CardMedia } from '@mui/material';
 import empty_cart from '../images/empty_cart.png'
 import Proceed_to_pay from '../Components/Dialog/Proceed_to_pay';
 import { useSelector, useDispatch } from 'react-redux';
-import { store_data_for_check_out, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
+import { store_data_for_check_out, get_my_profile, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -23,10 +23,12 @@ import Small_Cart from '../Components/Small_Cart';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Cookies from 'js-cookie';
 import Loading from '../Components/LoadingIcon/Loading';
+
 export default function Cart() {
+  
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state?.apply_new_theme)
+  const buttonStyles = useSelector((state) => state?.all_theme)
   const selected_address = useSelector((state) => state.selected_address)
   const selected_date_time_var = useSelector((state) => state.selected_date_time)
   const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
@@ -40,9 +42,14 @@ export default function Cart() {
   const [data, setData] = React.useState()
   const [disable, setDisable] = React.useState(true)
   const [Load, setLoad] = useState(false)
+  const [discount, setDiscount] = useState(null)
 
   const totalPackagePrice = []
   const token = Cookies.get('token')
+
+  useEffect(() => {
+    dispatch(get_my_profile())
+  }, [token])
 
   const handleOpen = () => {
     if (token) {
@@ -168,13 +175,22 @@ export default function Cart() {
     }
   }, [coupons?.post_coupon_success?.success])
 
-  // console.log(, 'this is data')
-  console.log(coupons?.post_coupon_success, 'this is data')
-
+  useEffect(() => {
+    if (coupons?.post_coupon_success?.data?.message === "Applicable") {
+      function extractNumbersFromString(inputString) {
+        const numbers = inputString.match(/\d+/g);
+        return numbers ? numbers.join('') : '';
+      }
+      const mergedNumbersFrom1 = extractNumbersFromString(coupons?.post_coupon_success?.data?.result?.message);
+      setDiscount(parseInt(mergedNumbersFrom1))
+    } else {
+      console.error('error')
+    }
+  }, [coupons?.post_coupon_success?.data?.result?.message])
 
   return (
     <div>
-      {loading&&<Loading/>}
+      {loading && <Loading />}
       <Media
         queries={{
           small: '(max-width: 768px)',
@@ -261,6 +277,12 @@ export default function Cart() {
                     <Typography color={'error'} variant='h6' mt={2} textAlign={"center"}>Empty Cart</Typography>
                   </Box>
                 )}
+                {discount !== null ?
+                  <Grid sx={{ background: '#22bb33', mt: 2, mx: -3 }}>
+                    <Typography sx={{ color: 'white', textAlign: 'center', py: 1 }}>Congratulation &#8377;{discount} saved so far!
+                    </Typography>
+                  </Grid> : ''
+                }
                 {Array.isArray(card_data) && card_data.length > 0 &&
                   <>
                     <hr />
@@ -270,7 +292,7 @@ export default function Cart() {
                     </Grid>
                     <Grid container>
                       <Grid xs={6}>Item discount</Grid>
-                      <Grid xs={6} textAlign={'end'}>  &#8377; --</Grid>
+                      <Grid xs={6} textAlign={'end'}>  {discount !== null ? <Typography color={'#43a047'}> &#8377;{discount}</Typography> : <Typography color={'gray'}> &#8377;0</Typography>}</Grid>
                     </Grid>
                     <Grid container>
                       <Grid xs={6}>Tax and fee</Grid>
@@ -280,89 +302,96 @@ export default function Cart() {
                     <Grid container>
                       <Grid xs={6}><b>
                         <Typography>
-
                           Total
                         </Typography>
                       </b>
 
                       </Grid>
                       <Grid xs={6} textAlign={'end'}><b><Typography>
-                        &#8377; {(totalPackagePrice.reduce(function (accumulator, currentValue) { return accumulator + currentValue }, 0)).toLocaleString('en-IN')}
+                        &#8377; {(totalPackagePrice.reduce((accumulator, currentValue) => accumulator + currentValue, 0) - discount).toLocaleString('en-IN')}
+
 
                       </Typography></b></Grid>
                     </Grid>
                   </>
                 }
-
               </Card>
-              {coupons?.post_coupon_success?.success && (
-                <Card sx={{
-                  my: 2,
-                  mx: 3,
-                  borderRadius: '10px',
-                  backdropFilter: `blur(10px)`,
-                  background: '#ffff',
-                  color: 'black', p: 1
-                }}  >
-                  <Grid container p={0}>
-                    <Grid item xs={1} pt={.1}>
-                      <CheckCircleRoundedIcon fontSize='small' sx={{ color: '#00E311' }} />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Box sx={{ color: 'black' }}>
-                        <Typography variant='subtitle' fontSize={'13px'}>
-                          {coupons?.post_coupon_success?.data?.result?.message}
-                        </Typography> <br />
-                        <Typography onClick={handleOpen} variant='subtitle' color={"gray"}>View all coupons <ArrowRightIcon sx={{ marginLeft: -1.5 }} color={'error'} /></Typography>
-                      </Box>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'right' }}>
-                        <Button color='error' sx={{ textTransform: 'capitalize' }} onClick={() => {
-                          dispatch(click_to_apply_coupon(''))
-                          window.location.reload(true)
-                        }}>Remove</Button>
-                      </Box>
-                    </Grid>
+              {Array.isArray(card_data) && card_data.length > 0 &&
+                <>
+                  {coupons?.post_coupon_success?.success && (
+                    <Card sx={{
+                      my: 2,
+                      mx: 3,
+                      borderRadius: '10px',
+                      backdropFilter: `blur(10px)`,
+                      background: '#ffff',
+                      color: 'black', p: 1
+                    }}  >
+                      <Grid container p={0}>
+                        <Grid item xs={1} pt={.1}>
+                          <CheckCircleRoundedIcon fontSize='small' sx={{ color: '#00E311' }} />
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Box sx={{ color: 'black' }}>
+                            <Typography variant='subtitle' fontSize={'13px'}>
+                              {coupons?.post_coupon_success?.data?.result?.message}
+                            </Typography> <br />
+                            <Typography onClick={handleOpen} variant='subtitle' color={"gray"}>View all coupons <ArrowRightIcon sx={{ marginLeft: -1.5 }} color={'error'} /></Typography>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <Box sx={{ display: 'flex', justifyContent: 'right', alignItems: 'right' }}>
+                            <Button color='error' sx={{ textTransform: 'capitalize' }} onClick={() => {
+                              dispatch(click_to_apply_coupon(''))
+                              window.location.reload(true)
+                            }}>Remove</Button>
+                          </Box>
+                        </Grid>
 
-                  </Grid>
-                </Card>
-              )}
-              {coupons?.post_coupon_success.length === 0 && (
-                <Card sx={{
-                  my: 2, mx: 3,
-                  borderRadius: '10px',
-                  backdropFilter: buttonStyles.child_backdropFilter,
-                  background: 'WHITE',
-                  color: buttonStyles.child_div_text,
+                      </Grid>
+                    </Card>
+                  )}
+                  {coupons?.post_coupon_success.length === 0 && (
+                    <Card sx={{
+                      my: 2, mx: 3,
+                      borderRadius: '10px',
+                      backdropFilter: buttonStyles.child_backdropFilter,
+                      background: 'WHITE',
+                      color: buttonStyles.child_div_text,
 
-                }} elevation={2} onClick={handleOpen}  >
-                  <Grid container sx={{ p: 1 }}>
-                    <Grid item xs={1}>
-                      <img width="25" style={{ marginTop: '2px' }} height="25" src="https://img.icons8.com/material/24/discount--v1.png" alt="discount--v1" />
-                    </Grid>
-                    <Grid item xs={9}>
-                      <Typography size='large' variant='text' sx={{color:'black', mx:1}}>View all coupons</Typography>
-                    </Grid>
-                    <Grid item xs={2} textAlign="right">
-                      <ArrowForwardIosIcon fontSize='small' sx={{fontWeight:800, color:'gray'}}/>
-                    </Grid>
-                  </Grid>
-                </Card>
-              )}
+                    }} elevation={2} onClick={handleOpen}  >
+                      <Grid container sx={{ p: 1 }}>
+                        <Grid item xs={1}>
+                          <img width="25" style={{ marginTop: '2px' }} height="25" src="https://img.icons8.com/material/24/discount--v1.png" alt="discount--v1" />
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Typography size='large' variant='text' sx={{ color: 'black', mx: 1 }}>View all coupons</Typography>
+                        </Grid>
+                        <Grid item xs={2} textAlign="right">
+                          <ArrowForwardIosIcon fontSize='small' sx={{ fontWeight: 800, color: 'gray' }} />
+                        </Grid>
+                      </Grid>
+                    </Card>
+                  )}
+                </>
+              }
 
-              <Box px={4} pb={4} pt={2}>
-                {Array.isArray(card_data) && card_data.length > 0 ? (
-                  <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={show_allAddress}>
-                    Proceed
-                  </Button>
-                ) : (
-                  <Button variant='contained' disabled fullWidth >
-                    Proceed
-                  </Button>
-                )}
+              {Array.isArray(card_data) && card_data.length > 0 &&
+                <>
+                  <Box px={4} pb={4} pt={2}>
+                    {Array.isArray(card_data) && card_data.length > 0 ? (
+                      <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={show_allAddress}>
+                        Proceed
+                      </Button>
+                    ) : (
+                      <Button variant='contained' disabled fullWidth >
+                        Proceed
+                      </Button>
+                    )}
 
-              </Box>
+                  </Box>
+                </>}
+
               <Proceed_to_pay />
             </>
           )
@@ -378,114 +407,132 @@ export default function Cart() {
         {(item) => (
           item.large && (
             <Container sx={{ p: 8 }}>
-              <Grid container spacing={2}>
-                <Grid xs={8}>
-                  <Box p={3} px={4} sx={{
-                    borderRadius: '10px',
-                    backdropFilter: buttonStyles.child_backdropFilter,
-                    background: buttonStyles.child_bg,
-                    color: buttonStyles.child_div_text,
-                  }} mx={2} mt={1}>
-                    <Grid container my={1}>
-                      <Grid xs={1} textAlign={'center'}>
-                        <FmdGoodIcon />
-                      </Grid>
-                      <Grid xs={10}>
-                        <Typography><b>Sending booking details to</b></Typography>
-                        <span>+91 {get_my_profile_success_error?.phone_number ? get_my_profile_success_error?.phone_number : 'Please login first!'}</span>
-                      </Grid>
-                    </Grid>
-                    <hr />
-                    <Grid container my={2}>
-                      <Grid xs={1} textAlign={'center'}>
-                        <FmdGoodIcon />
-                      </Grid>
-                      <Grid xs={10}>
-                        <Typography mt={.2}><b>Address :</b> {selected_address}  </Typography>
-                      </Grid>
-                      <Grid xs={1}>
-                        <Typography>{selected_address && <Button onClick={show_allAddress} sx={{ textTransform: 'capitalize', textAlign: 'end' }}>Edit</Button>} </Typography>
-                      </Grid>
-                    </Grid>
-                    <Box>
-                      <hr />
-                      {selected_address ? "" :
-                        <>
-                          <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth size='large' onClick={show_allAddress}> Select an Address</Button>
+              {Array.isArray(card_data) && card_data?.length > 0 ? (
+                <>
+                  <Grid container spacing={2}>
+                    <Grid xs={8}>
+                      <Box p={3} px={4} sx={{
+                        borderRadius: '10px',
+                        backdropFilter: buttonStyles.child_backdropFilter,
+                        background: buttonStyles.child_bg,
+                        color: buttonStyles.child_div_text,
+                      }} mx={2} mt={1}>
+                        <Grid container my={1}>
+                          <Grid xs={1} textAlign={'center'}>
+                            <FmdGoodIcon />
+                          </Grid>
+                          <Grid xs={10}>
+                            <Typography><b>Sending booking details to</b></Typography>
+                            <span>+91 {get_my_profile_success_error?.data?.phone_number ? get_my_profile_success_error?.data?.phone_number : 'Please login first!'}</span>
+                          </Grid>
+                        </Grid>
+                        <hr />
+                        <Grid container my={2}>
+                          <Grid xs={1} textAlign={'center'}>
+                            <FmdGoodIcon />
+                          </Grid>
+                          <Grid xs={10}>
+                            <Typography mt={.2}><b>Address :</b> {selected_address}  </Typography>
+                          </Grid>
+                          <Grid xs={1}>
+                            <Typography>{selected_address && <Button onClick={show_allAddress} sx={{ textTransform: 'capitalize', textAlign: 'end' }}>Edit</Button>} </Typography>
+                          </Grid>
+                        </Grid>
+                        <Box>
                           <hr />
-                        </>
-                      }
-
-                    </Box>
-                    <Grid container my={1}>
-                      <Grid xs={1} textAlign={'center'}>
-                        <AccessTimeFilledIcon />
-                      </Grid>
-                      <Grid xs={10}>
-                        <Typography><b>Slot :</b> {formattedDate} </Typography>
-                      </Grid>
-                      <Grid xs={1}>
-                        <Typography>{formattedDate !== 'Invalid Date' && <Button onClick={openSchedule} sx={{ textTransform: 'capitalize', textAlign: 'end' }}>Edit</Button>} </Typography>
-                      </Grid>
-                    </Grid>
-                    <Box>
-                      <hr />
-                      {formattedDate !== 'Invalid Date' ? "" :
-                        <>
-                          {selected_address &&
+                          {selected_address ? "" :
                             <>
-                              <Button
-                                style={{
-                                  background: buttonStyles.buttonColor,
-                                  color: buttonStyles.buttonText,
-                                }}
-                                variant='contained'
-                                fullWidth
-                                size='large'
-                                onClick={openSchedule}
-                              >
-                                Slot
-                              </Button>
+                              <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth size='large' onClick={show_allAddress}> Select an Address</Button>
+                              <hr />
                             </>
                           }
 
-                        </>
-                      }
+                        </Box>
+                        <Grid container my={1}>
+                          <Grid xs={1} textAlign={'center'}>
+                            <AccessTimeFilledIcon />
+                          </Grid>
+                          <Grid xs={10}>
+                            <Typography><b>Slot :</b> {formattedDate} </Typography>
+                          </Grid>
+                          <Grid xs={1}>
+                            <Typography>{formattedDate !== 'Invalid Date' && <Button onClick={openSchedule} sx={{ textTransform: 'capitalize', textAlign: 'end' }}>Edit</Button>} </Typography>
+                          </Grid>
+                        </Grid>
+                        <Box>
+                          <hr />
+                          {formattedDate !== 'Invalid Date' ? "" :
+                            <>
+                              {selected_address &&
+                                <>
+                                  <Button
+                                    style={{
+                                      background: buttonStyles.buttonColor,
+                                      color: buttonStyles.buttonText,
+                                    }}
+                                    variant='contained'
+                                    fullWidth
+                                    size='large'
+                                    onClick={openSchedule}
+                                  >
+                                    Slot
+                                  </Button>
+                                </>
+                              }
+
+                            </>
+                          }
 
 
-                    </Box>
-                    <Grid container my={3}>
-                      <Grid xs={1} textAlign={'center'}>
-                        <PaymentIcon />
-                      </Grid>
-                      <Grid xs={10}>
-                        <Typography><b>Payment Method</b></Typography>
-                      </Grid>
+                        </Box>
+                        <Grid container my={3}>
+                          <Grid xs={1} textAlign={'center'}>
+                            <PaymentIcon />
+                          </Grid>
+                          <Grid xs={10}>
+                            <Typography><b>Payment Method</b></Typography>
+                          </Grid>
+                        </Grid>
+                        <Box>
+                          <hr />
+                          <Button onClick={HandleCheckOut}
+                            style={{
+                              background: disable ? '#D1D1D1' : buttonStyles.buttonColor,
+                              color: disable ? 'white' : buttonStyles.buttonText,
+                            }}
+                            disabled={disable}
+                            variant='contained' fullWidth size='large'> Payment</Button>
+                          <hr />
+                        </Box>
+                        <Box >
+                          <Typography variant='h5'>Cancellation & reschedule policy</Typography>
+                          <span style={{ color: 'gray', fontSize: '14px' }}>So basically, I am trying to create a progress bar. In this example, I will just change the colors I was using to red, green and blue instead since that's obviously easier to understand than a load of hex values. Effectively, what I am going for is for the progress bar to have this RGB gradien
+                          </span>
+                        </Box>
+                      </Box>
                     </Grid>
-                    <Box>
-                      <hr />
-                      <Button onClick={HandleCheckOut}
-                        style={{
-                          background: disable ? '#D1D1D1' : buttonStyles.buttonColor,
-                          color: disable ? 'white' : buttonStyles.buttonText,
-                        }}
-                        disabled={disable}
-                        variant='contained' fullWidth size='large'> Payment</Button>
-                      <hr />
-                    </Box>
-                    <Box >
-                      <Typography variant='h5'>Cancellation & reschedule policy</Typography>
-                      <span style={{ color: 'gray', fontSize: '14px' }}>So basically, I am trying to create a progress bar. In this example, I will just change the colors I was using to red, green and blue instead since that's obviously easier to understand than a load of hex values. Effectively, what I am going for is for the progress bar to have this RGB gradien
-                      </span>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid xs={4}>
-                  <Box sx={{ color: 'black', borderRadius: '10px', py: 1, width: 360, pl: 0 }}>
-                    <Small_Cart />
-                  </Box>
-                </Grid>
-              </Grid>
+                    <Grid xs={4}>
+                      <Box sx={{ color: 'black', borderRadius: '10px', py: 1, width: 360, pl: 0 }}>
+                        <Small_Cart discount={discount} />
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </>
+
+              ) : (
+                <Box height={'270px'} py={1} my={4}>
+                  <CardMedia
+                    component="img"
+                    alt="green iguana"
+                    style={{ objectFit: 'contain', width: '100%', height: '100%', marginTop: '-40px' }}
+                    image={empty_cart}
+                  />
+
+                  <Typography color={'warning'} my={1} textAlign={"center"}><Link to={'/'}>Go to add</Link></Typography>
+                  <Typography color={'error'} variant='h6' mt={-0} textAlign={"center"}>Empty Cart</Typography>
+                </Box>
+              )}
+
             </Container>
           )
         )}

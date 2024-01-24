@@ -30,8 +30,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Help() {
     const dispatch = useDispatch()
     const open = useSelector((state) => state.help_dialog)
-    const textStyle = useSelector((state) => state.apply_new_theme)
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const textStyle = useSelector((state) => state.all_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const handleClose = () => {
         dispatch(close_help())
     };

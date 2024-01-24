@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AlertDialogSlide() {
   const open = useSelector((state) => state.agree_box)
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const buttonStyles = useSelector((state) => state.all_theme)
 
   const handleClose = () => {
     dispatch(close_agree_dialog())

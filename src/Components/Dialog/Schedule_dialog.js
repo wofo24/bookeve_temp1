@@ -25,8 +25,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Schedule_dialog() {
     const dispatch = useDispatch()
     const open = useSelector((state) => state.open_schedule)
-    const textStyle = useSelector((state) => state.apply_new_theme)
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const textStyle = useSelector((state) => state.all_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const selected = useSelector((state) => state.selected_address)
     const reschedule_data = useSelector((state) => state.reschedule)
     const selectedDate = new Date()
@@ -101,10 +101,6 @@ export default function Schedule_dialog() {
             dispatch(close_schedule_dialog());
             if (reschedule_data?.name?.reschedule) {
                 dispatch(reschedule_booking_date(reschedule_data?.id, `${formatted_date}T${get_time_name_state || '11:00'}:00`))
-                setTimeout(() => {
-                    window.location.reload(true)
-                }, 3000);
-
             }
         }
         else {
@@ -204,7 +200,7 @@ export default function Schedule_dialog() {
                                             {times?.map((item, index) => {
                                                 item?.replace(" AM", "");
                                                 return (
-                                                    <Box key={index} sx={{ p: 1, m: 1, borderRadius: '10px', width:90 }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}>
+                                                    <Box key={index} sx={{ p: 1, m: 1, borderRadius: '10px', width: 90 }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}>
                                                         <span>{item}</span>
                                                     </Box>
                                                 );

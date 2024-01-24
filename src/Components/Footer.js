@@ -17,7 +17,7 @@ const footerStyle = {
 };
 
 export default function Footer() {
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const public_info = useSelector((state) => state?.public_information?.data?.data)
     const loading = useSelector((state) => state?.public_information?.data?.loading)
     const error = useSelector((state) => state.error)

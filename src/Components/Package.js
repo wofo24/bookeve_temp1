@@ -14,13 +14,9 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import CircularProgress from '@mui/material-next/CircularProgress';
 export default function Package({ item }) {
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
-  const card_data = useSelector((state) => state.card_data)
-  const update_in_post = useSelector((state) => state.update_in_post)
+  const buttonStyles = useSelector((state) => state.all_theme)
   const [show_btn, setShow_btn] = useState(false)
   const [Load, setLoad] = useState(false)
-
-
 
   const Increment = (id) => {
     dispatch(add_fetch_post());
@@ -92,12 +88,12 @@ export default function Package({ item }) {
               <Typography component="div" sx={{ color: 'black', }} >
                 {item?.package_name}
               </Typography>
-              <Typography component="div" sx={{ color: 'black', fontSize: '13px', color: 'gray', py:.4 }} >
-                <Box sx={{borderBottom:'1px dotted', width:135, }}> 
-                <StarsRoundedIcon  sx={{ mt: -.5, fontSize:'18px' }} /> 3.9 (123 reviews)
+              <Typography component="div" sx={{ color: 'black', fontSize: '13px', color: 'gray', py: .4 }} >
+                <Box sx={{ borderBottom: '1px dotted', width: 135, }}>
+                  <StarsRoundedIcon sx={{ mt: -.5, fontSize: '18px' }} /> {item.avg_star_rating} ({item.reviews_count} reviews)
                 </Box>
               </Typography>
-              <Typography variant="subtitle1" fontSize={'14px'}  component="div">
+              <Typography variant="subtitle1" fontSize={'14px'} component="div">
                 &#8377;{parseFloat(item?.original_price)} &#x2666; {item.duration} min
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" component="div">
@@ -107,7 +103,7 @@ export default function Package({ item }) {
                 Duration :min
               </Typography> */}
               <Typography color="text.secondary" sx={{ fontSize: '12px' }}>
-               {item?.package_detail.split(' ').slice(0, 4).join(' ')} ...
+                {item?.package_detail.split(' ').slice(0, 4).join(' ')} ...
               </Typography>
               <Typography color="text.secondary" sx={{ fontSize: '12px', }}>
               </Typography>

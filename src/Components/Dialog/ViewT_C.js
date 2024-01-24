@@ -22,7 +22,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function ViewT_C() {
   const open = useSelector((state) => state.t_c_dialog)
   const dispatch = useDispatch()
-  const textStyle = useSelector((state) => state.apply_new_theme)
+  const textStyle = useSelector((state) => state.all_theme)
 
   const handleClose = () => {
     dispatch(close_t_c_dialog())

@@ -34,10 +34,10 @@ export default function Coupon() {
     const [formData, setFormData] = useState([])
     const [formErrors, setFormErrors] = useState({});
     const dispatch = useDispatch()
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const [toShow, setToShow] = useState()
-    const textStyle = useSelector((state) => state.apply_new_theme)
-    const apply_onClick_coupon = useSelector((state) => state.apply_onClick_coupon)
+    const textStyle = useSelector((state) => state.all_theme)
+    // const apply_onClick_coupon = useSelector((state) => state.apply_onClick_coupon)
     const coupons = useSelector((state) => state.coupons)
     const loading = useSelector((state) => state.coupons.loading)
     const card_data = useSelector((state) => state?.card_data?.data)
@@ -51,7 +51,7 @@ export default function Coupon() {
                 console.log('close')
             }
         } else {
-            console.log('make this is', card_data)
+            // console.log('make this is', card_data)
         }
     }, [open, card_data]);
 
@@ -59,9 +59,7 @@ export default function Coupon() {
         const { value, name } = event.target
         setFormData({ ...formData, [name]: value })
     }
-
-    console.log(formData, 'this is form data')
-
+   
     const handleClose = () => {
         dispatch(close_coupon_dialog())
     };
@@ -75,7 +73,7 @@ export default function Coupon() {
     };
 
     const ApplyCoupon = (data) => {
-        dispatch(click_to_apply_coupon(data?.id));
+        dispatch(click_to_apply_coupon(data?.code));
         setToShow(data);
         setFormData({ ...formData, coupon: data.code });
         handleClose()
@@ -91,8 +89,6 @@ export default function Coupon() {
         }
 
     }
-
-    console.log(coupons?.post_coupon_success?.data?.result)
 
     const MainApply = (data) => {
         if (!formData || !formData.coupon || formData.coupon === '') {
@@ -199,10 +195,10 @@ export default function Coupon() {
                                                                 </Box>
                                                             </Grid>
                                                             <Grid xs={4} textAlign='end'>
-                                                            <Box sx={{ mt: 4, textAlign: 'last' }}>
+                                                                <Box sx={{ mt: 4, textAlign: 'last' }}>
                                                                     {/* <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} >Apply</Button> */}
                                                                     {item?.code === formData?.coupon ?
-                                                                        <Button variant='contained' color='success' style={{ textTransform: 'capitalize'}} onClick={() => {
+                                                                        <Button variant='contained' color='success' style={{ textTransform: 'capitalize' }} onClick={() => {
                                                                             ApplyCoupon(item)
                                                                             Direct_apply(item)
                                                                         }
@@ -218,7 +214,7 @@ export default function Coupon() {
 
 
                                                                 </Box>
-                                                              
+
                                                             </Grid>
 
                                                         </Grid>
@@ -285,9 +281,9 @@ export default function Coupon() {
                                     </Typography>
                                 </Box>
 
-                                <Box py={1} sx={{ overflow: 'scroll', px: 2 ,}}>
+                                <Box py={1} sx={{ overflow: 'scroll', px: 2, }}>
                                     <form onSubmit={handleSubmit}>
-                                        <Grid container sx={{m:0, p:0}}>
+                                        <Grid container sx={{ m: 0, p: 0 }}>
                                             <Grid xs={12} item>
                                                 <TextField
                                                     onChange={handleChange}
@@ -305,9 +301,9 @@ export default function Coupon() {
                                             </Grid>
                                             <Box p={3} margin={'auto'}>
 
-                                                <Button  size='medium' variant='contained' type='submit' onClick={() => MainApply(formData?.coupon)} style={{padding:'8px 40px', background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Apply</Button>
+                                                <Button size='medium' variant='contained' type='submit' onClick={() => MainApply(formData?.coupon)} style={{ padding: '8px 40px', background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Apply</Button>
                                             </Box>
-                                            <Box sx={{ margin: 'auto', width:'100%' }}>
+                                            <Box sx={{ margin: 'auto', width: '100%' }}>
                                                 {loading && <Loading />}
                                                 {(coupons?.get_coupon_success?.data?.length !== 0) ? coupons?.get_coupon_success?.data?.map((item) => (
                                                     <Paper fullWidth elevation={2} sx={{ my: 2 }}>
@@ -331,7 +327,7 @@ export default function Coupon() {
                                                                 <Box sx={{ mt: 4, textAlign: 'last' }}>
                                                                     {/* <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} >Apply</Button> */}
                                                                     {item?.code === formData?.coupon ?
-                                                                        <Button variant='contained' color='success' style={{ textTransform: 'capitalize'}} onClick={() => {
+                                                                        <Button variant='contained' color='success' style={{ textTransform: 'capitalize' }} onClick={() => {
                                                                             ApplyCoupon(item)
                                                                             Direct_apply(item)
                                                                         }

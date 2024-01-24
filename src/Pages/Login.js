@@ -21,7 +21,7 @@ export default function Login() {
         "phone_number": data?.phone_number
     });
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const positive_response = useSelector((state) => state.useLogged_in.data)
     const loading = useSelector((state) => state.useLogged_in.loading)
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined });

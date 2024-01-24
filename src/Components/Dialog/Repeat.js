@@ -11,7 +11,7 @@ export default function Repeat() {
   const open_r = useSelector((state) => state.repeat_open);
   const data = useSelector((state) => state.repeat_data);
   
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const buttonStyles = useSelector((state) => state.all_theme)
   const dispatch = useDispatch()
   const handleClose = () => {
     dispatch(closeRepeat())

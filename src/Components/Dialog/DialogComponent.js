@@ -38,8 +38,8 @@ export default function AlertDialogSlide() {
     const open = useSelector((state) => state.dialog_open);
     const dialog_data = useSelector((state) => state.dialog_data);
     const [selectedValue, setSelectedValue] = React.useState("");
-    const textStyle = useSelector((state) => state.apply_new_theme)
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const textStyle = useSelector((state) => state.all_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const steps = [
         {
             label: 'Select campaign settings',

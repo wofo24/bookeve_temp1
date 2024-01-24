@@ -7,15 +7,19 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@mui/material';
-import { checked_out_get, open_help, open_schedule_dialog, booking_cancel } from '../Redux/actions/actions';
+import { checked_out_get, open_help, open_schedule_dialog, post_review, booking_cancel } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
-
-
+import Rating from '@mui/material/Rating';
+import LinearProgress from '@mui/material/LinearProgress';
 
 export default function Track_order() {
     const data = useSelector(state => state.check_out_data)
-    const buttonStyles = useSelector((state) => state?.apply_new_theme)
+    const buttonStyles = useSelector((state) => state?.all_theme)
+    const loading = useSelector((state) => state.review.loading)
+    const [will_map_data, setWill_map_data] = useState([])
+    const review = useSelector((state) => state.review.post_review_success)
     const [lastOrder, setLastOrder] = useState([])
+    const [data_, setData_] = useState({ rating: parseInt(4), checkout: lastOrder[0]?.id })
     const totalPackagePrice = []
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -23,20 +27,40 @@ export default function Track_order() {
         dispatch(checked_out_get())
     }, [])
 
+
+
     useEffect(() => {
         const maxIdItem = data?.check_out_get_list_success?.data?.reduce((maxItem, currentItem) => {
             return currentItem?.id > (maxItem?.id || 0) ? currentItem : maxItem;
         }, null);
         setLastOrder([maxIdItem])
+        setData_((pre) => ({ ...data_, checkout: lastOrder[0]?.id }))
     }, [data?.check_out_get_list_success])
 
-    // console.log(data?.check_out_get_list_success?.data)
+    const HandleFeedback = (e) => {
+        const { name } = e.target
+        const { value } = e.target
+        setData_({ ...data_, [name]: value })
+    }
+
+    const HandleSubmit = (e) => {
+        e.preventDefault()
+        dispatch(post_review(data_))
+    }
+
+    useEffect(() => {
+        setData_(
+            {
+                rating: parseInt(0),
+                checkout: will_map_data?.id,
+                comment: ''
+            }
+        );
+    }, [review])
 
     return (
-
-
         <Container margin={'auto'} sx={{
-            p: 2,
+            p: 1,
             mt: 0,
             my: { lg: 4, xs: 0 },
             borderRadius: '10px',
@@ -46,7 +70,7 @@ export default function Track_order() {
         }} >
             <Box mx={1} mt={0}>
                 <Container sx={{
-                    px: 2, py: 4, my: 2, borderRadius: '10px',
+                    px: 0, py: 4, my: 2, borderRadius: '10px',
                     backdropFilter: buttonStyles.child_backdropFilter,
                     background: buttonStyles.child_bg,
                     color: buttonStyles.color,
@@ -132,7 +156,31 @@ export default function Track_order() {
                                         </Grid>
                                     </Box>
                                 </Card>
+                                <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2, mt: 4, textAlign: 'center' }}>
 
+                                    <Box>
+                                        <Typography variant='h6' component="legend" mb={.8}>Rate your experience</Typography>
+                                        <Typography variant='subtitle2' >The corresponding author must inform about the withdrawal ( Cancellation ) of the article before the acceptance from the International Journal of Medical Research </Typography>
+                                        <form style={{ textAlign: 'center' }} onSubmit={HandleSubmit} >
+                                            <Rating
+                                                required
+                                                sx={{ my: 2 }}
+                                                name="rating"
+                                                size='large'
+                                                value={data_.rating}
+                                                onChange={HandleFeedback}
+                                            /><br />
+                                            <textarea value={data_?.comment} required name='comment' onChange={HandleFeedback} placeholder='Type something...' style={{ minHeight: '3rem', width: '30rem', height: 'auto', borderRadius: '5px', padding: '5px' }} /><br />
+                                            <Button type='submit' sx={{ border: `1px solid ${buttonStyles.buttonColor}`, color: `${buttonStyles.buttonColor}`, px: 4, my: 2 }}>Submit</Button>
+                                        </form>
+                                    </Box>
+                                    {loading ?
+                                        <Box sx={{ mx: -4, mb: -2, mt: 3 }}>
+                                            <LinearProgress color="success" />
+                                        </Box>
+                                        :
+                                        ''}
+                                </Card>
                             </Grid>
                             <Grid lg={5} md={5} textAlign={'start'} px={1} pt={3} >
                                 <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
@@ -176,6 +224,8 @@ export default function Track_order() {
                                     </Grid>
                                     {/* <hr /> */}
                                 </Card>
+
+
                                 <Card sx={{ my: 4, background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
                                     <Typography mb={2}> <b>Cancellation & Research policy </b></Typography>
                                     <span style={{ fontSize: '12px' }}>

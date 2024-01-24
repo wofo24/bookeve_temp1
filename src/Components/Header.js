@@ -6,7 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import { Navigate, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
+// import MenuIcon from '@mui/icons-material/Menu';
+import HouseRoundedIcon from '@mui/icons-material/HouseRounded';
 import Container from '@mui/material/Container';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
@@ -25,7 +26,7 @@ export default function Header() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const card_data = useSelector((state) => state.card_data.data)
     const cart_count = useSelector((state) => state.cart_count)
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -36,7 +37,7 @@ export default function Header() {
     const open = Boolean(anchorEl);
 
     useEffect(() => {
-        let count = 0; 
+        let count = 0;
         if (Array.isArray(card_data)) {
             card_data.forEach((item) => {
                 count += +item.quantity;
@@ -44,9 +45,6 @@ export default function Header() {
             dispatch(store_count(count))
         }
     }, [card_data]);
-
-
-    // console.log(active_user, 'this is active use')
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -58,20 +56,10 @@ export default function Header() {
         dispatch(get_my_profile())
     }, [token])
 
-    // const handleOpenNavMenu = (event) => {
-    //     setAnchorElNav(event.currentTarget);
-    // };
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
-    const HandleLogOut = () => {
-        // const Logout = () => {
-
-        dispatch(open_sign_out_dialog())
-
-
-        // }
-    }
+    const HandleLogOut = () => {dispatch(open_sign_out_dialog())}
 
     return (
         <>
@@ -120,39 +108,6 @@ export default function Header() {
                                     {public_info?.business_name}
                                 </Typography>
                                 <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: buttonStyles.icons_Color }}>
-
-                                    {/* <Menu
-                                        id="menu-appbar"
-                                        anchorEl={anchorElNav}
-                                        anchorOrigin={{
-                                            vertical: 'bottom',
-                                            horizontal: 'left',
-                                        }}
-                                        keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'left',
-                                        }}
-                                        open={Boolean(anchorElNav)}
-                                        onClose={handleCloseNavMenu}
-                                        sx={{
-                                            display: { xs: 'block', md: 'none' },
-                                            zIndex: '9999',
-                                            color: 'black'
-                                        }}
-                                    >
-                                        <Button color='success' onClick={() => navigate('/indexTheme')}>Try Theme</Button>
-                                    </Menu> */}
-                                    {/* <IconButton
-                                        size="large"
-                                        aria-label="account of current user"
-                                        aria-controls="menu-appbar"
-                                        aria-haspopup="true"
-                                        onClick={handleOpenNavMenu}
-                                        color="inherit"
-                                    >
-                                        <MenuIcon />
-                                    </IconButton> */}
                                 </Box>
                                 <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -199,6 +154,18 @@ export default function Header() {
                                                 <SearchRoundedIcon fontSize='large' sx={{ mx: 1 }} /> Search
                                             </Button>
                                         </Link>
+                                        <Link
+                                            to={`/`}
+                                            style={{ textDecoration: 'none' }}
+                                        >
+                                            <Button
+                                                onClick={handleCloseNavMenu}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize', alignItems: 'center' }}
+                                            >
+                                                <HouseRoundedIcon fontSize='large' sx={{ mx: 1 }} />
+                                                 Home
+                                            </Button>
+                                        </Link>
                                         {token ? <Link
                                             style={{ textDecoration: 'none' }}
                                         >
@@ -221,7 +188,7 @@ export default function Header() {
                                                     <Button
                                                         id="basic-button"
 
-                                                        sx={{ mx: 3, my: 2, color: window.location.pathname === '/profile' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
+                                                        sx={{ mx: 3, my: 2, color: window.location.pathname === '/login' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
                                                     >
                                                         <AccountCircleOutlinedIcon fontSize='large' sx={{ mx: 1 }} />  Login
                                                     </Button>
@@ -229,7 +196,7 @@ export default function Header() {
                                             </>
                                         }
                                         <Link
-                                            to={`/cart`}
+                                            to={token?`/cart`:'/login'}
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <Button
@@ -262,7 +229,7 @@ export default function Header() {
                                                 textDecoration: 'none', color: 'inherit',
                                             }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }}  >Profile</MenuItem></Link>
                                             <Link to='/all-booking' style={{ textDecoration: 'none', color: 'inherit', }}>  <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }} >My Booking</MenuItem></Link>
-                                            <Link to='/indexTheme' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }} >Theme</MenuItem></Link>
+                                            {/* <Link to='/indexTheme' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }} >Theme</MenuItem></Link> */}
                                             <Link to='#' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={HandleLogOut} style={{ fontSize: '20px', fontWeight: 500, color: 'red' }} >Logout</MenuItem></Link>
                                         </Box>
                                     </Menu>
@@ -319,38 +286,7 @@ export default function Header() {
                                 </Typography>
                                 <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: buttonStyles.icons_Color }}>
 
-                                    {/* <Menu
-                                        id="menu-appbar"
-                                        anchorEl={anchorElNav}
-                                        anchorOrigin={{
-                                            vertical: 'bottom',
-                                            horizontal: 'left',
-                                        }}
-                                        keepMounted
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'left',
-                                        }}
-                                        open={Boolean(anchorElNav)}
-                                        onClose={handleCloseNavMenu}
-                                        sx={{
-                                            display: { xs: 'block', md: 'none' },
-                                            zIndex: '9999',
-                                            color: 'black'
-                                        }}
-                                    >
-                                        <Button color='success' onClick={() => navigate('/indexTheme')}>Try Theme</Button>
-                                    </Menu>
-                                    <IconButton
-                                        size="large"
-                                        aria-label="account of current user"
-                                        aria-controls="menu-appbar"
-                                        aria-haspopup="true"
-                                        onClick={handleOpenNavMenu}
-                                        color="inherit"
-                                    >
-                                        <MenuIcon />
-                                    </IconButton> */}
+                                    
                                 </Box>
                                 <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

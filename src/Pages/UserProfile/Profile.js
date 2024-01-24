@@ -63,7 +63,7 @@ function a11yProps(index) {
 }
 
 export default function Profile() {
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const buttonStyles = useSelector((state) => state.all_theme)
   const get_my_profile_success_error1 = useSelector((state) => state.get_my_profile_update_success_error)
   const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
   const loading = useSelector((state) => state.get_my_profile_success_error?.data?.loading)

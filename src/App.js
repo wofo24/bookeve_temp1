@@ -34,7 +34,7 @@ import ViewT_C from './Components/Dialog/ViewT_C'
 import Help from './Components/Dialog/Help';
 import Snack from './Components/SnackBar/Snack'
 import Search_page from './Components/Search/Search_page';
-import { Unknown_user_entered, get_public_information } from './Redux/actions/actions';
+import { Unknown_user_entered, get_public_information, get_all_theme } from './Redux/actions/actions';
 import Logout from './Components/Dialog/Logout';
 const Cart = React.lazy(() => import('./Pages/Cart'))
 const Signup = React.lazy(() => import('./Pages/Signup'))
@@ -48,6 +48,7 @@ const Payment = React.lazy(() => import('./Pages/Payment'))
 
 function App() {
   const New_themes = useSelector((state) => state.apply_new_theme)
+  const all_theme = useSelector((state) => state.all_theme)
   const pathname = useSelector((state) => state.pathname)
   const unknown_user_token = Cookies.get('unknown_user_token')
   const token = Cookies.get('token')
@@ -70,16 +71,19 @@ function App() {
   useEffect(() => {
     dispatch(get_public_information())
   }, [])
-  console.log(New_themes, 'this is new theme')
+
+  useEffect(() => {
+    dispatch(get_all_theme())
+  }, [])
   return (
-    <body style={New_themes} >
-      <style>{New_themes.keyframesStyle}</style>
+    <body style={all_theme} >
+      {/* <style>{all_theme.keyframesStyle}</style> */}
       <BrowserRouter>
         <Header />
         <DialogComponent />
         <DetailsDlg />
         <Repeat />
-        <Logout/>
+        <Logout />
         <Open_delete />
         <Add_address />
         <All_Address />
