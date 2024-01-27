@@ -23,6 +23,7 @@ export default function Login() {
     const outerTheme = useTheme();
     const buttonStyles = useSelector((state) => state.all_theme)
     const positive_response = useSelector((state) => state.useLogged_in.data)
+    const error = useSelector((state) => state.useLogged_in.error)
     const loading = useSelector((state) => state.useLogged_in.loading)
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined });
     const [hasNavigated, setHasNavigated] = useState(false);
@@ -101,29 +102,35 @@ export default function Login() {
                 },
             },
         });
-       
-        useEffect(() => {
-            if (positive_response?.success === true && !hasNavigated) {
-                dispatch(store_id(parseInt(positive_response?.data?.phone_number)));
-                navigate('/otp');
-                setHasNavigated(true); 
+
+    useEffect(() => {
+        if (positive_response?.success === true && !hasNavigated) {
+            dispatch(store_id(parseInt(positive_response?.data?.phone_number)));
+            navigate('/otp', { state: { formData } });
+            setHasNavigated(true);
+        } else {
+            if (!error?.success && !hasNavigated) {
+                error?.phone_number?.map((item) => {
+                    if (item === "User with mobile no doesn't exist.") {
+                        setFormErrors({ 'phone_number': item });
+                        setTimeout(() => {
+                            navigate('/signup', { state: { formData } });
+                        }, 2000);
+                    }
+                });
             } else {
-                if (positive_response) {
-                    positive_response?.phone_number?.map((item) => {
-                        if (item === "User with mobile no doesn't exist.") {
-                            setTimeout(() => {
-                                navigate('/signup', { state: { formData } });
-                            }, 2000);
-                        }
-                    });
-                }
-                setFormErrors({ 'phone_number': positive_response.phone_number });
+                // console.log(error)
+
             }
-        }, [positive_response, hasNavigated]);
+            setFormErrors({ 'phone_number': error.phone_number && error.phone_number[0] });
+        }
+    }, [positive_response, error, hasNavigated]);
+
+    console.log(error?.phone_number)
 
     return (
         <div>
-            {loading&&<Loading/>}
+            {loading && <Loading />}
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -159,9 +166,10 @@ export default function Login() {
                                                     onChange={handleChange}
                                                     fullWidth
                                                     defaultValue={data?.phone_number}
-                                                    type='tel'  // Use type 'tel' for phone numbers
+                                                    type='number'  // Use type 'tel' for phone numbers
                                                     id="standard-textarea"
                                                     label="Phone number"
+                                                    placeholder='Phone number'
                                                     name='phone_number'
                                                     required
                                                     inputProps={{
@@ -236,9 +244,11 @@ export default function Login() {
 
                                                 <TextField
                                                     onChange={handleChange}
+                                                    defaultValue={data?.phone_number}
                                                     fullWidth
-                                                    type='tel'  // Use type 'tel' for phone numbers
+                                                    type='number'  // Use type 'tel' for phone numbers
                                                     id="standard-textarea"
+                                                    placeholder='Phone number'
                                                     label="Phone number"
                                                     name='phone_number'
                                                     required

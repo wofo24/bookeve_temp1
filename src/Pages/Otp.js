@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import Loading from '../Components/LoadingIcon/Loading'
+import { useLocation } from 'react-router-dom';
 export default function Otp() {
 
     const customTheme = (outerTheme) =>
@@ -80,6 +81,7 @@ export default function Otp() {
     const user_id = useSelector((state) => state.user_id)
     const active_user_Response = useSelector((state) => state.active_user.data)
     const loading_otp_send = useSelector((state) => state.otp_resend.loading)
+    const location = useLocation();
 
     const loading = useSelector((state) => state.active_user.loading)
     const otp_resend_response = useSelector((state) => state.otp_resend.data)
@@ -90,7 +92,9 @@ export default function Otp() {
     const [counter, setCounter] = useState(30);
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const state_data = location.state?.formData || null;
 
+    // console.log(state_data)s
     const handleChange = (event) => {
         const { value, name } = event.target
         setFormData({ ...formData, [name]: value })
@@ -142,8 +146,17 @@ export default function Otp() {
     }, [active_user_Response, hasNavigated, error]);
 
 
+    const handleNav = () => {
+        setTimeout(() => {
+            window.location.reload(true);
+            window.location.href = '/login';
+        }, 1000);
+    };
+    
+
     return (
         <div>
+
             {loading || loading_otp_send ? <Loading /> : null}
 
             <Media
@@ -170,11 +183,17 @@ export default function Otp() {
                                 </span>
                             </Typography>
                         </Box>
+                        <Box mt={1} px={7} textAlign={"center"}>
+                            <Typography variant='subtitle' textAlign={'center'} sx={{ opacity: '.8' }}>Please enter the OTP sent to {state_data?.phone_number}.
+                                {/* <br/> */}
+                                <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => handleNav()}> Change</span>
+                            </Typography>
+                        </Box>
                         <div>
                             <form onSubmit={handleSubmit}>
-                                <Box py={3}>
+                                <Box pb={3} px={3}>
                                     <Grid container spacing={3}>
-                                        <Grid xs={12} item>
+                                        <Grid xs={12} item >
                                             <ThemeProvider theme={customTheme(outerTheme)}>
                                                 <TextField
                                                     onChange={handleChange}

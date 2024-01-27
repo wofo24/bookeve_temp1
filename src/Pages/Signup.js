@@ -85,10 +85,7 @@ export default function Signup() {
     const outerTheme = useTheme();
     const location = useLocation();
     const data = location?.state?.formData;
-    // const [showPassword, setShowPassword] = React.useState(false);
     const [formData, setFormData] = useState({ "phone_number": data?.phone_number })
-    // const handleClickShowPassword = () => setShowPassword((show) => !show);
-
     const buttonStyles = useSelector((state) => state.all_theme)
     const signup_response = useSelector((state) => state.useSign_Up.data)
     const loading = useSelector((state) => state.useSign_Up.loading)
@@ -96,8 +93,6 @@ export default function Signup() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined, 'name': undefined });
-
-
 
     const handleChange = (event) => {
         const { value, name } = event.target
@@ -113,24 +108,28 @@ export default function Signup() {
     useEffect(() => {
         if (signup_response?.success === true) {
             dispatch(store_id(signup_response?.data?.id));
-            navigate('/otp');
+            navigate('/otp', { state: { formData } });
         }
         else {
             if (error) {
                 error?.phone_number?.map((item) => {
                     if (item === 'User with this phone number already exists.') {
-                        navigate('/login', { state: { formData } })
+                        setFormErrors({ "phone_number": item })
+                        setTimeout(() => {
+
+                            navigate('/login', { state: { formData } })
+                        }, 2000);
                     }
                 })
-
+                setFormErrors({ 'phone_number': error.phone_number && error.phone_number[0] });
             }
-            setFormErrors({ "phone_number": error.phone_number })
         }
+        console.log(error)
     }, [signup_response, error]);
 
     return (
         <div>
-            {loading&&<Loading/>}
+            {loading && <Loading />}
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -150,7 +149,7 @@ export default function Signup() {
                                 <Typography textAlign='left' fontSize={36} >Sign up</Typography>
                                 <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>Don't have account &nbsp;
                                     <span className='ThemeColorYellow'>
-                                        <Link to='/signup' style={{ color: buttonStyles.icons_Color}}>Create Your Account</Link>&nbsp;
+                                        <Link to='/signup' style={{ color: buttonStyles.icons_Color }}>Create Your Account</Link>&nbsp;
                                     </span> it's takes less then 30 second's.
                                 </Typography>
                             </Box>
@@ -166,6 +165,7 @@ export default function Signup() {
                                                         id="standard-textarea"
                                                         label="Name"
                                                         name='name'
+                                                        placeholder='Phone number'
                                                         multiline
                                                         variant="standard"
                                                         required
@@ -180,10 +180,11 @@ export default function Signup() {
                                                         onChange={handleChange}
                                                         fullWidth
                                                         defaultValue={formData?.phone_number}
-                                                        type='tel'  // Use type 'tel' for phone numbers
+                                                        type='number'  // Use type 'tel' for phone numbers
                                                         id="standard-textarea"
                                                         label="Phone number"
                                                         name='phone_number'
+                                                        placeholder='Phone number'
                                                         required
                                                         inputProps={{
                                                             pattern: "^[0-9]{10}$",
@@ -203,7 +204,7 @@ export default function Signup() {
                                             </Grid>
 
                                             <Grid item xs={6} py={2} textAlign='right'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Signup</Button>
+                                                <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Signup</Button>
                                             </Grid>
                                         </Grid>
                                     </Box>
@@ -256,6 +257,7 @@ export default function Signup() {
                                                         multiline
                                                         variant="standard"
                                                         required
+
                                                     />
                                                 </ThemeProvider>
                                             </Grid>
@@ -264,9 +266,11 @@ export default function Signup() {
                                                     <TextField
                                                         onChange={handleChange}
                                                         fullWidth
+
                                                         defaultValue={data?.phone_number}
-                                                        type='tel'  // Use type 'tel' for phone numbers
+                                                        type='number'  // Use type 'tel' for phone numbers
                                                         id="standard-textarea"
+                                                        placeholder='Phone number'
                                                         label="Phone number"
                                                         name='phone_number'
                                                         required
@@ -274,6 +278,8 @@ export default function Signup() {
                                                             pattern: "^[0-9]{10}$",
                                                         }}
                                                         variant="standard"
+                                                        error={!!formErrors.phone_number}
+                                                        helperText={formErrors.phone_number}
                                                     />
                                                 </ThemeProvider>
                                             </Grid>
@@ -297,7 +303,7 @@ export default function Signup() {
                                                 </Link>
                                             </Grid>
                                             <Grid item xs={12} py={2} textAlign='center'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' size='large' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Signup</Button>
+                                                <Button id='BackgroundColorChangeOnly' variant='contained' size='large' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Signup</Button>
                                                 {/* <Button id='BackgroundColorChangeOnly' variant='contained' type='submit'>Signup</Button> */}
                                             </Grid>
                                         </Grid>

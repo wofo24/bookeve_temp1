@@ -46,6 +46,9 @@ export default function Header() {
         }
     }, [card_data]);
 
+
+    // console.log(public_info,)
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -59,7 +62,7 @@ export default function Header() {
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
-    const HandleLogOut = () => {dispatch(open_sign_out_dialog())}
+    const HandleLogOut = () => { dispatch(open_sign_out_dialog()) }
 
     return (
         <>
@@ -78,16 +81,36 @@ export default function Header() {
                     }}>
                         <Container maxWidth="xl">
                             <Toolbar disableGutters sx={{ m: 'auto' }}>
-                                <Box onClick={() => navigate('/')} sx={{ height: '40px', width: '40px', display: { xs: 'flex', md: 'none' } }}>
-                                    {public_info && public_info?.company_logo ? (<img src={public_info?.company_logo} style={{ height: '40px', width: '40px', marginRight: '9px' }} />) :
-                                        (
-                                            <>
-                                                <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-
-                                            </>
-                                        )}
-
+                                <Box
+                                    onClick={() => navigate('/')}
+                                    sx={{ height: '40px', width: '40px', display: { xs: 'flex', md: 'none' } }}
+                                >
+                                    {public_info && (
+                                        <>
+                                            {public_info.company_logo && !public_info.is_text ? (
+                                                <img src={public_info.company_logo} />
+                                            ) : (
+                                                <>
+                                                    {public_info.is_text && <Typography>{public_info.business_name}</Typography>}
+                                                    {public_info.company_logo && public_info.is_text && (
+                                                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                            <img src={public_info.company_logo} />
+                                                            <Typography>{public_info.business_name}</Typography>
+                                                        </Box>
+                                                    )}
+                                                    {!public_info.company_logo && !public_info.is_text && (
+                                                        <StoreRoundedIcon
+                                                            style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }}
+                                                            onClick={() => navigate('/')}
+                                                            sx={{ mr: 1 }}
+                                                        />
+                                                    )}
+                                                </>
+                                            )}
+                                        </>
+                                    )}
                                 </Box>
+
                                 <Typography
                                     variant="h5"
                                     noWrap
@@ -112,13 +135,30 @@ export default function Header() {
                                 <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <Box onClick={() => navigate('/')} sx={{ height: '40px', width: '40px' }}>
-                                            {public_info && public_info.company_logo ? (<img src={public_info.company_logo} style={{ height: '50px', width: '50px', marginRight: '9px' }} />) :
-                                                (
-                                                    <>
-                                                        <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-
-                                                    </>
-                                                )}
+                                            {public_info && (
+                                                <>
+                                                    {public_info.company_logo && !public_info.is_text ? (
+                                                        <img src={public_info.company_logo} />
+                                                    ) : (
+                                                        <>
+                                                            {public_info.is_text && <Typography>{public_info.business_name}</Typography>}
+                                                            {public_info.company_logo && public_info.is_text && (
+                                                                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                                                                    <img src={public_info.company_logo} />
+                                                                    <Typography>{public_info.business_name}</Typography>
+                                                                </Box>
+                                                            )}
+                                                            {!public_info.company_logo && !public_info.is_text && (
+                                                                <StoreRoundedIcon
+                                                                    style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }}
+                                                                    onClick={() => navigate('/')}
+                                                                    sx={{ mr: 1 }}
+                                                                />
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </>
+                                            )}
 
                                         </Box>
                                         <Typography
@@ -163,7 +203,7 @@ export default function Header() {
                                                 sx={{ mx: 3, my: 2, color: window.location.pathname === '/' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize', alignItems: 'center' }}
                                             >
                                                 <HouseRoundedIcon fontSize='large' sx={{ mx: 1 }} />
-                                                 Home
+                                                Home
                                             </Button>
                                         </Link>
                                         {token ? <Link
@@ -196,7 +236,7 @@ export default function Header() {
                                             </>
                                         }
                                         <Link
-                                            to={token?`/cart`:'/login'}
+                                            to={token ? `/cart` : '/login'}
                                             style={{ textDecoration: 'none' }}
                                         >
                                             <Button
@@ -286,7 +326,7 @@ export default function Header() {
                                 </Typography>
                                 <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: buttonStyles.icons_Color }}>
 
-                                    
+
                                 </Box>
                                 <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

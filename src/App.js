@@ -147,7 +147,7 @@ function App() {
                     <Route path="/all-order" element={<Suspense fallback={<div><Loading /></div>}><Protected component={All_order} /></Suspense>} />
                     <Route path="/indexTheme" element={<Suspense fallback={<div><Loading /></div>}><Protected component={Index} /></Suspense>} />
                     <Route path="/package-view" element={<PackageView />} />
-                    <Route path="/search" element={<Search />} />
+                    <Route path="/search" element={<Search_page />} />
                     <Route path="/all-booking" element={<All_Bookings />} />
                     <Route path="/booking-details" element={<Booking_details />} />
                   </Routes>

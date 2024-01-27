@@ -12,7 +12,7 @@ import { CardMedia } from '@mui/material';
 import empty_cart from '../images/empty_cart.png'
 import Proceed_to_pay from '../Components/Dialog/Proceed_to_pay';
 import { useSelector, useDispatch } from 'react-redux';
-import { store_data_for_check_out, get_my_profile, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
+import { store_data_for_check_out, get_my_profile,store_count, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -157,6 +157,8 @@ export default function Cart() {
 
   const clear_cart = () => {
     dispatch(add_fetch_post())
+    dispatch(store_count())
+    // store_count
     dispatch(clear_all_cart_data())
   }
 

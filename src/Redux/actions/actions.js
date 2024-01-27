@@ -215,7 +215,9 @@ export const increment_in_bag = (id) => {
     dispatch({ type: type.UPDATE_IN_BAG_LOADING });
     try {
       const response = await axios(config);
+
       dispatch({ type: type.UPDATE_IN_BAG, payload: response.data });
+      dispatch({ type: type.INCREMENT_FOR_SNACKBAR, payload: response.data });
     } catch (error) {
       dispatch({ type: type.GET_ALL_CART_DATA_ERROR, payload: error.response.data.error });
     }
@@ -241,6 +243,7 @@ export const decrement_in_bag = (id) => {
     try {
       const response = await axios(config);
       dispatch({ type: type.UPDATE_IN_BAG, payload: response.data });
+      dispatch({ type: type.DECREMENT_FORM_SNACKBAR, payload: response.data });
     } catch (error) {
       dispatch({ type: type.GET_ALL_CART_DATA_ERROR, payload: error.response.data.error });
     }
@@ -316,12 +319,12 @@ export const reschedule_booking_date = (id, data) => {
       const response = await axios(config);
       dispatch({ type: type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY, payload: response?.data });
     } catch (error) {
-      console.error('Error:', error.response.data);
       dispatch({ type: type.RESCHEDULE_BOOKING_DATA_FAIL, payload: error.response.data });
     }
 
   };
 };
+
 
 export const booking_cancel = (id) => {
   const firstItem = id && id.length > 0 ? id[0] : null;
@@ -410,8 +413,7 @@ export const delete_address = (id) => {
     headers: {
       'Authorization': `Bearer ${token}`
     }
-  };
-
+  }
   return async (dispatch) => {
     dispatch({ type: type.ADDRESS_LOADING });
     try {
@@ -427,7 +429,7 @@ export const delete_address = (id) => {
 export const get_search_item = (Query, search_type) => {
   const config = {
     method: 'get',
-    url: `${Root_url}/web/v1/search/?search_type=${search_type}&search=${Query}`,
+    url: `${Root_url}/web/v1/search/?search_type=All&search=${Query}`,
   };
   return async (dispatch) => {
     dispatch({ type: type.SEARCH_ITEM_LOADING });
@@ -436,7 +438,7 @@ export const get_search_item = (Query, search_type) => {
       dispatch({ type: type.SEARCH_ITEM, payload: response.data.data });
       dispatch({ type: type.SEARCHED_QUARRY, payload: Query });
     } catch (error) {
-      dispatch({ type: type.FETCH_ERROR, payload: error.message });
+      dispatch({ type: type.SEARCH_ITEM_ERROR, payload: error.message });
     }
   };
 };
@@ -485,7 +487,7 @@ export const checked_out_get = (offset, limit) => {
   const token = Cookies.get('token')
   const config = {
     method: 'get',
-    url: `${Root_url}/web/v1/checkout/?offset=${offset}&limit=${limit}`,
+    url: `${Root_url}/web/v1/checkout/?offset=${offset ? offset : 0}&limit=${limit ? limit : 10}`,
     headers: {
       'Authorization': `Bearer ${token}`
     }
@@ -614,7 +616,7 @@ export const get_all_package_all_review = (id) => {
     method: 'get',
     url: `${Root_url}/web/v1/packages/${id}/reviews/?&offset=0&limit=10`,
   }
-  
+
   return async (dispatch) => {
     dispatch({ type: type.GET_ALL_PACKAGE_REVIEWS_LOADING });
     try {
@@ -847,3 +849,7 @@ export const close_sign_out_dialog = () => {
 export const show_message = (value, message, messageType) => {
   return { type: type.SHOW_MESSAGE, payload: { open: value, message: message, MessageType: messageType } };
 };
+
+export const empty_reschedule = () => {
+  return { type: type.EMPTY_RESCHEDULE_BOOKING_DATA_SUCCESSFULLY }
+}

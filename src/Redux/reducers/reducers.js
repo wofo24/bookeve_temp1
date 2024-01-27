@@ -49,7 +49,9 @@ const initialState = {
   card_data: {
     loading: false,
     data: [],
-    error: []
+    error: [],
+    snack_update_increment: [],
+    snack_update_decrement: []
   },
   check_out_data: {
     loading: false,
@@ -296,7 +298,9 @@ const rootReducer = (state = initialState, action) => {
 
     case type.OPEN_ADDRESS_ADD_DIALOG:
       return { ...state, open_add_dialog: true, open_address_data: action.payload };
-    // unknown bag ----------------------------------------------------------------------------------------------------->
+
+    // unknown || known bag ----------------------------------------------------------------------------------------------------->
+
     case type.UPDATE_IN_BAG_LOADING:
       return { ...state, card_data: { ...state.card_data, loading: true } };
     case type.UPDATE_IN_BAG:
@@ -305,6 +309,11 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, card_data: { ...state.card_data, loading: false, data: action.payload } };
     case type.GET_ALL_CART_DATA_ERROR:
       return { ...state, card_data: { ...state.card_data, loading: false, error: action.payload } };
+
+    case type.INCREMENT_FOR_SNACKBAR:
+      return { ...state, card_data: { ...state.card_data, loading: false, snack_update_increment: action.payload } };
+    case type.DECREMENT_FORM_SNACKBAR:
+      return { ...state, card_data: { ...state.card_data, loading: false, snack_update_decrement: action.payload } };
 
     // Reschedule Booking checkout ----------------------------------------------------------------------------------------------------->
 
@@ -315,6 +324,10 @@ const rootReducer = (state = initialState, action) => {
     case type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY:
       return {
         ...state, check_out_data: { ...state.check_out_data, loading: false, reschedule_check_out_get_list_success: action.payload }
+      }
+    case type.EMPTY_RESCHEDULE_BOOKING_DATA_SUCCESSFULLY:
+      return {
+        ...state, check_out_data: { ...state.check_out_data, loading: false, reschedule_check_out_get_list_success: null, check_out_get_list_fail: null}
       }
     case type.RESCHEDULE_BOOKING_DATA_FAIL:
       return {
@@ -363,6 +376,8 @@ const rootReducer = (state = initialState, action) => {
       return { ...state, search_item: { ...state.search_item, loading: true } };
     case type.SEARCH_ITEM:
       return { ...state, search_item: { ...state.search_item, loading: false, data: action.payload } };
+    case type.SEARCH_ITEM_ERROR:
+      return { ...state, search_item: { ...state.search_item, loading: false, error: action.payload } };
     case type.SEARCHED_QUARRY:
       return { ...state, searched_quarry: action.payload };
     case type.GET_SEARCH_TYPE:

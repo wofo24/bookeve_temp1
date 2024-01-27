@@ -21,6 +21,15 @@ export default function Snack() {
         }
         dispatch(show_message(false, MessageArray.message, MessageArray.messageType))
     };
+
+    
+    React.useEffect(() => {
+        if (MessageArray.open) {
+            setTimeout(() => {
+                handleClose()
+            }, 3000);
+        }
+    }, [MessageArray.open])
     return (
         <>
             <Media
@@ -34,7 +43,7 @@ export default function Snack() {
                     <>
                         {matches.small && (
                             <Stack spacing={2} sx={{ width: '100%' }}>
-                                <Snackbar open={MessageArray.open} autoHideDuration={5000} onClose={handleClose}>
+                                <Snackbar open={MessageArray.open} autoHideDuration={3000} onClose={handleClose}>
                                     <Alert onClose={handleClose} severity={MessageArray.MessageType} sx={{ width: '100%', mb: { lg: 0, xs: 21 }, position: 'absolute' }}>
                                         {MessageArray.message}
                                     </Alert>
@@ -60,7 +69,7 @@ export default function Snack() {
                     <>
                         {matches.large && (
                             <Stack spacing={2} sx={{ width: '100%' }}>
-                                <Snackbar open={MessageArray.open} autoHideDuration={5000} onClose={handleClose}>
+                                <Snackbar open={MessageArray.open} autoHideDuration={3000} onClose={handleClose}>
                                     <Alert onClose={handleClose} severity={MessageArray.MessageType} sx={{ width: '100%', mb: { lg: 0, xs: 19 } }}>
                                         {MessageArray.message}
                                     </Alert>

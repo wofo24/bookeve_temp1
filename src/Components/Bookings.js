@@ -22,7 +22,6 @@ export default function Bookings() {
 
 
 
-
     const ShowDetailsFunction = (item) => {
         dispatch(to_show_in_details_checkout(item))
         navigate('/booking-details')
@@ -31,7 +30,7 @@ export default function Bookings() {
     useEffect(() => {
         dispatch(checked_out_get(0, 10))
 
-    }, [])
+    }, [data?.reschedule_check_out_get_list_success,])
 
     const handleChange = (event, value) => {
         const data = `${value - 1}${0}`
@@ -39,7 +38,7 @@ export default function Bookings() {
         dispatch(checked_out_get(parseInt(data), 10))
     };
 
-    console.log(data?.check_out_get_list_success?.data, 'this is ddata')
+    // console.log(data?.check_out_get_list_success?.data, 'this is ddata')
 
     return (
         <>

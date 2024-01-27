@@ -10,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from 'react-redux'
 import { Box, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect } from 'react'
 import Slide from '@mui/material/Slide';
 import { close_schedule_dialog, reschedule_booking_date, selected_date_time } from '../../Redux/actions/actions';

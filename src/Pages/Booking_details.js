@@ -6,7 +6,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { open_help, checked_out_get, post_review, open_schedule_dialog, booking_cancel, show_message } from '../Redux/actions/actions';
+import { open_help, checked_out_get, empty_reschedule, post_review, open_schedule_dialog, booking_cancel, show_message } from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -25,6 +25,7 @@ export default function Booking_details() {
     const selected_address = useSelector((state) => state.selected_address)
     const show_in_details_checkout = useSelector((state) => state.show_in_details_checkout)
     const data = useSelector(state => state.check_out_data)
+    const error = useSelector(state => state.check_out_data?.check_out_get_list_fail)
     const checkout_loading = useSelector(state => state.check_out_data.loading)
     const id = localStorage.getItem('id')
     const [data_, setData_] = useState({ rating: parseInt(4), checkout: will_map_data?.id })
@@ -41,11 +42,13 @@ export default function Booking_details() {
                 setData_((prevData) => ({ ...prevData, checkout: item.id }));
             });
         }
-    }, [data]);
+    }, [data, show_in_details_checkout]);
 
     useEffect(() => {
         dispatch(checked_out_get())
-    }, [dispatch, data?.reschedule_check_out_get_list_success])
+    }, [dispatch, data?.reschedule_check_out_get_list_success, show_in_details_checkout])
+
+
 
     const HandleFeedback = (e) => {
         const { name } = e.target
@@ -57,6 +60,20 @@ export default function Booking_details() {
         e.preventDefault()
         dispatch(post_review(data_))
     }
+
+
+    useEffect(() => {
+        dispatch(empty_reschedule())
+    }, [window.location.pathname])
+
+    useEffect(() => {
+        if (error != null) {
+            dispatch(show_message(true, "Order can't reschedule more!", 'warning'))
+        }
+        if (data?.reschedule_check_out_get_list_success != null) {
+            dispatch(show_message(true, "Order rescheduled! ", 'success'))
+        }
+    }, [error, data?.reschedule_check_out_get_list_success])
 
     useEffect(() => {
         setData_(
@@ -71,8 +88,9 @@ export default function Booking_details() {
     useEffect(() => {
         if (data.cancel_booking_check_out_get_list_success.success) {
             dispatch(show_message(true, data?.cancel_booking_check_out_get_list_success?.data, 'success'))
+            window.location.reload(true)
         }
-    }, [data?.cancel_booking_check_out_get_list_success?.data])
+    }, [data?.cancel_booking_check_out_get_list_success?.data, will_map_data])
 
     return (
         <div>
@@ -187,7 +205,19 @@ export default function Booking_details() {
                                                         </Grid>
                                                         <Grid container>
                                                             <Grid xs={1}>    <AccessTimeFilledIcon /></Grid>
-                                                            <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}><b>Slot :</b>{will_map_data.appointment_date}</Grid>
+                                                            <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}><b>Slot : </b>{data?.reschedule_check_out_get_list_success != null ?
+
+                                                                new Date(data?.reschedule_check_out_get_list_success.data?.appointment_date).toLocaleString('en-US', {
+                                                                    year: 'numeric', month: 'long', day: 'numeric',
+                                                                    hour: 'numeric', minute: 'numeric', second: 'numeric'
+                                                                })
+                                                                :
+                                                                new Date(will_map_data.appointment_date).toLocaleString('en-US', {
+                                                                    year: 'numeric', month: 'long', day: 'numeric',
+                                                                    hour: 'numeric', minute: 'numeric', second: 'numeric'
+                                                                })
+
+                                                            }</Grid>
                                                         </Grid>
                                                         <Grid container my={3} >
                                                             <Grid xs={6} textAlign={'end'} p={2}>
@@ -354,7 +384,19 @@ export default function Booking_details() {
                                                         </Grid>
                                                         <Grid container>
                                                             <Grid xs={1}>    <AccessTimeFilledIcon /></Grid>
-                                                            <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}><b>Slot :</b>{will_map_data.appointment_date}</Grid>
+                                                            <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}><b>Slot : </b>{data?.reschedule_check_out_get_list_success != null ?
+
+                                                                new Date(data?.reschedule_check_out_get_list_success.data?.appointment_date).toLocaleString('en-US', {
+                                                                    year: 'numeric', month: 'long', day: 'numeric',
+                                                                    hour: 'numeric', minute: 'numeric', second: 'numeric'
+                                                                })
+                                                                :
+                                                                new Date(will_map_data.appointment_date).toLocaleString('en-US', {
+                                                                    year: 'numeric', month: 'long', day: 'numeric',
+                                                                    hour: 'numeric', minute: 'numeric', second: 'numeric'
+                                                                })
+
+                                                            }</Grid>
                                                         </Grid>
                                                         <Grid container mt={1} >
                                                             <Grid xs={6} textAlign={'end'} p={2}>
