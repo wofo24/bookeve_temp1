@@ -26,7 +26,7 @@ export default function Schedule() {
     const On_handleSubmit = () => {
         dispatch(get_schedule())
     }
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
 
     const navigate = useNavigate()
     const [value, setValue] = React.useState(null);
@@ -45,6 +45,7 @@ export default function Schedule() {
     const year = currentDate.getFullYear();
     const month2 = currentDate.getMonth();
     const lastDateOfJuly2023 = getLastDateOfMonth(year, month2);
+    
     const [selectedMonth, setSelectedMonth] = useState(() => {
         const current = selectedDate.getDate()
         if (lastDateOfJuly2023 === current) {

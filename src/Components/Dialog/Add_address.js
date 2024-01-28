@@ -24,6 +24,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function Add_address() {
+
+    const [formData, setFormData] = useState({ "address_type": 'home' })
+    const [formErrors, setFormErrors] = useState({});
+    const outerTheme = useTheme();
+    const buttonStyles = useSelector((state) => state.all_theme)
+    const textStyle = useSelector((state) => state.all_theme)
+    const openAdd = useSelector((state) => state.open_add_dialog)
+    const all_address = useSelector((state) => state.all_address)
+    const open_address_data = useSelector((state) => state.open_address_data)
+    const dispatch = useDispatch()
     const customTheme = (outerTheme) =>
         createTheme({
             components: {
@@ -86,17 +96,6 @@ export default function Add_address() {
                 },
             },
         });
-    const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const textStyle = useSelector((state) => state.apply_new_theme)
-    const openAdd = useSelector((state) => state.open_add_dialog)
-    const all_address = useSelector((state) => state.all_address)
-    const open_address_data = useSelector((state) => state.open_address_data)
-
-    const dispatch = useDispatch()
-    const [formData, setFormData] = useState([])
-
-    const [formErrors, setFormErrors] = useState({});
 
     const handleClose = () => {
         dispatch(closeAdd_Address())
@@ -119,6 +118,7 @@ export default function Add_address() {
             dispatch(post_address(formData));
         }
     };
+
     useEffect(() => {
         if (all_address?.posted_address_result?.response?.data?.error) {
             let updatedErrors = {};
@@ -265,7 +265,7 @@ export default function Add_address() {
                                                                 helperText={formErrors.state}
                                                             />
                                                         </Grid>
-                                                        <Grid xs={12} item>
+                                                        {/* <Grid xs={12} item>
                                                             <TextField sx={{ my: 1 }}
                                                                 onChange={handleChange}
                                                                 fullWidth
@@ -279,7 +279,7 @@ export default function Add_address() {
                                                                 error={!!formErrors.address_type}
                                                                 helperText={formErrors.address_type}
                                                             />
-                                                        </Grid>
+                                                        </Grid> */}
                                                         <Grid xs={12} item>
                                                             <TextField sx={{ my: 1 }}
                                                                 onChange={handleChange}
@@ -353,18 +353,21 @@ export default function Add_address() {
                             >
                                 <CloseIcon />
                             </IconButton>
-                            <DialogContent>
-                                <DialogContentText id="alert-dialog-description">
-                                    {/* Add Address */}
-                                </DialogContentText>
+                            <form onSubmit={handleSubmit}>
+                                <DialogContent dividers>
+                                    <DialogContentText id="alert-dialog-description">
 
-                                <Box px={2} py={0} width={550} >
-                                    <form onSubmit={handleSubmit}>
+                                    </DialogContentText>
+
+                                    <Box px={1} pb={1} width={550} >
                                         <Box>
-                                            <Grid container spacing={3} >
-                                                <Grid xs={12} item>
-                                                    <ThemeProvider theme={customTheme(outerTheme)}>
-                                                        <TextField sx={{ my: 1 }}
+                                            <ThemeProvider theme={customTheme(outerTheme)}>
+                                                <Grid xs={12} container spacing={3}>
+                                                    <Grid xs={12} item>
+                                                        {/* <Grid> */}
+
+
+                                                        <TextField
                                                             onChange={handleChange}
                                                             defaultValue={open_address_data?.house_no}
                                                             fullWidth
@@ -377,117 +380,103 @@ export default function Add_address() {
                                                             error={!!formErrors.house_no}
                                                             helperText={formErrors.house_no}
                                                         />
-                                                        <Grid xs={6} item>
-                                                            <TextField sx={{ my: 1 }}
-                                                                onChange={handleChange}
-                                                                defaultValue={open_address_data?.mobile_number}
-                                                                fullWidth
-                                                                type='tel'  // Use type 'tel' for phone numbers
-                                                                id="standard-textarea"
-                                                                label="mobile_number"
-                                                                name='mobile_number'
-                                                                required
-                                                                inputProps={{
-                                                                    pattern: "^[0-9]{10}$",
-                                                                }}
-                                                                variant="standard"
-                                                                error={!!formErrors.mobile_number}
-                                                                helperText={formErrors.mobile_number}
-                                                            />
-                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid xs={6} item>
+                                                        <TextField
+                                                            onChange={handleChange}
+                                                            defaultValue={open_address_data?.mobile_number}
+                                                            fullWidth
+                                                            type='tel'  // Use type 'tel' for phone numbers
+                                                            id="standard-textarea"
+                                                            label="Mobile Number"
+                                                            name='mobile_number'
+                                                            required
+                                                            inputProps={{
+                                                                pattern: "^[0-9]{10}$",
+                                                            }}
+                                                            variant="standard"
+                                                            error={!!formErrors.mobile_number}
+                                                            helperText={formErrors.mobile_number}
+                                                        />
+                                                    </Grid>
 
-                                                        <Grid xs={6} item>
-                                                            <TextField sx={{ my: 1 }}
-                                                                onChange={handleChange}
-                                                                fullWidth
-                                                                defaultValue={open_address_data?.street}
-                                                                type='text'  // Use type 'tel' for phone numbers
-                                                                id="standard-textarea"
-                                                                label="street"
-                                                                name='street'
-                                                                required
-                                                                variant="standard"
-                                                                error={!!formErrors.street}
-                                                                helperText={formErrors.street}
-                                                            />
-                                                        </Grid>
+                                                    <Grid xs={6} item>
+                                                        <TextField
+                                                            onChange={handleChange}
+                                                            fullWidth
+                                                            defaultValue={open_address_data?.street}
+                                                            type='text'  // Use type 'tel' for phone numbers
+                                                            id="standard-textarea"
+                                                            label="Street"
+                                                            name='street'
+                                                            required
+                                                            variant="standard"
+                                                            error={!!formErrors.street}
+                                                            helperText={formErrors.street}
+                                                        />
+                                                    </Grid>
 
-                                                        <Grid xs={6} item>
+                                                    <Grid xs={6} item>
 
-                                                            <TextField sx={{ my: 1 }}
-                                                                onChange={handleChange}
-                                                                fullWidth
-                                                                type='text'  // Use type 'tel' for phone numbers
-                                                                id="standard-textarea"
-                                                                label="city"
-                                                                name='city'
-                                                                required
-                                                                defaultValue={open_address_data?.city}
-                                                                variant="standard"
-                                                                error={!!formErrors.city}
-                                                                helperText={formErrors.city}
-                                                            />
-                                                        </Grid>
-                                                        <Grid xs={6} item>
-                                                            <TextField sx={{ my: 1 }}
-                                                                onChange={handleChange}
-                                                                fullWidth
-                                                                defaultValue={open_address_data?.state}
-                                                                type='text'  // Use type 'tel' for phone numbers
-                                                                id="standard-textarea"
-                                                                label="State"
-                                                                name='state'
-                                                                required
-                                                                variant="standard"
-                                                                error={!!formErrors.state}
-                                                                helperText={formErrors.state}
-                                                            />
-                                                        </Grid>
-                                                        <Grid xs={6} item>
-                                                            <TextField sx={{ my: 1 }}
-                                                                onChange={handleChange}
-                                                                fullWidth
-                                                                defaultValue={open_address_data?.address_type}
-                                                                type='text'
-                                                                id="standard-textarea"
-                                                                label="address_type"
-                                                                name='address_type'
-                                                                required
-                                                                variant="standard"
-                                                                error={!!formErrors.address_type}
-                                                                helperText={formErrors.address_type}
-                                                            />
-                                                        </Grid>
-                                                        <Grid xs={12} item>
-                                                            <TextField sx={{ my: 1 }}
-                                                                onChange={handleChange}
-                                                                fullWidth
-                                                                defaultValue={open_address_data?.postal_code}
-                                                                type='tel'
-                                                                id="standard-textarea"
-                                                                label="postal_code"
-                                                                name='postal_code'
-                                                                required
-                                                                variant="standard"
-                                                                error={!!formErrors.postal_code}
-                                                                helperText={formErrors.postal_code}
-                                                            />
-                                                        </Grid>
-                                                    </ThemeProvider>
+                                                        <TextField
+                                                            onChange={handleChange}
+                                                            fullWidth
+                                                            type='text'  // Use type 'tel' for phone numbers
+                                                            id="standard-textarea"
+                                                            label="City"
+                                                            name='city'
+                                                            required
+                                                            defaultValue={open_address_data?.city}
+                                                            variant="standard"
+                                                            error={!!formErrors.city}
+                                                            helperText={formErrors.city}
+                                                        />
+                                                    </Grid>
+                                                    <Grid xs={6} item>
+                                                        <TextField
+                                                            onChange={handleChange}
+                                                            fullWidth
+                                                            defaultValue={open_address_data?.state}
+                                                            type='text'  // Use type 'tel' for phone numbers
+                                                            id="standard-textarea"
+                                                            label="State"
+                                                            name='state'
+                                                            required
+                                                            variant="standard"
+                                                            error={!!formErrors.state}
+                                                            helperText={formErrors.state}
+                                                        />
+                                                    </Grid>
+                                                    <Grid xs={12} item>
+                                                        <TextField
+                                                            onChange={handleChange}
+                                                            fullWidth
+                                                            defaultValue={open_address_data?.postal_code}
+                                                            type='tel'
+                                                            id="standard-textarea"
+                                                            label="Postal Code"
+                                                            name='postal_code'
+                                                            required
+                                                            variant="standard"
+                                                            error={!!formErrors.postal_code}
+                                                            helperText={formErrors.postal_code}
+                                                        />
+                                                    </Grid>
                                                 </Grid>
-                                            </Grid>
+
+                                            </ThemeProvider>
                                         </Box>
-                                    </form>
-                                </Box>
-                            </DialogContent>
-                            <DialogActions sx={{ p: 2 }}>
-                                <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} onClick={handleClose}>No</Button>
+                                    </Box>
+                                </DialogContent>
+                                <DialogActions sx={{ p: 2 }}>
+                                    <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} onClick={handleClose}>No</Button>
 
-                                <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} onClick={handleClose} >
-                                    {open_address_data?.id ? 'Update' : ' Save address'}
+                                    <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} type='submit' >
+                                        {open_address_data?.id ? 'Update' : ' Save address'}
 
-                                </Button>
-                            </DialogActions>
+                                    </Button>
+                                </DialogActions>
+                            </form>
                         </Dialog >
                     </>
                 )

@@ -10,10 +10,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from 'react-redux'
 import { Box, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+
 import { useState, useEffect } from 'react'
 import Slide from '@mui/material/Slide';
-import { close_schedule_dialog, selected_date_time } from '../../Redux/actions/actions';
+import { close_schedule_dialog, reschedule_booking_date, selected_date_time } from '../../Redux/actions/actions';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import Media from 'react-media';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
@@ -25,10 +25,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Schedule_dialog() {
     const dispatch = useDispatch()
     const open = useSelector((state) => state.open_schedule)
-    const textStyle = useSelector((state) => state.apply_new_theme)
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const textStyle = useSelector((state) => state.all_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const selected = useSelector((state) => state.selected_address)
-    const selected_date_time_var = useSelector((state) => state.selected_date_time)
+    const reschedule_data = useSelector((state) => state.reschedule)
     const selectedDate = new Date()
     const [month, setMonth] = useState([])
     const dates = [];
@@ -91,18 +91,23 @@ export default function Schedule_dialog() {
         setGet_time_name_state((currentTime) => currentTime.split(' ')[0]);
     }
 
+    const handleExit = () => {
+        dispatch(close_schedule_dialog());
+    }
+
     const handleClose = () => {
         dispatch(selected_date_time(`${formatted_date}T${get_time_name_state || '11:00'}:00`));
         if (formatted_date) {
             dispatch(close_schedule_dialog());
+            if (reschedule_data?.name?.reschedule) {
+                dispatch(reschedule_booking_date(reschedule_data?.id, `${formatted_date}T${get_time_name_state || '11:00'}:00`))
+            }
         }
         else {
             alert('select Properly')
         }
 
-
     };
-    console.log(selected_date_time_var, 'kkkkkkkkk')
 
     function formatDate(date) {
         const day = date.getDate().toString().padStart(2, '0');
@@ -125,6 +130,8 @@ export default function Schedule_dialog() {
         color: 'black'
     }
 
+
+
     return (
         <>
             <Media queries={{
@@ -146,7 +153,7 @@ export default function Schedule_dialog() {
                                 </DialogTitle>
                                 <IconButton
                                     aria-label="close"
-                                    onClick={handleClose}
+                                    onClick={handleExit}
                                     sx={{
                                         position: 'absolute',
                                         right: 8,
@@ -159,15 +166,15 @@ export default function Schedule_dialog() {
                                 <DialogContent dividers>
                                     <div>
                                         <form>
-                                            <Box sx={{ display: 'flex', flex: 'wrap' }} width={550}>
-                                                {month.map((month, index) => {
+                                            <Box sx={{ display: 'flex', flex: 'wrap', overflowX: "scroll" }} >
+                                                {month?.map((month, index) => {
                                                     const date = new Date(selectedDate.getFullYear(), index, 1);
                                                     const dateInMonth = date.getMonth() + 1
                                                     const newD = new Date()
 
                                                     if (dateInMonth > newD.getMonth()) {
                                                         return (
-                                                            <Box sx={{ p: 1, px: 2, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
+                                                            <Box sx={{ cursor: 'pointer', p: 1, px: 2, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
                                                                 onClick={() => get_month_name(index)}
                                                             >
                                                                 {month}
@@ -189,14 +196,17 @@ export default function Schedule_dialog() {
                                             </Box>
                                         </form>
                                         <Box mt={3}><Typography variant='h6'>Select Time of service</Typography></Box>
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '75%', m: 'auto' }} >
+                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
                                             {times?.map((item, index) => {
                                                 item?.replace(" AM", "");
                                                 return (
-                                                    <Box key={index} sx={{ p: 1, m: 1, borderRadius: '10px', width: 90 }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}> <span>{item}</span> </Box>
-                                                )
+                                                    <Box key={index} sx={{ p: 1, m: 1, borderRadius: '10px', width: 90 }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}>
+                                                        <span>{item}</span>
+                                                    </Box>
+                                                );
                                             })}
                                         </Box>
+
 
                                     </div >
                                 </DialogContent>
@@ -229,39 +239,44 @@ export default function Schedule_dialog() {
 
 
 
-                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                {open && <Box sx={{
-                                    px: 2,
-                                    py: 2, position: 'fixed',
-                                    top: 150,
-                                    left: 0,
-                                    right: 0,
-                                    background: '#ffff',
-                                    borderRadius: '15px',
-                                    color: 'black',
-                                    zIndex: '9999'
-                                }}>
-                                    <Grid container>
-                                        <Grid sx={{ display: 'grid', placeContent: 'center' }} xs={1}> <Typography textAlign={'start'} variant='subtitle2'><b> <HomeRoundedIcon sx={{ color: 'gray' }} /></b>
-                                        </Typography></Grid>
-                                        <Grid xs={10} px={2} sx={{ display: 'grid', placeContent: 'start' }}><Typography textAlign={'start'} variant='subtitle2'> {selected.split("").slice(0, 45).join('')}...</Typography></Grid>
-                                        <Grid xs={1} sx={{ display: 'grid', placeContent: 'center' }} ><Typography textAlign={'start'}> <ArrowForwardIosRoundedIcon sx={{ color: 'gray' }} fontSize='small' /></Typography></Grid>
-                                    </Grid>
-                                    <hr />
-                                </Box>}
-                            </DialogTitle>
+                            {!reschedule_data?.name?.reschedule &&
+                                <>
+                                    <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                        {open && <Box sx={{
+                                            px: 2,
+                                            py: 2, position: 'fixed',
+                                            top: 150,
+                                            left: 0,
+                                            right: 0,
+                                            background: '#ffff',
+                                            borderRadius: '15px',
+                                            color: 'black',
+                                            zIndex: '9999'
+                                        }}>
+                                            <Grid container>
+                                                <Grid sx={{ display: 'grid', placeContent: 'center' }} xs={1}> <Typography textAlign={'start'} variant='subtitle2'><b> <HomeRoundedIcon sx={{ color: 'gray' }} /></b>
+                                                </Typography></Grid>
+                                                <Grid xs={10} px={2} sx={{ display: 'grid', placeContent: 'start' }}><Typography textAlign={'start'} variant='subtitle2'> {selected.split("").slice(0, 45).join('')}...</Typography></Grid>
+                                                <Grid xs={1} sx={{ display: 'grid', placeContent: 'center' }} ><Typography textAlign={'start'}> <ArrowForwardIosRoundedIcon sx={{ color: 'gray' }} fontSize='small' /></Typography></Grid>
+                                            </Grid>
+                                            <hr />
+                                        </Box>}
+                                    </DialogTitle>
+                                </>
+                            }
 
-                            <Grid container sx={{ mt: 7, p: 0 }}>
+
+                            <Grid container sx={{ mt: reschedule_data?.name?.reschedule ? 0 : 7, p: 0 }}>
                                 <Grid item xs={10}>
 
                                     <DialogTitle sx={{ m: 0 }} id="customized-dialog-title">
-                                        <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Select Date & Time</b></Typography>
+                                        <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>{reschedule_data?.name?.title}</b></Typography>
                                     </DialogTitle>
                                 </Grid>
                                 <Grid item xs={2} sx={{ display: 'grid', placeContent: 'center' }}>
                                     <IconButton
                                         aria-label="close"
-                                        onClick={handleClose}
+                                        onClick={handleExit}
                                     >
                                         <CloseIcon />
                                     </IconButton>
@@ -281,23 +296,25 @@ export default function Schedule_dialog() {
                             }}>
                                 <DialogContent dividers>
 
-                                    <Box sx={{ display: 'flex', flex: 'wrap' }}>
-                                        {month.map((month, index) => {
-                                            const date = new Date(selectedDate.getFullYear(), index, 1);
-                                            const dateInMonth = date.getMonth() + 1
-                                            const newD = new Date()
+                                    <Box sx={{ display: 'flex', flex: 'wrap', overflowX: "scroll", '::-webkit-scrollbar': { display: 'none' } }} >
+                                        {
+                                            month.map((month, index) => {
+                                                const date = new Date(selectedDate.getFullYear(), index, 1);
+                                                const dateInMonth = date.getMonth() + 1
+                                                const newD = new Date()
 
-                                            if (dateInMonth > newD.getMonth()) {
-                                                return (
-                                                    <Box sx={{ p: 1, px: 2, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
-                                                        onClick={() => get_month_name(index)}
-                                                    >
-                                                        {month}
-                                                    </Box>
-                                                );
-                                            }
-                                            return null;
-                                        })}
+                                                if (dateInMonth > newD.getMonth()) {
+                                                    return (
+                                                        <Box sx={{ p: 1, px: 2, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
+                                                            onClick={() => get_month_name(index)}
+                                                        >
+                                                            {month}
+                                                        </Box>
+                                                    );
+                                                }
+                                                return null;
+                                            })
+                                        }
                                     </Box>
                                     <Box sx={{ display: "flex", overflowX: "scroll" }}>
                                         {[...Array(endDate.getDate())].map((_, index) => {
@@ -351,8 +368,9 @@ export default function Schedule_dialog() {
                         </Dialog>
 
                     </>
-                )}
-            </Media>
+                )
+                }
+            </Media >
 
         </>
     )

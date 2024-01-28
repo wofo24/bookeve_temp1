@@ -10,7 +10,7 @@ import 'swiper/css/pagination';
 import '../Css/App.css';
 import { Box, Card, Typography } from '@mui/material';
 export default function Testimonial() {
-    const buttonStyles = useSelector((state) => state?.apply_new_theme)
+    const buttonStyles = useSelector((state) => state?.all_theme)
     return (
         <Box p={2}>
             <Box mb={3}>

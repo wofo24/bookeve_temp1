@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom';
 import { styled } from '@mui/system';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
+import Loading from '../Components/LoadingIcon/Loading';
 
 export default function Login() {
     const location = useLocation();
@@ -20,13 +21,15 @@ export default function Login() {
         "phone_number": data?.phone_number
     });
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
-    const positive_response = useSelector((state) => state.useLogged_in)
+    const buttonStyles = useSelector((state) => state.all_theme)
+    const positive_response = useSelector((state) => state.useLogged_in.data)
+    const error = useSelector((state) => state.useLogged_in.error)
+    const loading = useSelector((state) => state.useLogged_in.loading)
     const [formErrors, setFormErrors] = useState({ "phone_number": undefined });
+    const [hasNavigated, setHasNavigated] = useState(false);
+
     const dispatch = useDispatch()
     const navigate = useNavigate()
-
-    // console.log(buttonStyles, 'this is buttton')
 
     const handleChange = (event) => {
         const { value, name } = event.target
@@ -101,27 +104,33 @@ export default function Login() {
         });
 
     useEffect(() => {
-        if (positive_response?.success === true) {
+        if (positive_response?.success === true && !hasNavigated) {
             dispatch(store_id(parseInt(positive_response?.data?.phone_number)));
-            navigate('/otp')
-        }
-        else {
-            if (positive_response) {
-                positive_response?.phone_number?.map((item) => {
+            navigate('/otp', { state: { formData } });
+            setHasNavigated(true);
+        } else {
+            if (!error?.success && !hasNavigated) {
+                error?.phone_number?.map((item) => {
                     if (item === "User with mobile no doesn't exist.") {
+                        setFormErrors({ 'phone_number': item });
                         setTimeout(() => {
-                            navigate('/signup', { state: { formData } })
+                            navigate('/signup', { state: { formData } });
                         }, 2000);
                     }
-                }
-                )
+                });
+            } else {
+                // console.log(error)
+
             }
-            setFormErrors({ 'phone_number': positive_response.phone_number })
+            setFormErrors({ 'phone_number': error.phone_number && error.phone_number[0] });
         }
-    }, [positive_response]);
+    }, [positive_response, error, hasNavigated]);
+
+    console.log(error?.phone_number)
 
     return (
         <div>
+            {loading && <Loading />}
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -157,9 +166,10 @@ export default function Login() {
                                                     onChange={handleChange}
                                                     fullWidth
                                                     defaultValue={data?.phone_number}
-                                                    type='tel'  // Use type 'tel' for phone numbers
+                                                    type='number'  // Use type 'tel' for phone numbers
                                                     id="standard-textarea"
                                                     label="Phone number"
+                                                    placeholder='Phone number'
                                                     name='phone_number'
                                                     required
                                                     inputProps={{
@@ -172,7 +182,7 @@ export default function Login() {
                                             </ThemeProvider>
 
                                         </Grid>
-                                        <Grid item xs={6} textAlign='left' >
+                                        <Grid item xs={12} textAlign='left' >
                                             <Box>
                                                 <Typography style={{ cursor: 'pointer', fontSize: '12px' }} variant='paragraph'> Don't Have an account ? </Typography>
                                                 <Link to="/signup" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
@@ -180,13 +190,13 @@ export default function Login() {
                                                 </Link>
                                             </Box>
                                         </Grid>
-                                        <Grid item xs={6} textAlign='right' >
+                                        {/* <Grid item xs={6} textAlign='right' >
                                             <Box>
                                                 <Link to="/otp" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
                                                     Forgot Password ?
                                                 </Link>
                                             </Box>
-                                        </Grid>
+                                        </Grid> */}
 
                                         <Grid item xs={12} py={2} textAlign='center'>
                                             {/* <Button style={{ brder: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }}>No</Button> */}
@@ -234,9 +244,11 @@ export default function Login() {
 
                                                 <TextField
                                                     onChange={handleChange}
+                                                    defaultValue={data?.phone_number}
                                                     fullWidth
-                                                    type='tel'  // Use type 'tel' for phone numbers
+                                                    type='number'  // Use type 'tel' for phone numbers
                                                     id="standard-textarea"
+                                                    placeholder='Phone number'
                                                     label="Phone number"
                                                     name='phone_number'
                                                     required

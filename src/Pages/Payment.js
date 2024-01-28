@@ -11,12 +11,14 @@ import { Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Media from 'react-media';
-import { checked_out_call, clear_all_cart_data } from '../Redux/actions/actions';
+import Loading from '../Components/LoadingIcon/Loading'
+import { checked_out_call, clear_all_cart_data, selected_date_time } from '../Redux/actions/actions';
 
 export default function Payment() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const selected_date_time_var = useSelector(state => state.selected_date_time)
   const check_out_data = useSelector(state => state.check_out_data)
+  const loading = useSelector(state => state.check_out_data.loading)
   const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
   const [data, setData] = React.useState()
   const dispatch = useDispatch()
@@ -33,18 +35,31 @@ export default function Payment() {
   }, [])
 
   const submitData = () => {
-    console.log(data, 'this is')
     dispatch(checked_out_call(data))
   }
 
   React.useEffect(() => {
+    // navigate('/successful', { replace: true, state: null });
+    window.history.replaceState(null, '/', window.location.href);
+    console.log(window.history)
+}, []);
+
+  React.useEffect(() => {
+    navigate( { state: null });
+}, []);
+  
+  React.useEffect(() => {
     if (check_out_data?.check_out_success.success) {
       dispatch(clear_all_cart_data())
-      navigate('/successful')
+      dispatch(selected_date_time())
+      setTimeout(() => {
+        navigate('/successful')
+        window.location.reload(true)
+      }, 1000);
     }
 
   }, [check_out_data?.check_out_success])
-  console.log(check_out_data)
+
   const navigate = useNavigate()
 
   const handleListItemClick = (index) => {
@@ -55,6 +70,9 @@ export default function Payment() {
 
   return (
     <>
+    {loading?<Loading/>:
+    <>
+   
 
       <Media
         queries={{
@@ -142,8 +160,8 @@ export default function Payment() {
 
 
       </Media>
-
-
+</>
+}
     </>
   );
 }

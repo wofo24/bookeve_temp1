@@ -1,158 +1,212 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card, Grid } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { Box, Typography, Button, Container } from '@mui/material'
 import Media from 'react-media';
 import { useDispatch, useSelector } from 'react-redux'
-import { open_schedule_dialog, open_help } from '../Redux/actions/actions';
+import Pagination from '@mui/material/Pagination';
+import { open_help, checked_out_get, to_show_in_details_checkout } from '../Redux/actions/actions';
+import Stack from '@mui/material/Stack';
 
 import { useNavigate } from 'react-router-dom';
+import Loading from './LoadingIcon/Loading';
 export default function Bookings() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const buttonStyles = useSelector((state) => state?.apply_new_theme)
+    const buttonStyles = useSelector((state) => state?.all_theme)
+
+    const data = useSelector(state => state.check_out_data)
+    const loading = useSelector(state => state.check_out_data.loading)
+    const [page, setPage] = React.useState(1);
+
+
+
+    const ShowDetailsFunction = (item) => {
+        dispatch(to_show_in_details_checkout(item))
+        navigate('/booking-details')
+    }
+
+    useEffect(() => {
+        dispatch(checked_out_get(0, 10))
+
+    }, [data?.reschedule_check_out_get_list_success,])
+
+    const handleChange = (event, value) => {
+        const data = `${value - 1}${0}`
+        setPage(value);
+        dispatch(checked_out_get(parseInt(data), 10))
+    };
+
+    // console.log(data?.check_out_get_list_success?.data, 'this is ddata')
 
     return (
         <>
-            <Media
-                queries={{
-                    small: '(max-width: 768px)',
-                    medium: '(min-width: 769px) and (max-width: 1024px)',
-                    large: '(min-width: 1025px)',
-                }}
-            >
-                {(item) => item.large && (
-                    <>
-                        <Container margin={'auto'} sx={{
-                            p: 2,
-                            borderRadius: '10px',
-                            backdropFilter: buttonStyles.child_backdropFilter,
-                            background: buttonStyles.child_bg,
-                            color: buttonStyles.child_div_text,
+            {loading
+                ?
+                <Loading />
+                :
+                <>
+                    <Media
+                        queries={{
+                            small: '(max-width: 768px)',
+                            medium: '(min-width: 769px) and (max-width: 1024px)',
+                            large: '(min-width: 1025px)',
+                        }}
+                    >
+                        {(item) => item.large && (
+                            <>
+                                <Container margin={'auto'} sx={{
+                                    p: 2,
+                                    borderRadius: '10px',
+                                    backdropFilter: buttonStyles.child_backdropFilter,
+                                    background: buttonStyles.child_bg,
+                                    color: buttonStyles.child_div_text,
 
-                        }} >
-                            <Grid container>
-                                <Grid xs={6}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                                        <Typography onClick={() => navigate('/')}><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} fontSize='large' /></Typography>
-                                        <Typography variant='h5' mt={1}> <b>Booking & plans</b></Typography>
-                                    </Box>
-                                </Grid>
-                                <Grid xs={6} textAlign={'end'}>
-                                    <Button variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
+                                }} >
 
-                                </Grid>
-                            </Grid>
-                            <hr style={{ border: '1px solid' }} />
-                            <Box mx={10} mt={2}>
-                                <Typography variant='h5' mb={2}><b>Category</b></Typography>
-                                <Card sx={{ borderRadius: '10px', p: 2 }} >
-                                    <Grid container onClick={() => navigate('/booking-details')}>
-                                        <Grid xs={6}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                                                <Box >
-                                                    <Typography color={'error'} fontSize={'13px'}><b>BOOKING CANCELLED</b></Typography>
-                                                    <span style={{ fontSize: '13px' }}><b>Category name & more</b></span>
-                                                    <Typography style={{ fontSize: '11px' }}>time </Typography>
-                                                </Box>
-                                            </Box>
-                                        </Grid>
-                                        <Grid xs={6} textAlign={'end'}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center', height: '100%' }}>
-                                                <ArrowForwardIosIcon />
-                                            </Box>
-                                        </Grid>
-                                    </Grid>
-                                </Card>
-                                <hr style={{ border: '2px solid', marginTop: '35px' }} />
-                            </Box>
-                            <Box mx={10} mt={2}>
-                                <Typography variant='h5'><b>Category</b></Typography>
-                                <Box sx={{ border: '1px solid black', borderRadius: '10px', p: 2 }} mt={3} >
                                     <Grid container>
                                         <Grid xs={6}>
                                             <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                                                <Box>
-                                                    <Typography color={'error'} fontSize={'13px'}><b>BOOKING CANCELLED</b></Typography>
-                                                    <span style={{ fontSize: '13px' }}><b>Category name & more</b></span>
-                                                    <Typography style={{ fontSize: '11px' }}>time</Typography>
-                                                </Box>
+                                                <Typography onClick={() => navigate('/')}><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} fontSize='large' /></Typography>
+                                                <Typography variant='h5' mt={1}> <b>Booking & plans</b></Typography>
                                             </Box>
                                         </Grid>
                                         <Grid xs={6} textAlign={'end'}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center', height: '100%' }}>
-                                                <ArrowForwardIosIcon />
-                                            </Box>
+                                            <Button variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
+
                                         </Grid>
                                     </Grid>
-                                </Box>
-                                <hr style={{ border: '2px solid ', marginTop: '35px' }} />
-                            </Box>
-                        </Container>
-                    </>
-                )
+                                    <hr style={{ border: '1px solid' }} />
+                                    {loading ? <Loading /> :
+                                        <Box mx={10} mt={2}>
+                                            {/* <Typography variant='h5' mb={2}><b>Categories</b></Typography> */}
+                                            {data?.check_out_get_list_success?.data?.map((item, index) => {
+                                                return (
+                                                    <>
 
-                }
+                                                        <Card sx={{ border: '1px solid black', borderRadius: '10px', px: 2, py: 1.5, mt: 2 }} key={index}  >
+                                                            <Grid container onClick={() => ShowDetailsFunction(item)}>
+                                                                <Grid xs={6}>
+                                                                    <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
+                                                                        <Box>
+                                                                            <Typography sx={{ color: '#4CAF50' }} fontSize={'13px'}><b>BOOKED </b></Typography>
+                                                                            <span style={{ fontSize: '13px' }}><b>
+                                                                                {
+                                                                                    item?.packages.map((item2, index) => {
+                                                                                        if (index === 0) {
+                                                                                            return item2?.package_name
+                                                                                        }
+                                                                                    })
+                                                                                }
+                                                                                {item.packages.length > 1 && ` & ${item.packages.length - 1} More`}
 
-            </Media>
-            <Media
-                queries={{
-                    small: '(max-width: 768px)',
-                    medium: '(min-width: 769px) and (max-width: 1024px)',
-                    large: '(min-width: 1025px)',
-                }}
-            >
-                {(item) => item.small && (
-                    <>
-                        <Container margin={'auto'} sx={{
-                            p: 2,
-                            borderRadius: '10px',
-                            backdropFilter: buttonStyles.child_backdropFilter,
-                            background: buttonStyles.child_bg,
-                            color: buttonStyles.child_div_text,
-                        }} >
-                            <Grid container>
-                                <Grid xs={6} textAlign={'left'}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                                        <Typography onClick={() => navigate('/profile')}><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} fontSize='medium' /></Typography>
-                                        <Typography variant='h6'> <b>Booking & plans</b></Typography>
+                                                                            </b></span>
+                                                                            <Typography style={{ fontSize: '11px' }}><b>Price:</b> &#8377; <span> {item.total_price}</span></Typography>
+                                                                            <Typography style={{ fontSize: '11px' }}><b>Time:</b> {item.appointment_date}</Typography>
+                                                                        </Box>
+                                                                    </Box>
+                                                                </Grid>
+                                                                <Grid xs={6} textAlign={'end'}>
+                                                                    <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center', height: '100%' }}>
+                                                                        <ArrowForwardIosIcon />
+                                                                    </Box>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Card>
+                                                    </>
+                                                )
+                                            })}
+                                        </Box>
+                                    }
+
+                                    <hr style={{ border: '1px solid', marginTop: '30px' }} />
+                                    <Box sx={{ display: 'flex', placeContent: 'center' }}>
+                                        <Stack spacing={2}>
+                                            <Pagination count={Math.ceil(data?.check_out_get_list_success?.count / 10)} defaultPage={1} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
+                                        </Stack>
+
                                     </Box>
-                                </Grid>
-                                <Grid xs={6} textAlign={'end'}>
-                                    <Button variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
+                                </Container>
+                            </>
+                        )
 
+                        }
 
-                                </Grid>
-                            </Grid>
-                            <hr style={{ border: '.5px solid' }} />
-                            <Box mx={1} mt={2}>
-                                <Typography variant='h5'><b>Category</b></Typography>
-                                <Box sx={{ border: '1px solid black', borderRadius: '10px', p: 2 }} mt={3} >
-                                    <Grid container onClick={() => navigate('/booking-details')}>
-                                        <Grid xs={6}>
+                    </Media>
+                    <Media
+                        queries={{
+                            small: '(max-width: 768px)',
+                            medium: '(min-width: 769px) and (max-width: 1024px)',
+                            large: '(min-width: 1025px)',
+                        }}
+                    >
+                        {(item) => item.small && (
+                            <>
+                                <Container margin={'auto'} sx={{
+                                    p: 2,
+                                    borderRadius: '10px',
+                                    backdropFilter: buttonStyles.child_backdropFilter,
+                                    background: buttonStyles.child_bg,
+                                    color: buttonStyles.child_div_text,
+                                }} >
+                                    <Grid container>
+                                        <Grid xs={6} textAlign={'left'}>
                                             <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
-                                                <Box>
-                                                    <Typography color={'error'} fontSize={'13px'}><b>BOOKING CANCELLED</b></Typography>
-                                                    <span style={{ fontSize: '13px' }}><b>Category name & more</b></span>
-                                                    <Typography style={{ fontSize: '11px' }}>time</Typography>
-                                                </Box>
+                                                <Typography onClick={() => navigate('/profile')}><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} fontSize='medium' /></Typography>
+                                                <Typography variant='h6'> <b>Booking & plans</b></Typography>
                                             </Box>
                                         </Grid>
                                         <Grid xs={6} textAlign={'end'}>
-                                            <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center', height: '100%' }}>
-                                                <ArrowForwardIosIcon />
-                                            </Box>
+                                            <Button variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
+
+
                                         </Grid>
                                     </Grid>
-                                </Box>
-                                <hr style={{ border: '1px solid', marginTop: '30px' }} />
-                            </Box>
+                                    <hr style={{ border: '.5px solid' }} />
+                                    {loading ? <Loading /> :
+                                        <Box mx={1} mt={2}>
+                                            {/* <Typography variant='h5'><b>Category</b></Typography> */}
+                                            {data?.check_out_get_list_success?.data?.map((item) => (
+                                                <Box sx={{ border: '1px solid black', borderRadius: '10px', p: 2 }} mt={3} >
+                                                    <Grid container onClick={() => ShowDetailsFunction(item)}>
+                                                        <Grid xs={6}>
+                                                            <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
+                                                                <Box>
+                                                                    <Typography sx={{ color: '#4CAF50' }} fontSize={'13px'}><b>BOOKED </b></Typography>
+                                                                    <span style={{ fontSize: '13px' }}><b>Category name & more</b></span>
+                                                                    <Typography style={{ fontSize: '11px' }}><b>Price:</b> &#8377; <span> {item.total_price}</span></Typography>
+                                                                    <Typography style={{ fontSize: '11px' }}><b>Time:</b> {item.appointment_date}</Typography>
+                                                                </Box>
+                                                            </Box>
+                                                        </Grid>
+                                                        <Grid xs={6} textAlign={'end'}>
+                                                            <Box sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center', height: '100%' }}>
+                                                                <ArrowForwardIosIcon />
+                                                            </Box>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Box>
+                                            ))}
 
-                        </Container>
-                    </>
-                )}
-            </Media>
+                                            <hr style={{ border: '1px solid', marginTop: '30px' }} />
+
+                                            <Box sx={{ display: 'flex', placeContent: 'center' }}>
+                                                <Stack spacing={2}>
+                                                    <Pagination count={Math.ceil(data?.check_out_get_list_success?.count / 10)} defaultPage={1} variant="outlined" shape="rounded" page={page} onChange={handleChange} />
+                                                </Stack>
+
+                                            </Box>
+                                        </Box>}
+
+
+                                </Container>
+                            </>
+                        )}
+                    </Media>
+                </>
+            }
+
         </>
     )
 }

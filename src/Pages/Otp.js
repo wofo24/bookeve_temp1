@@ -9,7 +9,8 @@ import { Container } from '@mui/system';
 import Cookies from 'js-cookie';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
-
+import Loading from '../Components/LoadingIcon/Loading'
+import { useLocation } from 'react-router-dom';
 export default function Otp() {
 
     const customTheme = (outerTheme) =>
@@ -75,19 +76,30 @@ export default function Otp() {
             },
         });
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
+    const error = useSelector((state) => state.active_user.error)
     const user_id = useSelector((state) => state.user_id)
-    const active_user_Response = useSelector((state) => state.active_user)
-    const otp_resend_response = useSelector((state) => state.otp_resend)
-    const [formData, setFormData] = useState({ otp: '5555' })
+    const active_user_Response = useSelector((state) => state.active_user.data)
+    const loading_otp_send = useSelector((state) => state.otp_resend.loading)
+    const location = useLocation();
+
+    const loading = useSelector((state) => state.active_user.loading)
+    const otp_resend_response = useSelector((state) => state.otp_resend.data)
+    const pathname = useSelector((state) => state.pathname)
+    const [hasNavigated, setHasNavigated] = useState(false);
+    const [formData, setFormData] = useState([])
     const [formErrors, setFormErrors] = useState({ "error": undefined });
+    const [counter, setCounter] = useState(30);
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const state_data = location.state?.formData || null;
 
+    // console.log(state_data)s
     const handleChange = (event) => {
         const { value, name } = event.target
         setFormData({ ...formData, [name]: value })
     }
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -95,40 +107,58 @@ export default function Otp() {
             dispatch(activate(formData, user_id))
         }
         else {
-            console.log(formData, user_id, 'user id form data')
+            // console.log(formData, user_id, 'user id form data')
         }
     };
+
     const handleReSendOTP = (event) => {
         event.preventDefault();
         if (user_id !== undefined) {
-            dispatch(re_send_otp(user_id))
+            dispatch(re_send_otp(user_id, formData))
+            setCounter(30)
+            setFormErrors({ 'error': "" });
         }
         else {
             alert('fail resend otp')
-            console.log(user_id, 'not any user id')
+
         }
     };
 
+    useEffect(() => {
+        let timer;
+        if (counter > 0) {
+            timer = setTimeout(() => setCounter(counter - 1), 1000);
+        }
+        return () => clearTimeout(timer);
+    }, [counter]);
 
     useEffect(() => {
-        if (active_user_Response?.success === true) {
+        if (active_user_Response?.success === true && !hasNavigated) {
             Cookies.set('token', active_user_Response?.data?.access);
-            navigate('/');
-        } else {
-            setFormErrors({ 'error': active_user_Response.error });
+            Cookies.remove('unknown_user_token');
+            setTimeout(() => {
+                setHasNavigated(true);
+                navigate(`${pathname ? pathname : '/'}`);
+            }, 1000);
+        } else if (active_user_Response) {
+            setFormErrors({ 'error': error?.error });
         }
-    }, [active_user_Response]);
+    }, [active_user_Response, hasNavigated, error]);
 
-    useEffect(() => {
-        if (otp_resend_response?.success === true) {
-            console.log(otp_resend_response.data)
-            // Cookies.set('token', otp_resend_response?.data?.access);
-            navigate('/');
-        }
-    }, [otp_resend_response]);
+
+    const handleNav = () => {
+        setTimeout(() => {
+            window.location.reload(true);
+            window.location.href = '/login';
+        }, 1000);
+    };
+    
 
     return (
         <div>
+
+            {loading || loading_otp_send ? <Loading /> : null}
+
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -153,11 +183,17 @@ export default function Otp() {
                                 </span>
                             </Typography>
                         </Box>
+                        <Box mt={1} px={7} textAlign={"center"}>
+                            <Typography variant='subtitle' textAlign={'center'} sx={{ opacity: '.8' }}>Please enter the OTP sent to {state_data?.phone_number}.
+                                {/* <br/> */}
+                                <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => handleNav()}> Change</span>
+                            </Typography>
+                        </Box>
                         <div>
                             <form onSubmit={handleSubmit}>
-                                <Box py={3}>
+                                <Box pb={3} px={3}>
                                     <Grid container spacing={3}>
-                                        <Grid xs={12} item>
+                                        <Grid xs={12} item >
                                             <ThemeProvider theme={customTheme(outerTheme)}>
                                                 <TextField
                                                     onChange={handleChange}
@@ -165,6 +201,7 @@ export default function Otp() {
                                                     type='tel'  // Use type 'tel' for phone numbers
                                                     id="standard-textarea"
                                                     label="OTP"
+                                                    placeholder='4 Digit otp.'
                                                     name='otp'
                                                     required
                                                     inputProps={{
@@ -175,14 +212,21 @@ export default function Otp() {
                                                     helperText={formErrors.error}
                                                 />
                                             </ThemeProvider>
+                                            <Box pt={1} >
+                                                <Typography textAlign={"center"} fontSize={'13px'} sx={{ color: 'green', textAlign: 'center' }} variant='subtitle'>{otp_resend_response?.data?.message}.</Typography>
+
+                                            </Box>
                                         </Grid>
-                                        <Grid item xs={6} textAlign='left' >
-                                            <Button id='BackgroundColorChangeOnly' variant='outlined' color='success' style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} fullWidth onClick={handleReSendOTP}>Re-send OTP</Button>
+                                        <Grid item xs={12} textAlign='center' mt={-3} >
+                                            <Box sx={{ display: 'grid', placeContent: 'center' }}>
+                                                <Typography variant='subtitle' fontSize={'13px'} textAlign={'center'}>Not received your code? {counter < 1 ? <span style={{ color: "blue", cursor: 'pointer', fontSize: '15px' }} onClick={handleReSendOTP}>Resend code</span> : `${counter} sec`}</Typography>
+                                            </Box>
                                         </Grid>
 
-                                        <Grid item xs={6} py={2} textAlign='right'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Proceed</Button>
+                                        <Grid item xs={12} py={0} textAlign='center'>
+                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText, textTransform: "capitalize" }} >Verify</Button>
                                         </Grid>
+
                                     </Grid>
                                 </Box>
                             </form>
@@ -207,7 +251,7 @@ export default function Otp() {
                         color: buttonStyles.child_div_text,
                     }}>
                         <Box>
-                            <Typography textAlign='left'  fontSize={46}>OTP</Typography>
+                            <Typography textAlign='left' fontSize={46}>OTP</Typography>
                             <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>
                                 <span className='ThemeColorYellow'>
                                     Welcome Back!
@@ -217,7 +261,7 @@ export default function Otp() {
                         <div>
                             <form onSubmit={handleSubmit}>
                                 <Box py={3} px={2}>
-                                    <Grid container spacing={5}>
+                                    <Grid container spacing={3}>
                                         <Grid xs={12} item>
                                             <ThemeProvider theme={customTheme(outerTheme)}>
                                                 <TextField
@@ -226,6 +270,7 @@ export default function Otp() {
                                                     type='tel'  // Use type 'tel' for phone numbers
                                                     id="standard-textarea"
                                                     label="OTP"
+                                                    placeholder='4 Digit otp.'
                                                     name='otp'
                                                     required
                                                     inputProps={{
@@ -236,15 +281,21 @@ export default function Otp() {
                                                     helperText={formErrors.error}
                                                 />
                                             </ThemeProvider>
+                                            <Box pt={1} >
+                                                <Typography textAlign={"center"} fontSize={'13px'} sx={{ color: 'green', textAlign: 'center' }} variant='subtitle'>{otp_resend_response?.data?.message}.</Typography>
+
+                                            </Box>
+                                        </Grid>
+                                        <Grid item xs={12} textAlign='center' mt={-3} >
+                                            <Box sx={{ display: 'grid', placeContent: 'center' }}>
+                                                <Typography variant='subtitle' fontSize={'13px'} textAlign={'center'}>Not received your code? {counter < 1 ? <span style={{ color: "blue", cursor: 'pointer', fontSize: '15px' }} onClick={handleReSendOTP}>Resend code</span> : `${counter} sec`}</Typography>
+                                            </Box>
                                         </Grid>
 
-                                        <Grid item xs={6} textAlign='left' >
-                                            <Button id='BackgroundColorChangeOnly' variant='outlined' color='success' style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} fullWidth onClick={handleReSendOTP}>Re-send OTP</Button>
+                                        <Grid item xs={12} py={0} textAlign='center'>
+                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText, textTransform: "capitalize" }} >Verify</Button>
                                         </Grid>
 
-                                        <Grid item xs={6} py={2} textAlign='right'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Proceed</Button>
-                                        </Grid>
                                     </Grid>
                                 </Box>
                             </form>

@@ -4,24 +4,25 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import img from '../images/imagesSampleIMage.png'
+import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { add_package, increment_in_bag, decrement_in_bag, fetchPosts, show_message, incrementPackageCount, decrementPackageCount, openDialog, openRepeat, openView } from '../Redux/actions/actions';
+import { add_package, add_fetch_post, increment_in_bag, decrement_in_bag, fetchPosts, show_message, incrementPackageCount, decrementPackageCount, openDialog, openRepeat, openView } from '../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import CircularProgress from '@mui/material-next/CircularProgress';
+import LinearProgress from '@mui/material/LinearProgress';
+
 export default function Package({ item }) {
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const buttonStyles = useSelector((state) => state.all_theme)
+  const loading_post = useSelector((state) => state?.posts?.loading);
+  const loading = useSelector((state) => state.card_data.loading)
   const card_data = useSelector((state) => state.card_data)
   const [show_btn, setShow_btn] = useState(false)
-  const [Load, setLoad] = useState(false)
-
-
+  const [id, setId] = useState()
 
   const Increment = (id) => {
-    console.log('call from add')
     if (item.variants) {
       if (item.quanitity === 0) {
         dispatch(openDialog(item))
@@ -33,39 +34,35 @@ export default function Package({ item }) {
       dispatch(increment_in_bag(id));
       dispatch(incrementPackageCount(id));
       dispatch(add_package(id));
-      dispatch(show_message(true, 'Package added successfully!', 'success'))
     }
+    setId(id)
+    dispatch(add_fetch_post());
+  }
+
+  const Decrement = (id) => {
+    setId(id)
+    dispatch(decrement_in_bag(id));
+    dispatch(add_fetch_post());
   }
 
 
-
-  const Decrement = () => {
-    dispatch(decrement_in_bag(item.id));
+  useEffect(() => {
+    dispatch(show_message(true, 'Package added successfully!', 'success'))
+  }, [card_data.snack_update_increment])
+  useEffect(() => {
     dispatch(show_message(true, 'Package removed!', 'warning'))
-  }
+  }, [card_data.snack_update_decrement])
 
-  const Show_btn_ = () => {
-    setShow_btn(true);
-  };
-  const Loading = () => {
-    setLoad(true)
-  }
-
-    useEffect(() => {
-    if (item?.quanitity >= 1 || item.quanitity === 0) {
-      Show_btn_();
-      setLoad(false)
+  useEffect(() => {
+    if (item?.quanitity >= 1 || item?.quanitity === 0) {
+      setShow_btn(true);
     }
     else {
-      setLoad(false)
       setShow_btn(false)
-
     }
-  }, [item?.quanitity]);
+    setId()
+  }, [item]);
 
-  const open_view = (data) => {
-    dispatch(openView(data))
-  }
 
   return (
     <Box my={1.5} sx={{ backgroundColor: 'transparent' }}>
@@ -89,22 +86,25 @@ export default function Package({ item }) {
               <Typography component="div" sx={{ color: 'black', }} >
                 {item?.package_name}
               </Typography>
-              <Typography variant="subtitle1" fontSize={'14px'} color="text.secondary" component="div">
-                Price:  &#8377; {item?.original_price}
+              <Typography component="div" sx={{ color: 'black', fontSize: '13px', color: 'gray', py: .4 }} >
+                <Box sx={{ borderBottom: '1px dotted', width: 135, }}>
+                  <StarsRoundedIcon sx={{ mt: -.5, fontSize: '18px' }} /> {item.avg_star_rating} ({item.reviews_count} reviews)
+                </Box>
+              </Typography>
+              <Typography variant="subtitle1" fontSize={'14px'} component="div">
+                &#8377;{parseFloat(item?.original_price)} &#x2666; {item.duration} min
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" component="div">
                 {item.offer ? (`Off: ${item?.packageDiscount}%`) : ''}
               </Typography>
-              <Typography variant="subtitle1" fontSize={'15px'} color="text.secondary" component="div">
-                Duration : {item.duration} min
+
+              <Typography color="text.secondary" sx={{ fontSize: '12px' }}>
+                {item?.package_detail.split(' ').slice(0, 4).join(' ')} ...
               </Typography>
               <Typography color="text.secondary" sx={{ fontSize: '12px', }}>
-                Description: {item?.package_detail.split(' ').slice(0, 3).join(' ')} ...
               </Typography>
-              <Typography color="text.secondary" sx={{ fontSize: '12px', }}>
-              </Typography>
-              <Box pt={2}>
-                <Typography sx={{ textTransform: 'capitalize', color: buttonStyles.icons_Color }} variant='text' onClick={() => open_view(item)}>View details</Typography>
+              <Box pt={1}>
+                <Typography sx={{ textTransform: 'capitalize', color: buttonStyles.icons_Color }} variant='text' onClick={() => dispatch(openView(item))}>View details</Typography>
               </Box>
             </Box>
           </Grid>
@@ -112,9 +112,9 @@ export default function Package({ item }) {
             <Box sx={{ maxWidth: '150px', maxHeight: '130px', overflow: 'hidden', borderRadius: '10px' }}>
               <CardMedia
                 component="img"
-                sx={{ maxWidth: '150px', maxHeight: '135px', m: 'auto', }}
-                image={img}
-                alt="Live from space album cover"
+                sx={{ width: '130px', height: '135px', m: 'auto', }}
+                image={item.icon === null ? img : item.icon}
+                alt="Not Found!"
               />
             </Box>
             <Box mt={-1}>
@@ -126,16 +126,13 @@ export default function Package({ item }) {
                       alignContent: 'center', mt: -5, ml: 2.5, color: buttonStyles.icons_Color,
                       backgroundColor: 'white', width: '80px', height: '35px',
                       borderRadius: '10px',
+                      overflow: 'hidden'
                     }}>
-                      {Load ? (
-                        <CircularProgress
-                          color="tertiary"
-                          variant="indeterminate"
-                          sx={{
-                            width: '24px',
-                            height: '24px',
-                          }}
-                        />
+
+                      {loading_post && id === item?.id && id === item?.id ? (
+                        <Box sx={{ width: '100%', px: 1 }}>
+                          <LinearProgress fourColor sx={{ mt: 3.9, borderBottomRightRadius: '30px', borderBottomLeftRadius: '30px', mx: -.7, height: '5px' }} />
+                        </Box>
                       ) :
                         <>
                           <Grid item textAlign={'center'} sx={{
@@ -145,14 +142,14 @@ export default function Package({ item }) {
                           }}>
                             <RemoveIcon onClick={() => {
                               Decrement(item?.id)
-                              Loading()
+
                             }} sx={{}} />
                           </Grid>
                           <Grid item textAlign={'center'} sx={{
                             display: 'flex', justifyContent: 'center',
                             alignContent: 'center',
                           }}>
-                            <Box sx={{ background: '#fff3d0', height: '35px', width: '30px', pt: .3, fontWeight: 600, fontSize: '17px' }}>
+                            <Box sx={{ background: buttonStyles.child_bg, height: '35px', width: '30px', pt: .3, fontWeight: 600, fontSize: '17px' }}>
                               {item.quanitity === null ? 0 : item.quanitity}
                             </Box>
                           </Grid>
@@ -162,7 +159,6 @@ export default function Package({ item }) {
                             pt: .7
                           }}>
                             <AddIcon onClick={() => {
-                              Loading()
                               Increment(item?.id)
                             }} />
                           </Grid>
@@ -174,7 +170,8 @@ export default function Package({ item }) {
                   </>
                   :
                   (<Button sx={{
-                    borderRadius: '10px', mt: -5, ml: 2.5, px: 3, textColor: '#ffc219',
+                    overflow: 'hidden',
+                    borderRadius: '10px', mt: -5, ml: 2.3, width: 83, height: '35px', textColor: '#ffc219',
                     background: 'white', background: buttonStyles.buttonColor,
                     color: buttonStyles.buttonText,
                     '&:hover, &:active': {
@@ -182,20 +179,13 @@ export default function Package({ item }) {
                       textColor: '#ffc219',
                     },
                   }} width={'80px'} onClick={() => {
-                    // Show_btn()
-                    Loading()
                     Increment(item?.id)
                   }} >
-                    {Load ? <CircularProgress
-                      color="tertiary"
-                      variant="indeterminate"
-                      sx={{
-                        width: '24px',
-                        height: '24px',
-                        //  px: 1
-                        mx:.45
-                      }}
-                    /> : 'Add'}
+                    {loading_post && id === item?.id ?
+                      <Box sx={{ width: '100%' }}>
+                        <LinearProgress fourColor sx={{ mt: 3.9, background: buttonStyles.buttonColor, borderBottomRightRadius: '30px', borderBottomLeftRadius: '30px', mx: -1, height: '5px' }} />
+                      </Box>
+                      : 'Add'}
                   </Button>)
                 }
               </Button>

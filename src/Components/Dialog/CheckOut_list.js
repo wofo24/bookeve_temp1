@@ -5,8 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItem from '@mui/material/ListItem';
 import List from '@mui/material/List';
 import Divider from '@mui/material/Divider';
-import AppBar from '@mui/material/AppBar';
-import { Box, Card, CardMedia, Grid } from '@mui/material';
+import { Box, CardMedia, Grid } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -23,7 +22,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function CheckOut_list() {
     const dispatch = useDispatch()
     const data = useSelector((state) => state.open_check)
-    // console.log(data.data_success)
     const handleClose = () => {
         dispatch(close_check_out())
     };
@@ -43,7 +41,7 @@ export default function CheckOut_list() {
             >
                 <Box sx={{ position: 'relative' }}>
                     <Toolbar>
-                        <Button autoFocus color="inherit" sx={{ textTransform: "capitalize", fontSize:'20px' }} onClick={handleClose}>
+                        <Button autoFocus color="inherit" sx={{ textTransform: "capitalize", fontSize: '20px' }} onClick={handleClose}>
                             Ordered Packages
                         </Button>
 
@@ -62,10 +60,10 @@ export default function CheckOut_list() {
                 </Box>
                 <Divider />
                 <Typography variant='h6' mx={2} mt={2}>Packages</Typography>
-                <List sx={{overflow:'auto',height:'30rem', maxHeight: 'calc(80vh - 250px)' }}>
+                <List sx={{ overflow: 'auto', height: '30rem', maxHeight: 'calc(80vh - 250px)' }}>
                     {data?.data_success?.packages?.map((item) => {
                         return (
-                            <Box sx={{ mb: 2,mx:2,borderRadius:'10px', mt:1, px: 2, py: 1,boxShadow: `rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;` }}>
+                            <Box sx={{ mb: 2, mx: 2, borderRadius: '10px', mt: 1, px: 2, py: 1, boxShadow: `rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;` }}>
                                 <Grid container>
                                     <Grid item xs={4} sx={{ py: 1 }}>
                                         <CardMedia
@@ -86,16 +84,13 @@ export default function CheckOut_list() {
                         )
                     })
                     }
-                    {/* <ListItem button>
-                        <ListItemText primary="Phone ringtone" secondary="Titania" />
-                    </ListItem> */}
                     <Divider />
                     <ListItem button>
                         <ListItemText
                             primary={`Total Price: ₹${data?.data_success?.total_price}`}
-                            secondary={`Payment : ${data?.data_success?.paid?'Paid':'Unpaid'}`}
+                            secondary={`Payment : ${data?.data_success?.paid ? 'Paid' : 'Unpaid'}`}
                         />
-                       
+
                     </ListItem>
                 </List>
             </Dialog>

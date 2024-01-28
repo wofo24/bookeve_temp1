@@ -10,13 +10,12 @@ import { openDelete_Address, closeDelete_Address, delete_address } from '../../R
 export default function Open_delete() {
   const open = useSelector((state) => state.delete_open)
 
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const buttonStyles = useSelector((state) => state.all_theme)
   const address_id = useSelector((state) => state.address_id)
   const dispatch = useDispatch()
   const handleDelete = () => {
     dispatch(delete_address(address_id))
     dispatch(closeDelete_Address())
-
   };
   const handleClose = () => {
     dispatch(closeDelete_Address())

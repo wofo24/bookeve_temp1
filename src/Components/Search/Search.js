@@ -22,7 +22,7 @@ export default function Search(props) {
     const dispatch = useDispatch();
     const searched_quarry = useSelector((state) => state.searched_quarry)
     const inputRef = useRef(null);
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const [queries, setQueries] = useState(props.queries_Recent ? props.queries_Recent : searched_quarry)
     const navigate = useNavigate()
 
@@ -37,8 +37,8 @@ export default function Search(props) {
 
     useEffect(() => {
         setQueries(props.queries_Recent);
-      }, [props.queries_Recent]);
-      
+    }, [props.queries_Recent]);
+
 
     const handleDelete = (val) => {
         dispatch(empty_quarry(val));
@@ -57,8 +57,6 @@ export default function Search(props) {
             inputRef.current && inputRef.current.focus()
         }
     }, [])
-
-    console.log(searched_quarry)
 
     const customTheme = (outerTheme) =>
         createTheme({
@@ -176,33 +174,39 @@ export default function Search(props) {
                         <Box
                             component="form"
                             sx={{
-                                '& > :not(style)': { m: 2, mt: 6 },
+                                '& > :not(style)': { m: 0, mt: 6 },
                             }}
                             noValidate
                             autoComplete="off"
                         >
-                            <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
+                            <FormControl fullWidth>
                                 <ThemeProvider theme={customTheme(outerTheme)}>
                                     <TextField
                                         fullWidth
                                         onChange={handleChange}
                                         inputRef={inputRef}
-
-                                        placeholder='Search..'
+                                        value={queries}
                                         size='medium'
-
+                                        placeholder="Search..."
+                                        onKeyPress={handleKeyPress}
+                                        defaultValue={queries ? queries : searched_quarry}
                                         InputProps={{
                                             endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <CloseIcon />
+                                                <InputAdornment position="start">
+                                                    {queries ? <CloseIcon onClick={handleDelete} sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} /> : <SearchRoundedIcon sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} />}
+                                                </InputAdornment>
+                                            ),
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    {window.location.pathname === '/package-view' &&
+                                                        <ChevronLeftRoundedIcon onClick={() => navigate('/search')} sx={{ ml: -1.5, width: 40, height: 40, color: buttonStyles.icons_Color }} />
+                                                    }
                                                 </InputAdornment>
                                             ),
                                             style: { textAlign: 'center', borderRadius: '15px' },
                                         }}
                                     />
                                 </ThemeProvider>
-
-
                             </FormControl>
 
                         </Box>

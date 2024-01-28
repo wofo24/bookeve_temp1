@@ -1,8 +1,9 @@
 import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { protectRoute } from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
+import { store_pathname } from '../../Redux/actions/actions';
 
 const decodeJWT = (token) => {
     try {
@@ -36,8 +37,8 @@ const isTokenExpired = (expirationTime) => {
 export default function Protected(props) {
     const Component = props?.component;
     const isLoggedIn = Cookies.get('token');
-
     const token = Cookies.get('token');
+    const location = useLocation();
 
     useEffect(() => {
         if (token) {
@@ -60,13 +61,20 @@ export default function Protected(props) {
             console.warn('Token not found in cookies.');
         }
     }, [token]);
-
-    const dispatch = useDispatch();
     useEffect(() => {
-        if (isLoggedIn) {
-            dispatch(protectRoute(props?.component?.name));
+        if (!props?.protected) {
+            dispatch(store_pathname(location.pathname))
+        }
+    }, [location.pathname, props?.protected, Component]);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (isLoggedIn && props?.component?.name) {
+            dispatch(protectRoute(props.component.name));
         }
     }, [isLoggedIn, props?.component?.name]);
 
     return isLoggedIn ? <Component /> : <Navigate to="/login" replace />;
+
+
 }

@@ -8,7 +8,7 @@ export default function Index() {
   const dispatch = useDispatch()
   const buttonStyles = useSelector((state) => state.button_style)
   const themes = useSelector((state) => state.all_theme)
-  const New_themes = useSelector((state) => state.apply_new_theme)
+  const New_themes = useSelector((state) => state.all_theme)
   const theme = [themes?.theme_configuration]
 
   const [buttonStyle, setButtonStyle] = useState({
@@ -47,24 +47,24 @@ export default function Index() {
     dispatch(apply_new_theme(item))
     window.location.reload(true)
   }
- 
+
   return (
     <Container>
-
       <Typography variant='h5' m={2}>Themes</Typography>
       <Box sx={{ display: 'flex', justifyContent: 'center', flex: 'wrap' }}>
-        {theme.map((item, index) => {
+        <Typography>Default Theme applied</Typography>
+        {/* {theme && theme.map((item, index) => {
           return (
             <Paper
               // onClick={() => handleActivate(item, index)}
               sx={{
                 borderRadius: '10px',
-                backgroundPosition: item.backgroundPosition,
-                animation: `${item.keyframesStyle['@keyframes AnimationName']} ${item.animation}`,
-                OAnimation: item.OAnimation,
-                WebkitAnimation: item.WebkitAnimation,
-                background: item.background,
-                MozAnimation: item.MozAnimation,
+                backgroundPosition: item?.backgroundPosition,
+                animation: `${item.keyframesStyle['@keyframes AnimationName']} ${item?.animation}`,
+                OAnimation: item?.OAnimation,
+                WebkitAnimation: item?.WebkitAnimation,
+                background: item?.background,
+                MozAnimation: item?.MozAnimation,
                 border: active === index ? activate_paper.border : 'none',
                 color: '#fff',
                 padding: '15px',
@@ -98,7 +98,7 @@ export default function Index() {
               </Paper>
             </Paper>
           );
-        })}
+        })} */}
 
       </Box>
 

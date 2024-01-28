@@ -34,11 +34,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function AlertDialogSlide() {
+    const dispatch = useDispatch()
     const open = useSelector((state) => state.dialog_open);
     const dialog_data = useSelector((state) => state.dialog_data);
     const [selectedValue, setSelectedValue] = React.useState("");
-    const textStyle = useSelector((state) => state.apply_new_theme)
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const textStyle = useSelector((state) => state.all_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
     const steps = [
         {
             label: 'Select campaign settings',
@@ -74,6 +75,11 @@ export default function AlertDialogSlide() {
         },
 
     ]
+    
+    const handleClose = () => {
+        setSelectedValue(null);
+        dispatch(closeDialog())
+    };
 
     const handleChange = (event) => {
         const value = event.target.value;
@@ -86,12 +92,8 @@ export default function AlertDialogSlide() {
         });
     };
 
-    const dispatch = useDispatch()
-    const handleClose = () => {
-        setSelectedValue(null);
-        dispatch(closeDialog())
-    };
 
+ 
     const handleIncrement = () => {
         if (selectedValue || dialog_data?.variants == []) {
             dispatch(incrementPackageCount(dialog_data.packageId))
@@ -269,7 +271,7 @@ export default function AlertDialogSlide() {
 
                     <>
                         <Dialog
-                            PaperProps={{ style: { borderRadius: '15px', zIndex: '99999', marginTop:'490px' } }}
+                            PaperProps={{ style: { borderRadius: '15px', zIndex: '99999', marginTop: '490px' } }}
                             open={open}
                             TransitionComponent={Transition}
                             keepMounted
@@ -366,8 +368,8 @@ export default function AlertDialogSlide() {
                                             {/* <Typography variant='h5'>About the Process</Typography> */}
                                             <Typography variant='h5' mb={2} sx={{ fontFamily: textStyle.fontFamily }}><b>About the Process</b></Typography>
                                             <Box sx={{ maxWidth: '100%' }}>
-                                                <Stepper activeStep={'none'} orientation="vertical">
-                                                    {steps.map((step, index) => (
+                                                <Stepper orientation="vertical">
+                                                    {steps?.map((step, index) => (
                                                         <Step key={step.label}>
                                                             <StepLabel>
                                                                 <b> {step.label}</b>
@@ -386,16 +388,18 @@ export default function AlertDialogSlide() {
                                             <Button>RECOMMENDED</Button>
                                             <Typography variant='h4'><b>After care guide</b></Typography>
                                             {/* <Typography variant='h4' mb={2} sx={{fontFamily:textStyle.fontFamily}}><b>About the Process</b></Typography>  */}
-                                            {dic.map((item) => (
-                                                <Grid container my={2}>
-                                                    <Grid xs={1}>
-                                                        <Typography sx={{ fontSize: '20px', color: 'green', mt: 1 }}> {item.icon}</Typography>
+                                            {dic?.map((item, index) => (
+                                                <Grid container my={2} key={index}>
+                                                    <Grid item xs={1}>
+                                                        <Typography sx={{ fontSize: '20px', color: 'green', mt: 1 }}>{item.icon}</Typography>
                                                     </Grid>
-                                                    <Grid xs={11} px={2}>
-                                                        <Typography variant='h6'> {item.dis}</Typography>
+                                                    <Grid item xs={11} px={2}>
+                                                        <Typography variant='h6'>{item.dis}</Typography>
                                                     </Grid>
                                                 </Grid>
                                             ))}
+
+
                                             <hr />
                                         </Box>
                                         <Box my={2}>

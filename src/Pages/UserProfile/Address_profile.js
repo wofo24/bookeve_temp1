@@ -21,7 +21,7 @@ export default function Address_profile() {
     const handleClickOpen = (data) => {
         dispatch(openAdd_Address(data))
     };
-    const buttonStyles = useSelector((state) => state.apply_new_theme)
+    const buttonStyles = useSelector((state) => state.all_theme)
 
     const handle_Delete_Dialog = () => {
         dispatch(openDelete_Address())
