@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
 import { Box, Typography } from '@mui/material';
 import { Grid } from '@mui/material';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -10,7 +9,7 @@ import { proceed_to_pay_close, open_schedule_dialog, proceed_to_pay_open, show_a
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import { Paper } from '@mui/material';
 import Cookies from 'js-cookie';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Proceed_to_pay() {
     const navigate = useNavigate()
@@ -22,9 +21,6 @@ export default function Proceed_to_pay() {
     const buttonStyles = useSelector((state) => state?.all_theme)
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(proceed_to_pay_open())
-    }, [selected_address, selected_date_time_var])
     const dateObject = new Date(selected_date_time_var);
     const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
     const formattedDate = dateObject.toLocaleDateString('en-US', options);
@@ -32,6 +28,9 @@ export default function Proceed_to_pay() {
     const handleEditSchedule = () => {
         dispatch(open_schedule_dialog())
     }
+    useEffect(() => {
+        dispatch(proceed_to_pay_open())
+    }, [selected_address, selected_date_time_var])
     const handleClose = () => {
         dispatch(proceed_to_pay_close())
         navigate('/payment')

@@ -27,8 +27,6 @@ export default function Address(props) {
     const handleClickOpen = (data) => {
         dispatch(openAdd_Address(data))
     };
-    const handleClose = () => {
-    }
     useEffect(() => {
         dispatch(get_all_address())
     }, [all_address.posted_address_result, all_address.delete_address_result, all_address.update_address_result])
@@ -36,7 +34,6 @@ export default function Address(props) {
     const handle_Delete_Dialog = (id) => {
         dispatch(openDelete_Address(id))
     }
-
     const handleChange = (event) => {
         setSelectedAddress(event.target.value);
     };

@@ -13,7 +13,7 @@ import { Card } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { openAdd_Address, closeAdd_Address, openDelete_Address } from '../../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
-// import Open_delete from '../Components/Dialog/Open_delete';
+
 export default function Address_profile() {
     const dispatch = useDispatch()
     const navigate = useNavigate()

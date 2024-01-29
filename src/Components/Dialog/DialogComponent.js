@@ -75,7 +75,7 @@ export default function AlertDialogSlide() {
         },
 
     ]
-    
+
     const handleClose = () => {
         setSelectedValue(null);
         dispatch(closeDialog())
@@ -92,8 +92,6 @@ export default function AlertDialogSlide() {
         });
     };
 
-
- 
     const handleIncrement = () => {
         if (selectedValue || dialog_data?.variants == []) {
             dispatch(incrementPackageCount(dialog_data.packageId))
@@ -105,14 +103,8 @@ export default function AlertDialogSlide() {
         }
     }
 
-
-
     return (
         <>
-
-
-
-
             <Media queries={{
                 small: '(max-width: 768px)',
                 medium: '(min-width: 769px) and (max-width: 1024px)',
@@ -148,10 +140,10 @@ export default function AlertDialogSlide() {
                                         </Grid>
                                         <hr />
                                     </Grid>
-                                    <Box fullWidth my={4}>
+                                    <Box  my={4}>
                                         {/* <Typography variant='h5'></Typography> */}
                                         <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}><b>Frequently add together</b></Typography>
-                                        <FormControl fullWidth>
+                                        <FormControl >
                                             <RadioGroup
                                                 aria-labelledby="demo-radio-buttons-group-label"
                                                 defaultValue={0}
@@ -177,7 +169,7 @@ export default function AlertDialogSlide() {
                                         </FormControl>
                                     </Box>
                                     <hr />
-                                    <Box fullWidth sx={{ background: 'skyblue', px: 2, py: 5, my: 4, borderRadius: '10px', textAlign: 'center', alignContent: 'center' }}>
+                                    <Box  sx={{ background: 'skyblue', px: 2, py: 5, my: 4, borderRadius: '10px', textAlign: 'center', alignContent: 'center' }}>
 
                                         <Typography variant='h5' mb={2} sx={{ fontFamily: textStyle.fontFamily }}><b>The UC difference</b></Typography>
 
@@ -217,7 +209,7 @@ export default function AlertDialogSlide() {
                                         {/* <Typography variant='h5'>About the Process</Typography> */}
                                         <Typography variant='h5' mb={2} sx={{ fontFamily: textStyle.fontFamily }}><b>About the Process</b></Typography>
                                         <Box sx={{ maxWidth: '100%' }}>
-                                            <Stepper activeStep={'none'} orientation="vertical">
+                                            <Stepper orientation="vertical">
                                                 {steps.map((step, index) => (
                                                     <Step key={step.label}>
                                                         <StepLabel>
@@ -237,12 +229,12 @@ export default function AlertDialogSlide() {
                                         <Button>RECOMMENDED</Button>
                                         <Typography variant='h4'><b>After care guide</b></Typography>
                                         {/* <Typography variant='h4' mb={2} sx={{fontFamily:textStyle.fontFamily}}><b>About the Process</b></Typography>  */}
-                                        {dic.map((item) => (
-                                            <Grid container my={2}>
-                                                <Grid xs={1}>
+                                        {dic?.map((item, index) => (
+                                            <Grid container my={2} key={index}>
+                                                <Grid item xs={1}>
                                                     <Typography sx={{ fontSize: '20px', color: 'green', mt: 1 }}> {item.icon}</Typography>
                                                 </Grid>
-                                                <Grid xs={11} px={2}>
+                                                <Grid item xs={11} px={2}>
                                                     <Typography variant='h6'> {item.dis}</Typography>
                                                 </Grid>
                                             </Grid>
@@ -299,10 +291,9 @@ export default function AlertDialogSlide() {
                                             </Grid>
                                             <hr />
                                         </Grid>
-                                        <Box fullWidth my={4}>
-                                            {/* <Typography variant='h5'></Typography> */}
+                                        <Box  my={4}>
                                             <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}><b>Frequently add together</b></Typography>
-                                            <FormControl fullWidth>
+                                            <FormControl >
                                                 <RadioGroup
                                                     aria-labelledby="demo-radio-buttons-group-label"
                                                     defaultValue={0}
@@ -328,7 +319,7 @@ export default function AlertDialogSlide() {
                                             </FormControl>
                                         </Box>
                                         <hr />
-                                        <Box fullWidth sx={{ background: 'skyblue', px: 2, py: 5, my: 4, borderRadius: '10px', textAlign: 'center', alignContent: 'center' }}>
+                                        <Box  sx={{ background: 'skyblue', px: 2, py: 5, my: 4, borderRadius: '10px', textAlign: 'center', alignContent: 'center' }}>
 
                                             <Typography variant='h5' mb={2} sx={{ fontFamily: textStyle.fontFamily }}><b>The UC difference</b></Typography>
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,10 +12,9 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
-import { get_all_package_all_review, show_message, closeView } from '../../Redux/actions/actions';
+import { get_all_package_all_review, closeView } from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import FormControlLabel from '@mui/material/FormControlLabel';
-// import Theme_Button from '../Theme/Theme_Button';
 import Checkbox from '@mui/material/Checkbox';
 import Media from 'react-media';
 import Loading from '../LoadingIcon/Loading'
@@ -69,9 +67,6 @@ export default function ViewDialog() {
             }
         });
     };
-
-    console.log(package_review?.data)
-
 
     return (
         <div>
@@ -223,7 +218,7 @@ export default function ViewDialog() {
                                         </Container>
                                     }
                                     <Box sx={{ flexGrow: 1 }} width={550} >
-                                        <FormControl fullWidth>
+                                        <FormControl >
                                             <RadioGroup
                                                 aria-labelledby="demo-radio-buttons-group-label"
                                                 defaultValue={0}
@@ -426,7 +421,7 @@ export default function ViewDialog() {
 
 
                                     <Box sx={{ flexGrow: 1 }}>
-                                        <FormControl fullWidth>
+                                        <FormControl >
                                             <RadioGroup
                                                 aria-labelledby="demo-radio-buttons-group-label"
                                                 defaultValue={0}

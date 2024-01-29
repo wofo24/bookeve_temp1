@@ -3,7 +3,6 @@ import { Box, Container, Grid, Typography } from '@mui/material'
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -13,7 +12,6 @@ import { Card } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
 import Media from 'react-media';
-import { useNavigate } from 'react-router-dom';
 import { hide_all_address, get_all_address, store_data_for_check_out_address_id, openDelete_Address, openAdd_Address, selected_address, open_schedule_dialog } from '../../Redux/actions/actions';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -40,7 +38,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function All_Address() {
     const dispatch = useDispatch()
-    const navigate = useNavigate()
     const [selectedAddress, setSelectedAddress] = useState('');
     const buttonStyles = useSelector((state) => state.all_theme)
     const open = useSelector((state) => state.all_address_dialog)
@@ -110,7 +107,7 @@ export default function All_Address() {
         }
     }, [all_address]);
 
-    console.log(all_address.all_address, 'this is all address')
+    // console.log(/all_address.all_address, 'this is all address')
 
     return (
         <div>

@@ -32,7 +32,6 @@ export default function Schedule_dialog() {
     const selectedDate = new Date()
     const [month, setMonth] = useState([])
     const dates = [];
-    const [currentMonth, setCurrentMonth] = useState(null);
     const [get_time_name_state, setGet_time_name_state] = useState()
     const [formatted_date, setFormatted_date] = useState()
     const [selectedDiv, setSelectedDiv] = useState(null);
@@ -64,18 +63,11 @@ export default function Schedule_dialog() {
     useEffect(() => {
         setMonth(monthNames);
         var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-        var lastDay = new Date(y, m + 1, 0);
     }, []);
 
     const get_month_name = (index) => {
-        setCurrentMonth(index + 1)
         setSelectedMonth(index)
     }
-
-    useEffect(() => setCurrentMonth(new Date().getMonth() + 1), []);
-
-
-
     const handleDateClick = (date, index) => {
         setSelectedDiv(index);
         const year = date.getFullYear();
@@ -141,80 +133,80 @@ export default function Schedule_dialog() {
             }}>
                 {(item) => item.large && (
                     <>
-                        <React.Fragment sx={{ p: 9 }}>
-                            <Dialog
-                                onClose={handleClose}
-                                aria-labelledby="customized-dialog-title"
-                                open={open}
-                                PaperProps={{ style: { borderRadius: '15px' } }}
+
+                        <Dialog
+                            onClose={handleClose}
+                            aria-labelledby="customized-dialog-title"
+                            open={open}
+                            PaperProps={{ style: { borderRadius: '15px', padding: '12px' } }}
+                        >
+                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Select Date & Time</b></Typography>
+                            </DialogTitle>
+                            <IconButton
+                                aria-label="close"
+                                onClick={handleExit}
+                                sx={{
+                                    position: 'absolute',
+                                    right: 8,
+                                    top: 8,
+                                    color: (theme) => theme.palette.grey[500],
+                                }}
                             >
-                                <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                    <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Select Date & Time</b></Typography>
-                                </DialogTitle>
-                                <IconButton
-                                    aria-label="close"
-                                    onClick={handleExit}
-                                    sx={{
-                                        position: 'absolute',
-                                        right: 8,
-                                        top: 8,
-                                        color: (theme) => theme.palette.grey[500],
-                                    }}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                                <DialogContent dividers>
-                                    <div>
-                                        <form>
-                                            <Box sx={{ display: 'flex', flex: 'wrap', overflowX: "scroll" }} >
-                                                {month?.map((month, index) => {
-                                                    const date = new Date(selectedDate.getFullYear(), index, 1);
-                                                    const dateInMonth = date.getMonth() + 1
-                                                    const newD = new Date()
+                                <CloseIcon />
+                            </IconButton>
+                            <DialogContent dividers>
+                                <div>
+                                    <form>
+                                        <Box sx={{ display: 'flex', flex: 'wrap', overflowX: "scroll" }} >
+                                            {month?.map((month, index) => {
+                                                const date = new Date(selectedDate.getFullYear(), index, 1);
+                                                const dateInMonth = date.getMonth() + 1
+                                                const newD = new Date()
 
-                                                    if (dateInMonth > newD.getMonth()) {
-                                                        return (
-                                                            <Box sx={{ cursor: 'pointer', p: 1, px: 2, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
-                                                                onClick={() => get_month_name(index)}
-                                                            >
-                                                                {month}
-                                                            </Box>
-                                                        );
-                                                    }
-                                                    return null;
-                                                })}
-
-                                            </Box>
-                                            <Box sx={{ display: "flex", overflowX: "scroll" }}>
-                                                {dates.filter((date) => date >= new Date()).map((date, index) => (
-                                                    <Box onClick={() => handleDateClick(date, index)} >
-                                                        <Box sx={{ cursor: 'pointer', textAlign: "center", borderRadius: '10px', px: 2, py: 1.5, m: 1, height: 75, width: 58 }} style={(selectedDiv === index ? activeMonth : InactiveMonth)} onClick={() => handleDateClick(date)} >
-                                                            {formatDate(date)}
+                                                if (dateInMonth > newD.getMonth()) {
+                                                    return (
+                                                        <Box sx={{ cursor: 'pointer', p: 1, px: 2, borderRadius: '10px', m: 1 }} key={index} style={selectedMonth === index ? activeMonth : InactiveMonth}
+                                                            onClick={() => get_month_name(index)}
+                                                        >
+                                                            {month}
                                                         </Box>
-                                                    </Box>
-                                                ))}
-                                            </Box>
-                                        </form>
-                                        <Box mt={3}><Typography variant='h6'>Select Time of service</Typography></Box>
-                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
-                                            {times?.map((item, index) => {
-                                                item?.replace(" AM", "");
-                                                return (
-                                                    <Box key={index} sx={{ p: 1, m: 1, borderRadius: '10px', width: 90 }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}>
-                                                        <span>{item}</span>
-                                                    </Box>
-                                                );
+                                                    );
+                                                }
+                                                return null;
                                             })}
+
                                         </Box>
+                                        <Box sx={{ display: "flex", overflowX: "scroll" }}>
+                                            {dates.filter((date) => date >= new Date()).map((date, index) => (
+                                                <Box onClick={() => handleDateClick(date, index)} key={index}>
+                                                    <Box sx={{ cursor: 'pointer', textAlign: "center", borderRadius: '10px', px: 2, py: 1.5, m: 1, height: 75, width: 58 }} style={(selectedDiv === index ? activeMonth : InactiveMonth)} onClick={() => handleDateClick(date)} >
+                                                        {formatDate(date)}
+                                                    </Box>
+                                                </Box>
+                                            ))}
+                                        </Box>
+                                    </form>
+                                    <Box mt={3}><Typography variant='h6'>Select Time of service</Typography></Box>
+                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
+                                        {times?.map((item, index) => {
+                                            item?.replace(" AM", "");
+                                            return (
+                                                <Box key={index} sx={{ p: 1, m: 1, borderRadius: '10px', width: 90 }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}>
+                                                    <span>{item}</span>
+                                                </Box>
+                                            );
+                                        })}
+                                    </Box>
 
 
-                                    </div >
-                                </DialogContent>
-                                <DialogActions sx={{ m: 1 }}>
-                                    <Button fullWidth onClick={handleClose} size='large' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Save</Button>
-                                </DialogActions>
-                            </Dialog>
-                        </React.Fragment>
+                                </div >
+                            </DialogContent>
+                            <DialogActions sx={{ m: 1 }}>
+                                <Button fullWidth onClick={handleClose} size='large' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Save</Button>
+                            </DialogActions>
+                        </Dialog>
+
                     </>
                 )}
 

@@ -25,7 +25,6 @@ export default function AlertDialogSlide() {
     <React.Fragment>
       <Dialog
         open={open}
-
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}

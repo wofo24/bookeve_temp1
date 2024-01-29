@@ -1,16 +1,12 @@
 import { Grid, Box, Typography } from '@mui/material';
 import React from 'react';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import CallIcon from '@mui/icons-material/Call';
-import MailIcon from '@mui/icons-material/Mail';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Media from 'react-media';
-import { get_public_information } from '../Redux/actions/actions';
 import Loading from './LoadingIcon/Loading';
 const footerStyle = {
     marginTop: 'auto',
@@ -20,11 +16,10 @@ export default function Footer() {
     const buttonStyles = useSelector((state) => state.all_theme)
     const public_info = useSelector((state) => state?.public_information?.data?.data)
     const loading = useSelector((state) => state?.public_information?.data?.loading)
-    const error = useSelector((state) => state.error)
-
+    
     return (
         <footer style={footerStyle}>
-            {loading&&<Loading/>}
+            {loading && <Loading />}
             <Media queries={{
                 small: '(max-width: 768px)',
                 medium: '(min-width: 769px) and (max-width: 1024px)',

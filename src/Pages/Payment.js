@@ -39,9 +39,7 @@ export default function Payment() {
   }
 
   React.useEffect(() => {
-    // navigate('/successful', { replace: true, state: null });
     window.history.replaceState(null, '/', window.location.href);
-    console.log(window.history)
 }, []);
 
   React.useEffect(() => {

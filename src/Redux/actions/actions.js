@@ -262,11 +262,9 @@ export const get_all_cart_data = () => {
     },
     headers: {},
   };
-
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
   return async (dispatch) => {
     dispatch({ type: type.UPDATE_IN_BAG_LOADING });
     try {
@@ -852,4 +850,12 @@ export const show_message = (value, message, messageType) => {
 
 export const empty_reschedule = () => {
   return { type: type.EMPTY_RESCHEDULE_BOOKING_DATA_SUCCESSFULLY }
+}
+
+export const clear_cart_data_message = ()=>{
+  return{type: type.CLEAR_CART_DATA_MESSAGES}
+}
+
+export const clear_coupon = ()=>{
+  return{type: type.CLEAR_COUPON_MESSAGES}
 }

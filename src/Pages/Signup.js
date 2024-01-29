@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { Link, useNavigate } from 'react-router-dom';
 import Media from 'react-media';
-import { signup, store_id, activate } from '../Redux/actions/actions';
+import { signup, store_id} from '../Redux/actions/actions';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import Loading from '../Components/LoadingIcon/Loading'
@@ -124,8 +124,7 @@ export default function Signup() {
                 setFormErrors({ 'phone_number': error.phone_number && error.phone_number[0] });
             }
         }
-        console.log(error)
-    }, [signup_response, error]);
+           }, [signup_response, error]);
 
     return (
         <div>

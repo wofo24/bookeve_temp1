@@ -1,22 +1,15 @@
 import React from 'react'
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import ListIcon from '@mui/icons-material/List';
-import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-// import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import Theme_Button from '../../Components/Theme/Theme_Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card, Grid } from '@mui/material';
 import Bookings from '../../Components/Bookings';
@@ -24,7 +17,6 @@ import Address from '../../Pages/Address'
 import { get_my_profile, open_profile_dialog, open_sign_out_dialog } from '../../Redux/actions/actions';
 import Media from 'react-media';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import Loading from '../../Components/LoadingIcon/Loading';
 
@@ -64,10 +56,8 @@ function a11yProps(index) {
 
 export default function Profile() {
   const buttonStyles = useSelector((state) => state.all_theme)
-  const get_my_profile_success_error1 = useSelector((state) => state.get_my_profile_update_success_error)
   const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
   const loading = useSelector((state) => state.get_my_profile_success_error?.data?.loading)
-  const error = useSelector((state) => state.get_my_profile_success_error?.data?.error)
   const loading1 = useSelector((state) => state.get_my_profile_success_error?.data?.loading)
   const pages = ['Orders', 'Address',];
   const style = { textDecoration: 'none', color: 'black', ':hover': { color: 'red' } }
@@ -80,8 +70,6 @@ export default function Profile() {
   };
   const handleChangeD = () => {
     dispatch(open_profile_dialog())
-
-
   }
 
   useEffect(() => {

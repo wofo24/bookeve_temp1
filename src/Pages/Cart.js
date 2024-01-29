@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CircularProgress from '@mui/material-next/CircularProgress';
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -12,7 +11,7 @@ import { CardMedia } from '@mui/material';
 import empty_cart from '../images/empty_cart.png'
 import Proceed_to_pay from '../Components/Dialog/Proceed_to_pay';
 import { useSelector, useDispatch } from 'react-redux';
-import { store_data_for_check_out, get_my_profile,store_count, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog, Increment_in_u_bag, update_in_bag } from '../Redux/actions/actions';
+import { store_data_for_check_out, get_my_profile,store_count, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog} from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -186,7 +185,7 @@ export default function Cart() {
       const mergedNumbersFrom1 = extractNumbersFromString(coupons?.post_coupon_success?.data?.result?.message);
       setDiscount(parseInt(mergedNumbersFrom1))
     } else {
-      console.error('error')
+      // console.error('error')
     }
   }, [coupons?.post_coupon_success?.data?.result?.message])
 

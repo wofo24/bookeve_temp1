@@ -30,14 +30,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function Coupon() {
     const open = useSelector((state) => state.coupon_dialog)
-
     const [formData, setFormData] = useState([])
     const [formErrors, setFormErrors] = useState({});
     const dispatch = useDispatch()
     const buttonStyles = useSelector((state) => state.all_theme)
-    const [toShow, setToShow] = useState()
     const textStyle = useSelector((state) => state.all_theme)
-    // const apply_onClick_coupon = useSelector((state) => state.apply_onClick_coupon)
     const coupons = useSelector((state) => state.coupons)
     const loading = useSelector((state) => state.coupons.loading)
     const card_data = useSelector((state) => state?.card_data?.data)
@@ -50,8 +47,6 @@ export default function Coupon() {
             } else {
                 console.log('close')
             }
-        } else {
-            // console.log('make this is', card_data)
         }
     }, [open, card_data]);
 
@@ -59,12 +54,11 @@ export default function Coupon() {
         const { value, name } = event.target
         setFormData({ ...formData, [name]: value })
     }
-   
+
     const handleClose = () => {
         dispatch(close_coupon_dialog())
     };
 
-    // console.log(apply_onClick_coupon, 'this is code')
     const handleSubmit = (event) => {
         event.preventDefault();
         if (formData) {
@@ -74,14 +68,11 @@ export default function Coupon() {
 
     const ApplyCoupon = (data) => {
         dispatch(click_to_apply_coupon(data?.code));
-        setToShow(data);
         setFormData({ ...formData, coupon: data.code });
         handleClose()
     }
 
     const Direct_apply = (data) => {
-
-        // console.log(data, 'dorect appy')
         if (card_data && Array.isArray(card_data)) {
             const Package = card_data.map((item) => ({ "id": item.package_id, "quantity": item.quantity }))
             const PACKAGE = { "packages": Package }
@@ -106,7 +97,6 @@ export default function Coupon() {
     }
     useEffect(() => {
         setFormErrors({ ...formErrors, coupon: coupons?.post_coupon_fail?.response?.data?.error });
-        // console.log('coupon')
     }, [coupons?.post_coupon_fail])
 
 

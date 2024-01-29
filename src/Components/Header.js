@@ -6,7 +6,6 @@ import IconButton from '@mui/material/IconButton';
 import { Navigate, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-// import MenuIcon from '@mui/icons-material/Menu';
 import HouseRoundedIcon from '@mui/icons-material/HouseRounded';
 import Container from '@mui/material/Container';
 import Badge from '@mui/material/Badge';
@@ -24,6 +23,7 @@ import Cookies from 'js-cookie';
 
 export default function Header() {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const openD = useSelector((state) => state.view_open);
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const buttonStyles = useSelector((state) => state.all_theme)
@@ -45,9 +45,6 @@ export default function Header() {
             dispatch(store_count(count))
         }
     }, [card_data]);
-
-
-    // console.log(public_info,)
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -290,9 +287,11 @@ export default function Header() {
             >
                 {(item) => item.small && (window.location.pathname !== '/search' && window.location.pathname !== '/package-view') && (
                     <AppBar sx={{
-                        position: 'sticky',
+                        position: !openD?'sticky':'',
                         backdropFilter: buttonStyles.child_backdropFilter,
                         background: buttonStyles.child_bg,
+                      
+
                     }}>
                         <Container maxWidth="xl">
                             <Toolbar disableGutters >
@@ -360,76 +359,9 @@ export default function Header() {
 
                                         </Typography>
                                     </Box>
-                                    <Box sx={{ flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
-
-                                        <Link
-                                            to={`/search`}
-                                            style={{ textDecoration: 'none' }}
-                                        >
-                                            <Button
-                                                onClick={handleCloseNavMenu}
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/search' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '25px', textTransform: 'capitalize', alignItems: 'center' }}
-                                            >
-                                                <SearchRoundedIcon fontSize='large' sx={{ mx: 1 }} /> Search
-                                            </Button>
-                                        </Link>
-
-                                        <Link
-                                            style={{ textDecoration: 'none' }}
-                                        >
-                                            <Button
-                                                id="basic-button"
-                                                aria-controls={open ? 'basic-menu' : undefined}
-                                                aria-haspopup="true"
-                                                aria-expanded={open ? 'true' : undefined}
-                                                onClick={handleClick}
-
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/profile' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '25px', textTransform: 'capitalize' }}
-                                            >
-                                                <AccountCircleOutlinedIcon fontSize='large' sx={{ mx: 1 }} />  Ashu
-                                            </Button>
-                                        </Link>
-
-
-                                        <Link
-                                            // key={page}
-                                            to={`/cart`}
-                                            style={{ textDecoration: 'none' }}
-                                        >
-                                            <Button
-                                                onClick={handleCloseNavMenu}
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/cart' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '25px', textTransform: 'capitalize' }}
-                                            >
-                                                <Badge badgeContent={4} color="success">
-                                                    <LocalMallOutlinedIcon fontSize='large' sx={{ mx: 1, mt: .2 }} />  Cart
-                                                </Badge>
-                                            </Button>
-                                        </Link>
-                                    </Box>
+                                    
                                 </Box>
-                                <Box>
-                                    <Menu
-
-                                        id="basic-menu"
-                                        anchorEl={anchorEl}
-                                        open={open}
-                                        onClose={handleClose}
-                                        MenuListProps={{
-                                            'aria-labelledby': 'basic-button',
-
-                                        }}
-
-                                    >
-                                        <Box sx={{ width: 200 }}>
-                                            <Link to='/profile' style={{
-                                                textDecoration: 'none', color: 'inherit',
-                                            }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }}  >Profile</MenuItem></Link>
-                                            <Link to='/all-booking' style={{ textDecoration: 'none', color: 'inherit', }}>  <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }} >My Booking</MenuItem></Link>
-                                            <Link to='/indexTheme' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }} >Theme</MenuItem></Link>
-                                            <Link to='/' style={{ textDecoration: 'none', color: 'inherit', }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500, color: 'red' }} >Logout</MenuItem></Link>
-                                        </Box>
-                                    </Menu>
-                                </Box>
+                              
                             </Toolbar>
                         </Container>
                     </AppBar >

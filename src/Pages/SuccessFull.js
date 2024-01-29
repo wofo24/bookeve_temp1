@@ -10,17 +10,16 @@ export default function SuccessFull() {
     const buttonStyles = useSelector((state) => state.all_theme)
     const navigate = useNavigate();
 
-  
+
     React.useEffect(() => {
-        // navigate('/successful', { replace: true, state: null });
         window.history.replaceState(null, '/', window.location.href);
     }, []);
-    
-      React.useEffect(() => {
-        navigate( { state: null });
+
+    React.useEffect(() => {
+        navigate({ state: null });
     }, []);
-      
-   
+
+
     return (
         <Container sx={{ margin: 'auto', textAlign: 'center', py: 10 }}>
             <CheckCircleRoundedIcon color='success' sx={{ height: 100, width: 100 }} />

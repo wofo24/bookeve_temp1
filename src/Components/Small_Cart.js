@@ -5,9 +5,8 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Card } from '@mui/material';
 import CircularProgress from '@mui/material-next/CircularProgress';
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { add_fetch_post, increment_in_bag, clear_all_cart_data, store_pathname, get_all_cart_data, decrement_in_bag, store_data_for_check_out, show_message, click_to_apply_coupon, open_coupon_dialog, show_all_address, hide_all_address, open_schedule_dialog } from '../Redux/actions/actions';
+import { add_fetch_post, increment_in_bag, clear_all_cart_data, store_pathname, get_all_cart_data, decrement_in_bag, store_data_for_check_out,  click_to_apply_coupon, open_coupon_dialog} from '../Redux/actions/actions';
 import Media from 'react-media';
 import empty_cart from '../images/empty_cart.png';
 import { CardMedia } from '@mui/material';
@@ -17,15 +16,11 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom'
 export default function Small_Cart(props) {
-    const navigate = useNavigate()
     const dispatch = useDispatch()
     const card_data = useSelector((state) => state.card_data.data)
     const buttonStyles = useSelector((state) => state.all_theme)
-    const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
     const coupons = useSelector((state) => state.coupons)
     const update_in_post = useSelector((state) => state.update_in_post)
-    const loading = useSelector((state) => state.coupons.loading)
-    // const card_data = useSelector((state) => state?.card_data?.data)
     const posts = useSelector((state) => state?.posts);
     const [disable, setDisable] = React.useState(true)
     const [Load, setLoad] = useState(false)
@@ -63,17 +58,6 @@ export default function Small_Cart(props) {
     }, [dispatch, posts, update_in_post])
 
     useEffect(() => {
-        if (Coupon_Code_value) {
-            dispatch(show_message(true, 'Coupon applied successful!', 'success'))
-        }
-        else {
-            dispatch(show_message(true, 'Coupon removed!', 'warning'))
-
-        }
-    }, [Coupon_Code_value])
-
-
-    useEffect(() => {
         const ready_for_check_out = Array.isArray(card_data) && card_data.length > 0 ? card_data?.map((item) => ({ "id": item.package_id, "quantity": item.quantity })) : []
         dispatch(store_data_for_check_out(ready_for_check_out))
     }, [card_data])
@@ -84,7 +68,7 @@ export default function Small_Cart(props) {
         }
 
     }, [card_data])
-   
+
     return (
         <Media
             queries={{

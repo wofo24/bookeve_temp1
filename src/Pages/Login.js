@@ -8,7 +8,6 @@ import Media from 'react-media';
 import { login } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { styled } from '@mui/system';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import Loading from '../Components/LoadingIcon/Loading';
@@ -126,9 +125,7 @@ export default function Login() {
         }
     }, [positive_response, error, hasNavigated]);
 
-    console.log(error?.phone_number)
-
-    return (
+       return (
         <div>
             {loading && <Loading />}
             <Media

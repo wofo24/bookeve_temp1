@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { protectRoute } from '../../Redux/actions/actions';
-import { useSelector, useDispatch } from 'react-redux';
+import {  useDispatch } from 'react-redux';
 import { store_pathname } from '../../Redux/actions/actions';
 
 const decodeJWT = (token) => {

@@ -109,10 +109,10 @@ export default function Edit_Profile() {
     const get_my_profile_success_error1 = useSelector((state) => state.get_my_profile_update_success_error)
     const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
     const loading = useSelector((state) => state.get_my_profile_update_success_error?.loading)
-    const error = useSelector((state) => state.get_my_profile_update_success_error?.error)
+    // const error = useSelector((state) => state.get_my_profile_update_success_error?.error)
     const [formData, setFormData] = useState([])
 
-    
+
     const Date1 = (event) => {
         const myDate = new Date(event.$d);
         const formattedDate = dayjs(myDate).format('YYYY-MM-DD');
@@ -120,19 +120,19 @@ export default function Edit_Profile() {
     }
 
     useEffect(() => {
-        if(open){
+        if (open) {
             dispatch(get_my_profile())
             setTimeout(() => {
                 handleClose()
             }, 2000);
         }
-      }, [get_my_profile_success_error1])
+    }, [get_my_profile_success_error1])
 
     const handleChange = (event) => {
         const { value, name } = event.target
         setFormData({ ...formData, [name]: value })
     };
-    console.log(formData, 'this is form')
+    // console.log(formData, 'this is form')
     const handleClose = () => {
         dispatch(close_profile_dialog())
     };
@@ -140,13 +140,9 @@ export default function Edit_Profile() {
 
     const handleSubmit = () => {
         dispatch(update_my_profile(token, formData))
-        // setTimeout(() => {
-        //     window.location.reload(true)
-        // }, 3000);
+       
     }
-
-    console.log(loading, 'edit')
-    return (
+       return (
         <div>
             {loading && <Loading />}
             <Media queries={{
@@ -162,7 +158,7 @@ export default function Edit_Profile() {
                             open={open}
                             PaperProps={{ style: { borderRadius: '15px' } }}
                         >
-                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                            <DialogTitle sx={{ p: 2 }} id="customized-dialog-title">
                                 <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Edit profile</b></Typography>
                             </DialogTitle>
                             <IconButton
@@ -179,36 +175,25 @@ export default function Edit_Profile() {
                             </IconButton>
                             <DialogContent >
                                 <Box sx={{ mx: 5, my: 2 }}>
-
-                                    <FormControl margin='auto' >
+                                    <FormControl >
                                         <from onSubmit={handleSubmit}>
-
-
                                             <ThemeProvider theme={customTheme(outerTheme)}>
                                                 <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 0 }}>
-                                                    <Grid xs={12} mt={2} px={2}>
+                                                    <Grid xs={12} mt={2} px={2} item>
                                                         <TextField defaultValue={get_my_profile_success_error ? get_my_profile_success_error?.name : 'name'} onChange={handleChange} name='name' fullWidth label="Name*" id="fullWidth" />
                                                     </Grid>
-                                                    <Grid xs={6} mt={2} p={2}>
+                                                    <Grid xs={6} mt={2} p={2} item>
                                                         <TextField id="" defaultValue={get_my_profile_success_error?.email_id} onChange={handleChange} name='email_id' fullWidth label="Email *" variant="outlined" />
                                                     </Grid>
-                                                    <Grid xs={6} mt={1} p={2}>
+                                                    <Grid xs={6} mt={1} p={2} item>
                                                         {/* <Grid item xs={12} mt={2} p={2}> */}
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DemoContainer components={['DatePicker', 'DatePicker']}>
                                                                 <DatePicker label="DOB" onChange={Date1} defaultValue={dayjs('2022-04-17')} />
-                                                                {/* <DatePicker 
-                                                                    label="Date of Birth"
-                                                                    value={formData.dob}
-                                                                    onChange={Date1}
-                                                                    placeholder={'DOB'}
-                                                                /> */}
                                                             </DemoContainer>
                                                         </LocalizationProvider>
-                                                        {/* <TextField id="fullWidth" type='date' label='Date of birth' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" /> */}
-                                                        {/* </Grid> */}
                                                     </Grid>
-                                                    <Grid xs={12} mt={3} >
+                                                    <Grid xs={12} mt={3} item>
                                                         <Button fullWidth type='submit' onClick={handleSubmit} size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} > "Update"</Button>
                                                     </Grid>
                                                 </Grid>
@@ -260,7 +245,7 @@ export default function Edit_Profile() {
                                     </IconButton>
                                     <DialogContent >
                                         <Box minHeight={350}>
-                                            <FormControl margin='none'>
+                                            <FormControl >
                                                 <ThemeProvider theme={customTheme(outerTheme)}>
                                                     <Grid container spacing={2}>
                                                         <Grid item xs={12} mt={2} px={2}>
@@ -273,12 +258,6 @@ export default function Edit_Profile() {
                                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                 <DemoContainer components={['DatePicker', 'DatePicker']}>
                                                                     <DatePicker label="DOB" onChange={Date1} defaultValue={dayjs('2022-04-17')} />
-                                                                    {/* <DatePicker 
-                                                                    label="Date of Birth"
-                                                                    value={formData.dob}
-                                                                    onChange={Date1}
-                                                                    placeholder={'DOB'}
-                                                                /> */}
                                                                 </DemoContainer>
                                                             </LocalizationProvider>
                                                             {/* <TextField id="fullWidth" type='date' label='Date of birth' defaultValue={get_my_profile_success_error?.dob} fullWidth onChange={handleChange} name='dob' variant="outlined" /> */}

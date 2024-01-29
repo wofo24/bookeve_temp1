@@ -93,8 +93,6 @@ export default function Otp() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const state_data = location.state?.formData || null;
-
-    // console.log(state_data)s
     const handleChange = (event) => {
         const { value, name } = event.target
         setFormData({ ...formData, [name]: value })

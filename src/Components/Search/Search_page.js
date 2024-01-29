@@ -7,12 +7,9 @@ import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { show_this_category_package, fetchPosts } from '../../Redux/actions/actions';
-import { get_search_item, empty_quarry } from '../../Redux/actions/actions';
-// import img from '../images/SampleIMage.jpg'
-import img from '../../images/imagesSampleIMage.png'
+import { get_search_item } from '../../Redux/actions/actions';
 import WestRoundedIcon from '@mui/icons-material/WestRounded';
 import Chip from '@mui/material/Chip';
-import { Container } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card, Grid } from '@mui/material';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
@@ -8,14 +8,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import Pagination from '@mui/material/Pagination';
 import { open_help, checked_out_get, to_show_in_details_checkout } from '../Redux/actions/actions';
 import Stack from '@mui/material/Stack';
-
 import { useNavigate } from 'react-router-dom';
 import Loading from './LoadingIcon/Loading';
 export default function Bookings() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const buttonStyles = useSelector((state) => state?.all_theme)
-
     const data = useSelector(state => state.check_out_data)
     const loading = useSelector(state => state.check_out_data.loading)
     const [page, setPage] = React.useState(1);
@@ -30,15 +28,13 @@ export default function Bookings() {
     useEffect(() => {
         dispatch(checked_out_get(0, 10))
 
-    }, [data?.reschedule_check_out_get_list_success,])
+    }, [dispatch, data?.reschedule_check_out_get_list_success,])
 
     const handleChange = (event, value) => {
         const data = `${value - 1}${0}`
         setPage(value);
         dispatch(checked_out_get(parseInt(data), 10))
     };
-
-    // console.log(data?.check_out_get_list_success?.data, 'this is ddata')
 
     return (
         <>
@@ -93,12 +89,9 @@ export default function Bookings() {
                                                                             <Typography sx={{ color: '#4CAF50' }} fontSize={'13px'}><b>BOOKED </b></Typography>
                                                                             <span style={{ fontSize: '13px' }}><b>
                                                                                 {
-                                                                                    item?.packages.map((item2, index) => {
-                                                                                        if (index === 0) {
-                                                                                            return item2?.package_name
-                                                                                        }
-                                                                                    })
+                                                                                    item?.packages?.map((item2, index) => index === 0 && item2?.package_name)
                                                                                 }
+
                                                                                 {item.packages.length > 1 && ` & ${item.packages.length - 1} More`}
 
                                                                             </b></span>

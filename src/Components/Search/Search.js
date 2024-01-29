@@ -8,13 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { get_search_item, empty_quarry } from '../../Redux/actions/actions';
 import TextField from '@mui/material/TextField';
 import Media from 'react-media';
-import FilledInput from '@mui/material/FilledInput';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import { alpha, styled } from '@mui/material/styles';
-import { createTheme, ThemeProvider, Theme, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 export default function Search(props) {

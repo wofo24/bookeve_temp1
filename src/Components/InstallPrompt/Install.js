@@ -15,7 +15,6 @@ const InstallPrompt = () => {
 
     const handleClick = (newState) => () => {
         setState({ ...newState, open: true });
-        console.log('Button clicked')
     };
 
     const handleClose = () => {
@@ -34,7 +33,7 @@ const InstallPrompt = () => {
             });
             localStorage.setItem('trig', true)
         } else {
-            console.log('nothing')
+            // console.log('nothing')
         }
     }, []);
 
@@ -43,8 +42,6 @@ const InstallPrompt = () => {
             promptEvent.prompt();
             promptEvent.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the A2HS prompt');
-
                     localStorage.setItem('installed', true)
                 }
                 setPromptEvent(null);
@@ -68,14 +65,13 @@ const InstallPrompt = () => {
             handleClick({ vertical: 'top', horizontal: 'center' })();
             const timeoutId = setTimeout(() => {
                 handleClose();
-            }, 5000);
+            }, 6000);
 
             return () => {
                 clearTimeout(timeoutId);
             };
             localStorage.setItem('trig', true)
         } else {
-            console.log('nothing')
         }
 
     }, []);
