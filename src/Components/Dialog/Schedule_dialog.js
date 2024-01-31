@@ -25,8 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Schedule_dialog() {
     const dispatch = useDispatch()
     const open = useSelector((state) => state.open_schedule)
-    const textStyle = useSelector((state) => state.all_theme)
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const selected = useSelector((state) => state.selected_address)
     const reschedule_data = useSelector((state) => state.reschedule)
     const selectedDate = new Date()
@@ -62,7 +61,6 @@ export default function Schedule_dialog() {
 
     useEffect(() => {
         setMonth(monthNames);
-        var date = new Date(), y = date.getFullYear(), m = date.getMonth();
     }, []);
 
     const get_month_name = (index) => {
@@ -114,12 +112,12 @@ export default function Schedule_dialog() {
     }
 
     const activeMonth = {
-        background: '#ffc629',
-        color: '#fff'
+        background: styles?.colors?.primary,
+        color: styles?.colors?.secondary
     }
     const InactiveMonth = {
-        border: '1px solid #ffc629',
-        color: 'black'
+        border: `1px solid ${styles?.colors?.primary}`,
+        color: styles?.colors?.primary
     }
 
 
@@ -141,7 +139,7 @@ export default function Schedule_dialog() {
                             PaperProps={{ style: { borderRadius: '15px', padding: '12px' } }}
                         >
                             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Select Date & Time</b></Typography>
+                                <Typography variant='h5' sx={{ fontFamily: styles?.typography?.fontFamily }}><b>Select Date & Time</b></Typography>
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -203,7 +201,7 @@ export default function Schedule_dialog() {
                                 </div >
                             </DialogContent>
                             <DialogActions sx={{ m: 1 }}>
-                                <Button fullWidth onClick={handleClose} size='large' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Save</Button>
+                                <Button fullWidth onClick={handleClose} size='large' variant='contained' style={{ background: styles?.colors?.button, color: styles?.colors?.text }} >Save</Button>
                             </DialogActions>
                         </Dialog>
 
@@ -262,7 +260,7 @@ export default function Schedule_dialog() {
                                 <Grid item xs={10}>
 
                                     <DialogTitle sx={{ m: 0 }} id="customized-dialog-title">
-                                        <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>{reschedule_data?.name?.title}</b></Typography>
+                                        <Typography variant='h5' sx={{ fontFamily: styles?.typography?.fontFamily }}><b>{reschedule_data?.name?.title}</b></Typography>
                                     </DialogTitle>
                                 </Grid>
                                 <Grid item xs={2} sx={{ display: 'grid', placeContent: 'center' }}>
@@ -350,7 +348,7 @@ export default function Schedule_dialog() {
                                     </Box>
                                     <Box sx={{ m: 'auto', width: '100%' }}>
                                         <DialogActions fullWidth >
-                                            <Button fullWidth onClick={handleClose} size='large' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Save</Button>
+                                            <Button fullWidth onClick={handleClose} size='large' variant='contained' style={{ background: styles?.colors?.button, color: styles?.colors?.text }} >Save</Button>
                                         </DialogActions>
                                     </Box>
                                 </DialogContent>

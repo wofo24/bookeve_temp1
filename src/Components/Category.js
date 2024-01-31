@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material'
 import Media from 'react-media';
 import { useSelector, useDispatch } from 'react-redux';
 export default function Category({ data }) {
-  const buttonStyles = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
   const text = useSelector((state) => state.text)
 
   return (
@@ -19,18 +19,13 @@ export default function Category({ data }) {
         {(matches) => (
           <>
             {matches.large && (
-             <Typography  fontSize={'27px'} my={1} sx={{ color: "black", fontFamily: buttonStyles.fontFamily }}>{data.category}</Typography>
-           )}
+              <Typography fontSize={'27px'} my={1} sx={{ color: "black", fontFamily: styles?.typography?.fontFamily }}>{data.category}</Typography>
+            )}
             {matches.small && (
-             <Typography variant='h5' sx={{ color: buttonStyles.color, fontFamily: buttonStyles.fontFamily }}>{data.category}</Typography>
-           )}
-
-
+              <Typography variant='h5' sx={{ color: styles?.colors?.heighlightText, fontFamily: styles?.typography?.fontFamily }}>{data.category}</Typography>
+            )}
           </>)}
-
-
       </Media>
-      {/* <Typography variant='h5' sx={{ color: buttonStyles.color, fontFamily: buttonStyles.fontFamily }}>{data.category}</Typography> */}
       {data?.packages?.map((item, index) => {
 
         return (

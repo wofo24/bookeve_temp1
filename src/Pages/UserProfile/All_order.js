@@ -7,7 +7,7 @@ import { get_all_ordered_data} from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 export default function All_order() {
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
   const all_orders = useSelector((state) => state.all_orders)
   const error = useSelector((state) => state.error)
   React.useEffect(() => {
@@ -15,7 +15,7 @@ export default function All_order() {
   }, [])
   return (
     <Box sx={{ minWidth: 275 }} >
-      <Typography variant='h5' textAlign='center' my={2} sx={{ fontFamily: buttonStyles.fontFamily }}>All orders</Typography>
+      <Typography variant='h5' textAlign='center' my={2} sx={{ fontFamily: styles?.typography?.fontFamily }}>All orders</Typography>
       {[1, 2, 3].map((item, index) => {
         return (
           <Box p={2} key={index}>

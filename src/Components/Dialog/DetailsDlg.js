@@ -45,7 +45,7 @@ export default function ViewDialog() {
     const view_data = useSelector((state) => state.view_data);
     const package_review = useSelector((state) => state.package_review);
     const loading = useSelector((state) => state.package_review.loading);
-    const textStyle = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
 
     const handleClose = () => {
         dispatch(closeView())
@@ -84,7 +84,7 @@ export default function ViewDialog() {
                             PaperProps={{ style: { borderRadius: '15px' } }}
                         >
                             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                <Typography sx={{ fontFamily: textStyle.fontFamily }}><b>About package</b></Typography>
+                                <Typography sx={{ fontFamily: styles?.typography?.fontFamily }}><b>About package</b></Typography>
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -225,7 +225,7 @@ export default function ViewDialog() {
                                                 name="radio-buttons-group"
                                                 value={selectedValue}
                                             >
-                                                <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
+                                                <Typography variant='h6' sx={{ fontFamily: styles?.typography?.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
                                                 <Grid container my={2} px={2}>
                                                     {view_data?.variants?.map((item, index) => (
                                                         <Grid item xs={12} key={index}>
@@ -272,7 +272,7 @@ export default function ViewDialog() {
 
 
                                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                    <Typography sx={{ fontFamily: textStyle.fontFamily }}><b>Details</b></Typography>
+                                    <Typography sx={{ fontFamily: styles?.typography?.fontFamily }}><b>Details</b></Typography>
                                 </DialogTitle>
                                 <IconButton
                                     aria-label="close"
@@ -428,7 +428,7 @@ export default function ViewDialog() {
                                                 name="radio-buttons-group"
                                                 value={selectedValue}
                                             >
-                                                <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
+                                                <Typography variant='h6' sx={{ fontFamily: styles?.typography?.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
                                                 <Grid container my={2} px={2}>
                                                     {view_data?.variants?.map((item, index) => (
                                                         <Grid item xs={12} key={index}>

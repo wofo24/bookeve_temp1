@@ -26,7 +26,7 @@ export default function Schedule() {
     const On_handleSubmit = () => {
         dispatch(get_schedule())
     }
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
 
     const navigate = useNavigate()
     const [value, setValue] = React.useState(null);
@@ -45,7 +45,7 @@ export default function Schedule() {
     const year = currentDate.getFullYear();
     const month2 = currentDate.getMonth();
     const lastDateOfJuly2023 = getLastDateOfMonth(year, month2);
-    
+
     const [selectedMonth, setSelectedMonth] = useState(() => {
         const current = selectedDate.getDate()
         if (lastDateOfJuly2023 === current) {
@@ -120,9 +120,8 @@ export default function Schedule() {
             <Box sx={{
                 p: 5,
                 borderRadius: '10px',
-                backdropFilter: buttonStyles.child_backdropFilter,
-                background: buttonStyles.child_bg,
-                color: buttonStyles.child_div_text,
+                background: styles?.colors?.secondary,
+                color: styles?.colors?.text,
                 m: 5,
                 '@media (max-width: 600px)': {
                     p: 2,
@@ -170,7 +169,7 @@ export default function Schedule() {
                         {times?.map((item, index) => {
                             item?.replace(" AM", "");
                             return (
-                                <Box sx={{ width:110, my:1 }}>
+                                <Box sx={{ width: 110, my: 1 }}>
                                     <Box key={index} sx={{ cursor: 'pointer', p: 1, my: 2, borderRadius: '10px', width: 100, margin: 'auto' }} style={activeNum === index ? activeMonth : InactiveMonth} onClick={() => TimeFun(item, index)}> <span>{item}</span> </Box>
                                 </Box>
                             )
@@ -178,7 +177,7 @@ export default function Schedule() {
                     </Box>
                 </Box>
                 <Box sx={{ p: 3 }}>
-                    <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={() => navigate('/payment')} >Proceed</Button>
+                    <Button variant='contained' style={{ background: styles?.colors?.button, color: styles?.colors?.text }} fullWidth onClick={() => navigate('/payment')} >Proceed</Button>
                 </Box>
 
 

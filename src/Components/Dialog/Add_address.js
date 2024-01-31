@@ -24,8 +24,8 @@ export default function Add_address() {
     const [formData, setFormData] = useState({ "address_type": 'home' })
     const [formErrors, setFormErrors] = useState({});
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.all_theme)
-    const textStyle = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
+    // const styles = useSelector((state) => state.all_theme)
     const openAdd = useSelector((state) => state.open_add_dialog)
     const all_address = useSelector((state) => state.all_address)
     const open_address_data = useSelector((state) => state.open_address_data)
@@ -36,11 +36,11 @@ export default function Add_address() {
                 MuiTextField: {
                     styleOverrides: {
                         root: {
-                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderHoverColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderFocusedColor': `${styles?.colors?.primary}`,
                             '& label.Mui-focused': {
-                                color: `${buttonStyles.icons_Color}`,
+                                color: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -48,14 +48,14 @@ export default function Add_address() {
                 MuiOutlinedInput: {
                     styleOverrides: {
                         notchedOutline: {
-                            borderColor: `${buttonStyles.icons_Color}`,
+                            borderColor: `${styles?.colors?.primary}`,
                         },
                         root: {
                             [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                             [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -64,13 +64,13 @@ export default function Add_address() {
                     styleOverrides: {
                         root: {
                             '&:before, &:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -79,13 +79,13 @@ export default function Add_address() {
                     styleOverrides: {
                         root: {
                             '&:before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -129,7 +129,7 @@ export default function Add_address() {
             handleClose();
         }
     }, [all_address?.posted_address_result?.response?.data?.error, all_address?.posted_address_result]);
-    
+
 
     return (
         <div>
@@ -153,7 +153,7 @@ export default function Add_address() {
                             <Grid container sx={{ mt: 0, p: 0 }}>
                                 <Grid item xs={10}>
                                     <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                        <Typography sx={{ fontFamily: textStyle.fontFamily }}> <b>{open_address_data?.id ? 'Update address' : 'Add new address'}</b></Typography>
+                                        {/* <Typography sx={{ fontFamily: styles.fontFamily }}> <b>{open_address_data?.id ? 'Update address' : 'Add new address'}</b></Typography> */}
                                     </DialogTitle>
                                 </Grid>
                                 <Grid item xs={2} sx={{ display: 'grid', placeContent: 'center' }}>
@@ -285,10 +285,10 @@ export default function Add_address() {
                                             </Grid>
                                         </Box>
                                         <DialogActions sx={{ p: 2 }}>
-                                            <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} onClick={handleClose}>No</Button>
+                                            <Button style={{ border: `1px solid ${styles?.colors?.primary}`, color: styles?.colors?.primary }} onClick={handleClose}>No</Button>
 
 
-                                            <Button type='submit' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >
+                                            <Button type='submit' variant='contained' style={{ background: styles?.colors?.primary }} >
                                                 {open_address_data?.id ? ' Update' : 'Save'}
                                             </Button>
                                         </DialogActions>
@@ -320,7 +320,7 @@ export default function Add_address() {
                         >\
 
                             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                <Typography sx={{ fontFamily: textStyle.fontFamily }}> <b>{open_address_data?.id ? 'Update address' : 'Add new address'}</b></Typography>
+                                {/* <Typography sx={{ fontFamily: styles.fontFamily }}> <b>{open_address_data?.id ? 'Update address' : 'Add new address'}</b></Typography> */}
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -446,9 +446,9 @@ export default function Add_address() {
                                     </Box>
                                 </DialogContent>
                                 <DialogActions sx={{ p: 2 }}>
-                                    <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} onClick={handleClose}>No</Button>
+                                    <Button style={{ border: `1px solid ${styles?.colors?.button}`, color: styles?.colors?.button }} onClick={handleClose}>No</Button>
 
-                                    <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} type='submit' >
+                                    <Button variant='contained' style={{ background: styles?.colors?.button, color: styles?.colors?.text }} type='submit' >
                                         {open_address_data?.id ? 'Update' : ' Save address'}
 
                                     </Button>

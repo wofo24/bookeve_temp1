@@ -11,7 +11,7 @@ import { CardMedia } from '@mui/material';
 import empty_cart from '../images/empty_cart.png'
 import Proceed_to_pay from '../Components/Dialog/Proceed_to_pay';
 import { useSelector, useDispatch } from 'react-redux';
-import { store_data_for_check_out, get_my_profile,store_count, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog} from '../Redux/actions/actions';
+import { store_data_for_check_out, get_my_profile, store_count, close_coupon_dialog, selected_date_time, add_fetch_post, checked_out_call, show_message, store_pathname, open_coupon_dialog, increment_in_bag, clear_all_cart_data, decrement_in_bag, get_all_cart_data, click_to_apply_coupon, show_all_address, open_schedule_dialog } from '../Redux/actions/actions';
 import Media from 'react-media';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
@@ -24,10 +24,10 @@ import Cookies from 'js-cookie';
 import Loading from '../Components/LoadingIcon/Loading';
 
 export default function Cart() {
-  
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state?.all_theme)
+  const styles = useSelector((state) => state?.all_theme)
   const selected_address = useSelector((state) => state.selected_address)
   const selected_date_time_var = useSelector((state) => state.selected_date_time)
   const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data)
@@ -42,7 +42,7 @@ export default function Cart() {
   const [disable, setDisable] = React.useState(true)
   const [Load, setLoad] = useState(false)
   const [discount, setDiscount] = useState(null)
-
+  const [id, setId] = useState()
   const totalPackagePrice = []
   const token = Cookies.get('token')
 
@@ -84,6 +84,7 @@ export default function Cart() {
   }
 
   const handleIncrease = (id) => {
+    setId(id)
     dispatch(increment_in_bag(id))
     dispatch(add_fetch_post())
     dispatch(get_all_cart_data())
@@ -91,6 +92,7 @@ export default function Cart() {
   };
 
   const handelDecrease = (id) => {
+    setId(id)
     dispatch(add_fetch_post())
     dispatch(decrement_in_bag(id))
     dispatch(get_all_cart_data())
@@ -207,9 +209,8 @@ export default function Cart() {
                 px: 3,
                 py: 1,
                 borderRadius: '10px',
-                backdropFilter: buttonStyles.child_backdropFilter,
-                background: buttonStyles.child_bg,
-                color: buttonStyles.child_div_text,
+                background: styles?.colors?.secondary,
+                color: styles?.colors?.heighlightText,
               }}>
                 <Grid container mt={1}>
                   <Grid xs={7}>
@@ -237,9 +238,9 @@ export default function Cart() {
                             <Typography>{item?.package}</Typography>
                             <Typography>Price: &#8377; {total_price}</Typography>
                           </Grid>
-                          {Load ?
+                          {Load && id === item.package_id?
                             <Grid xs={6} textAlign={'end'}>
-                              <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
+                              <Button sx={{ color: styles?.colors?.primary, backgroundColor: styles?.colors?.secondary, width: '80px', borderRadius: '10px' }}>
                                 <CircularProgress
                                   color="tertiary"
                                   variant="indeterminate"
@@ -252,7 +253,7 @@ export default function Cart() {
                             </Grid>
                             :
                             <Grid xs={6} textAlign={'end'}>
-                              <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
+                              <Button sx={{ color: styles?.colors?.primary, backgroundColor: styles?.colors?.secondary, width: '80px', borderRadius: '10px', border:`.5px solid ${styles?.colors?.primary}` }}>
                                 {item?.quantity <= 1 ? (
                                   <DeleteIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id)} />
                                 ) : (
@@ -279,8 +280,8 @@ export default function Cart() {
                   </Box>
                 )}
                 {discount !== null ?
-                  <Grid sx={{ background: '#22bb33', mt: 2, mx: -3 }}>
-                    <Typography sx={{ color: 'white', textAlign: 'center', py: 1 }}>Congratulation &#8377;{discount} saved so far!
+                  <Grid sx={{ background: styles?.colors?.success, mt: 2, mx: -3 }}>
+                    <Typography sx={{ color: styles?.colors?.white, textAlign: 'center', py: 1 }}>Congratulation &#8377;{discount} saved so far!
                     </Typography>
                   </Grid> : ''
                 }
@@ -356,10 +357,8 @@ export default function Cart() {
                     <Card sx={{
                       my: 2, mx: 3,
                       borderRadius: '10px',
-                      backdropFilter: buttonStyles.child_backdropFilter,
-                      background: 'WHITE',
-                      color: buttonStyles.child_div_text,
-
+                      background: styles?.colors?.secondary,
+                      color: styles?.colors?.text,
                     }} elevation={2} onClick={handleOpen}  >
                       <Grid container sx={{ p: 1 }}>
                         <Grid item xs={1}>
@@ -381,7 +380,7 @@ export default function Cart() {
                 <>
                   <Box px={4} pb={4} pt={2}>
                     {Array.isArray(card_data) && card_data.length > 0 ? (
-                      <Button variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth onClick={show_allAddress}>
+                      <Button variant='contained' style={{ background: styles?.colors?.button, color: styles?.colors?.white }} fullWidth onClick={show_allAddress}>
                         Proceed
                       </Button>
                     ) : (
@@ -414,9 +413,9 @@ export default function Cart() {
                     <Grid xs={8}>
                       <Box p={3} px={4} sx={{
                         borderRadius: '10px',
-                        backdropFilter: buttonStyles.child_backdropFilter,
-                        background: buttonStyles.child_bg,
-                        color: buttonStyles.child_div_text,
+                        backdropFilter: styles.child_backdropFilter,
+                        background: styles?.colors?.secondary,
+                        color: styles?.colors?.heighlightText,
                       }} mx={2} mt={1}>
                         <Grid container my={1}>
                           <Grid xs={1} textAlign={'center'}>
@@ -443,7 +442,7 @@ export default function Cart() {
                           <hr />
                           {selected_address ? "" :
                             <>
-                              <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth size='large' onClick={show_allAddress}> Select an Address</Button>
+                              <Button style={{ background: styles?.colors?.button, color: styles?.colors?.white }} variant='contained' fullWidth size='large' onClick={show_allAddress}> Select an Address</Button>
                               <hr />
                             </>
                           }
@@ -468,8 +467,7 @@ export default function Cart() {
                                 <>
                                   <Button
                                     style={{
-                                      background: buttonStyles.buttonColor,
-                                      color: buttonStyles.buttonText,
+                                      background: styles?.colors?.button, color: styles?.colors?.white,
                                     }}
                                     variant='contained'
                                     fullWidth
@@ -498,8 +496,10 @@ export default function Cart() {
                           <hr />
                           <Button onClick={HandleCheckOut}
                             style={{
-                              background: disable ? '#D1D1D1' : buttonStyles.buttonColor,
-                              color: disable ? 'white' : buttonStyles.buttonText,
+                              background: disable ? '#D1D1D1' : styles?.colors?.buttons,
+                              color:
+                                disable ? 'white' :
+                                  styles?.colors?.white,
                             }}
                             disabled={disable}
                             variant='contained' fullWidth size='large'> Payment</Button>

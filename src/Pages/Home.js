@@ -8,7 +8,7 @@ import CategoryItems from '../Components/CategoryItems';
 import Carousel from '../Components/Carousel';
 import { Box, Card, Container, Typography } from '@mui/material';
 import Search from '../Components/Search/Search';
-import SearchAll  from '../Components/Search/Search_All';
+import SearchAll from '../Components/Search/Search_All';
 import Media from 'react-media';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -32,7 +32,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const unknown_user_success_error = useSelector((state) => state.unknown_user_success_error)
   const update_in_post = useSelector((state) => state.update_in_post)
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
+  const styles = useSelector((state) => state.apply_new_theme)
 
   useEffect(() => {
     if (unknown_user_success_error.success) {
@@ -89,7 +89,7 @@ export default function Home() {
                   unmountOnExit
                 >
                   <div>
-                    {showSearch && <SearchAll  query={query} />}
+                    {showSearch && <SearchAll query={query} />}
                   </div>
                 </CSSTransition>
               </TransitionGroup>
@@ -117,8 +117,8 @@ export default function Home() {
                   {(matches) => (
 
                     matches.small && (
-                      <Box sx={{ position: 'sticky', top: 0, zIndex: "9999", display: openD && 'none', background: buttonStyles.child_bg, py: 1 }}>
-                        <Box onClick={() => navigate('/search')} sx={{ mx: 1, height: '56px', borderRadius: '15px', background: '#ffff' }}>
+                      <Box sx={{ position: 'sticky', top: 0, zIndex: "9999", display: openD && 'none', background: styles?.colors?.secondary, py: 1 }}>
+                        <Box onClick={() => navigate('/search')} sx={{ mx: 1, height: '56px', borderRadius: '15px', background: styles?.colors?.white }}>
                           <Search />
                         </Box>
                       </Box>
@@ -168,7 +168,7 @@ export default function Home() {
                           <Box>
                             {posts?.map((item, index) => {
                               return (
-                                <Box key={index} sx={{ background: '#a7d1b3', px: 3, mt: 3 }}>
+                                <Box key={index} sx={{ background: styles?.colors?.secondary, px: 3, mt: 3 }}>
                                   <Box sx={{ display: 'flex', pt: 3, pb: 2, float: 'left' }}>
                                     <Typography variant='h5'>{item.category} </Typography>
 
@@ -184,7 +184,6 @@ export default function Home() {
                                     slidesPerView={3.2}
                                     navigation={true}
                                     className="mySwiper1"
-
                                   >
                                     {item.packages.map((packageItem, index) => (
                                       <SwiperSlide style={{ height: '211px', width: '320px' }} key={index} >
@@ -193,7 +192,7 @@ export default function Home() {
                                               Best Seller
                                             </div> */}
                                           <Box sx={{ background: 'gray', height: '67%', borderTopLeftRadius: '25px', borderTopRightRadius: '25px', overflow: 'hidden' }}>
-                                            <img src={packageItem.icon} alt='packageIcon' />
+                                            <img src={packageItem.icon} alt={packageItem.package_name} />
                                           </Box>
                                           <Box sx={{ height: '33%', borderBottomLeftRadius: '25px', borderBottomRightRadius: '25px', background: 'white' }}>
                                             <Box textAlign='left' pt={1} >

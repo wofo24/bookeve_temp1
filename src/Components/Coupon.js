@@ -33,8 +33,8 @@ export default function Coupon() {
     const [formData, setFormData] = useState([])
     const [formErrors, setFormErrors] = useState({});
     const dispatch = useDispatch()
-    const buttonStyles = useSelector((state) => state.all_theme)
-    const textStyle = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
+    // const styles = useSelector((state) => state.all_theme)
     const coupons = useSelector((state) => state.coupons)
     const loading = useSelector((state) => state.coupons.loading)
     const card_data = useSelector((state) => state?.card_data?.data)
@@ -119,7 +119,7 @@ export default function Coupon() {
 
                     >
                         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                            <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Coupon</b></Typography>
+                            {/* <Typography variant='h5' sx={{ fontFamily: styles.fontFamily }}><b>Coupon</b></Typography> */}
                         </DialogTitle>
                         <IconButton
                             aria-label="close"
@@ -135,89 +135,90 @@ export default function Coupon() {
                         </IconButton>
                         <Box px={5} py={0} width={550}>
                             <Box>
-                                <Typography textAlign='left' fontSize={30} sx={{ fontFamily: textStyle.fontFamily }}>Apply Coupon</Typography>
+                                {/* <Typography textAlign='left' fontSize={30} sx={{ fontFamily: styles.fontFamily }}>Apply Coupon</Typography> */}
                                 <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>
                                     <span className='ThemeColorYellow'>
                                         For more exclusive Offer's
                                     </span>
                                 </Typography>
                             </Box>
-                            <div>
-                                <form onSubmit={handleSubmit}>
-                                    <Box py={1}>
-                                        <Grid container spacing={3}>
-                                            <Grid xs={12} item>
-                                                <TextField
-                                                    onChange={handleChange}
-                                                    value={formData.coupon || ' '}
-                                                    fullWidth
-                                                    type='tel'
-                                                    id="standard-textarea"
-                                                    label="Enter Coupon Code"
-                                                    name='coupon'
-                                                    required
-                                                    variant="standard"
-                                                    error={!!formErrors.coupon}
-                                                    helperText={formErrors.coupon}
-                                                />
+                            {!loading ?
+                                <div>
+                                    <form onSubmit={handleSubmit}>
+                                        <Box py={1}>
+                                            <Grid container spacing={3}>
+                                                <Grid xs={12} item>
+                                                    <TextField
+                                                        onChange={handleChange}
+                                                        value={formData.coupon || ' '}
+                                                        fullWidth
+                                                        type='tel'
+                                                        id="standard-textarea"
+                                                        label="Enter Coupon Code"
+                                                        name='coupon'
+                                                        required
+                                                        variant="standard"
+                                                        error={!!formErrors.coupon}
+                                                        helperText={formErrors.coupon}
+                                                    />
+                                                </Grid>
+                                                <Box width={300} p={3} margin={'auto'}>
+                                                    <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} style={{ background: styles?.colors?.button, color: styles?.colors?.text }} >Apply</Button>
+                                                </Box>
+                                                <Box sx={{ margin: 'auto' }}>
+                                                    {coupons?.get_coupon_success?.data && coupons?.get_coupon_success?.data.length !== 0 ? coupons?.get_coupon_success?.data?.map((item) => (
+                                                        <Paper fullWidth elevation={2} sx={{ my: 2 }}>
+                                                            <Grid container sx={{
+                                                                width: 415,
+                                                                borderRadius: "5px",
+                                                                overflow: 'hidden',
+                                                                p: 2,
+                                                                background: styles?.colors?.secondary,
+                                                            }}>
+                                                                <Grid xs={8} textAlign={'start'}>
+                                                                    <Box sx={{}}>
+                                                                        <Typography><b style={{ fontSize: '16px' }}>{item.title}</b></Typography>
+                                                                        <Typography><b style={{ fontSize: '16px' }}>{item.discount} off </b>on {item.in_which_order} order</Typography>
+                                                                        <Typography sx={{ color: '#76c265', fontSize: '14px' }} >Save &#8377;{item.discount_value} for this order</Typography>
+                                                                        <span style={{ fontSize: '15px' }} ><b>Coupon Code: </b> <text style={{ color: 'green' }}>{item.code}</text></span><br />
+                                                                        <Button size='small' onClick={() => dispatch(open_t_c_dialog(item.description))}>View T&C</Button>
+                                                                    </Box>
+                                                                </Grid>
+                                                                <Grid xs={4} textAlign='end'>
+                                                                    <Box sx={{ mt: 4, textAlign: 'last' }}>
+                                                                        {/* <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} >Apply</Button> */}
+                                                                        {item?.code === formData?.coupon ?
+                                                                            <Button variant='contained' color='success' style={{ textTransform: 'capitalize' }} onClick={() => {
+                                                                                ApplyCoupon(item)
+                                                                                Direct_apply(item)
+                                                                            }
+
+                                                                            }>Applied</Button> :
+
+                                                                            <Button style={{ textTransform: 'capitalize', border: `1px solid ${styles?.colors?.button}`, color: styles?.colors?.button }} onClick={() => {
+                                                                                ApplyCoupon(item)
+                                                                                Direct_apply(item)
+                                                                            }
+                                                                            }>Apply</Button>
+                                                                        }
+
+
+                                                                    </Box>
+
+                                                                </Grid>
+
+                                                            </Grid>
+                                                        </Paper>
+                                                    )) : 'No any coupon available'}
+                                                </Box>
+
+
                                             </Grid>
-                                            <Box width={300} p={3} margin={'auto'}>
-                                                <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Apply</Button>
-                                            </Box>
-                                            <Box sx={{ margin: 'auto' }}>
-                                                {coupons?.get_coupon_success?.data && coupons?.get_coupon_success?.data.length !== 0 ? coupons?.get_coupon_success?.data?.map((item) => (
-                                                    <Paper fullWidth elevation={2} sx={{ my: 2 }}>
-                                                        <Grid container sx={{
-                                                            width: 415,
-                                                            borderRadius: "10px",
-                                                            p: 2,
-
-                                                            backdropFilter: buttonStyles.child_backdropFilter,
-                                                            background: buttonStyles.child_bg,
-                                                        }}>
-                                                            <Grid xs={8} textAlign={'start'}>
-                                                                <Box sx={{}}>
-                                                                    <Typography><b style={{ fontSize: '16px' }}>{item.title}</b></Typography>
-                                                                    <Typography><b style={{ fontSize: '16px' }}>{item.discount} off </b>on {item.in_which_order} order</Typography>
-                                                                    <Typography sx={{ color: '#76c265', fontSize: '14px' }} >Save &#8377;{item.discount_value} for this order</Typography>
-                                                                    <span style={{ fontSize: '15px' }} ><b>Coupon Code: </b> <text style={{ color: 'green' }}>{item.code}</text></span><br />
-                                                                    <Button size='small' onClick={() => dispatch(open_t_c_dialog(item.description))}>View T&C</Button>
-                                                                </Box>
-                                                            </Grid>
-                                                            <Grid xs={4} textAlign='end'>
-                                                                <Box sx={{ mt: 4, textAlign: 'last' }}>
-                                                                    {/* <Button fullWidth size='medium' variant='contained' type='submit' onClick={() => MainApply(formData.coupon)} >Apply</Button> */}
-                                                                    {item?.code === formData?.coupon ?
-                                                                        <Button variant='contained' color='success' style={{ textTransform: 'capitalize' }} onClick={() => {
-                                                                            ApplyCoupon(item)
-                                                                            Direct_apply(item)
-                                                                        }
-
-                                                                        }>Applied</Button> :
-
-                                                                        <Button style={{ textTransform: 'capitalize', border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} onClick={() => {
-                                                                            ApplyCoupon(item)
-                                                                            Direct_apply(item)
-                                                                        }
-                                                                        }>Apply</Button>
-                                                                    }
-
-
-                                                                </Box>
-
-                                                            </Grid>
-
-                                                        </Grid>
-                                                    </Paper>
-                                                )) : 'No any coupon available'}
-                                            </Box>
-
-
-                                        </Grid>
-                                        {/* <hr /> */}
-                                    </Box>
-                                </form>
-                            </div>
+                                            {/* <hr /> */}
+                                        </Box>
+                                    </form>
+                                </div>
+                                : <Loading />}
                         </Box>
 
                     </BootstrapDialog>
@@ -246,7 +247,7 @@ export default function Coupon() {
                     >
                         <Box>
                             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Coupon</b></Typography>
+                                {/* <Typography variant='h5' sx={{ fontFamily: styles.fontFamily }}><b>Coupon</b></Typography> */}
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -262,7 +263,7 @@ export default function Coupon() {
                             </IconButton>
                             <Box py={0} sx={{ overflow: 'scroll', minHeight: 350 }}>
                                 <Box px={2}>
-                                    <Typography textAlign='left' mb={2} fontSize={26} sx={{ fontFamily: textStyle.fontFamily }}>Apply Coupon</Typography>
+                                    {/* <Typography textAlign='left' mb={2} fontSize={26} sx={{ fontFamily: styles.fontFamily }}>Apply Coupon</Typography> */}
                                     {/* <Typography  variant='h5' ><b>Coupon</b></Typography>  */}
                                     <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>
                                         <span className='ThemeColorYellow'>
@@ -291,7 +292,7 @@ export default function Coupon() {
                                             </Grid>
                                             <Box p={3} margin={'auto'}>
 
-                                                <Button size='medium' variant='contained' type='submit' onClick={() => MainApply(formData?.coupon)} style={{ padding: '8px 40px', background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Apply</Button>
+                                                <Button size='medium' variant='contained' type='submit' onClick={() => MainApply(formData?.coupon)} style={{ padding: '8px 40px', background: styles?.colors?.button, color: styles?.colors?.text }} >Apply</Button>
                                             </Box>
                                             <Box sx={{ margin: 'auto', width: '100%' }}>
                                                 {loading && <Loading />}
@@ -299,10 +300,10 @@ export default function Coupon() {
                                                     <Paper fullWidth elevation={2} sx={{ my: 2 }}>
                                                         <Grid container sx={{
                                                             width: 'auto',
-                                                            borderRadius: "10px",
+                                                            borderRadius: "5px",
                                                             p: 2,
-                                                            backdropFilter: buttonStyles.child_backdropFilter,
-                                                            background: buttonStyles.child_bg,
+
+                                                            background: styles?.colors?.secondary,
                                                         }}>
                                                             <Grid xs={8} textAlign={'start'}>
                                                                 <Box sx={{}}>
@@ -324,7 +325,7 @@ export default function Coupon() {
 
                                                                         }>Applied</Button> :
 
-                                                                        <Button style={{ textTransform: 'capitalize', border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} onClick={() => {
+                                                                        <Button style={{ textTransform: 'capitalize', border: `1px solid ${styles?.colors?.button}`, color: styles?.colors?.button }} onClick={() => {
                                                                             ApplyCoupon(item)
                                                                             Direct_apply(item)
                                                                         }

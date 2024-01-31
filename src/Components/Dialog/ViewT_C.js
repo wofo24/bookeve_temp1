@@ -22,7 +22,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function ViewT_C() {
   const open = useSelector((state) => state.t_c_dialog)
   const dispatch = useDispatch()
-  const textStyle = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
 
   const handleClose = () => {
     dispatch(close_t_c_dialog())
@@ -38,7 +38,7 @@ export default function ViewT_C() {
         PaperProps={{ style: { borderRadius: '15px' } }}
       >
         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-          <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>T&C</b></Typography>
+          <Typography variant='h5' sx={{ fontFamily: styles?.typography?.fontFamily }}><b>T&C</b></Typography>
         </DialogTitle>
         <IconButton
           aria-label="close"
@@ -51,7 +51,7 @@ export default function ViewT_C() {
           }}
         >
           <CloseIcon />
-          
+
         </IconButton>
         <DialogContent dividers>
           <Typography gutterBottom>

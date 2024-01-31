@@ -65,9 +65,10 @@ function App() {
     dispatch(get_public_information())
     dispatch(get_all_theme())
   }, [dispatch])
+
   return (
-    <body style={all_theme} >
-      {/* <style>{all_theme.keyframesStyle}</style> */}
+    <body style={{ backgroundColor: all_theme?.colors?.background }}>
+
       <BrowserRouter>
         <Header />
         <DialogComponent />

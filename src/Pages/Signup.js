@@ -1,20 +1,11 @@
 import { Box, Button, Grid, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
-import IconButton from '@mui/material/IconButton';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import { Link, useNavigate } from 'react-router-dom';
 import Media from 'react-media';
-import { signup, store_id} from '../Redux/actions/actions';
+import { signup, store_id } from '../Redux/actions/actions';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import Loading from '../Components/LoadingIcon/Loading'
@@ -26,11 +17,11 @@ export default function Signup() {
                 MuiTextField: {
                     styleOverrides: {
                         root: {
-                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderHoverColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderFocusedColor': `${styles?.colors?.primary}`,
                             '& label.Mui-focused': {
-                                color: `${buttonStyles.icons_Color}`,
+                                color: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -38,14 +29,14 @@ export default function Signup() {
                 MuiOutlinedInput: {
                     styleOverrides: {
                         notchedOutline: {
-                            borderColor: `${buttonStyles.icons_Color}`,
+                            borderColor: `${styles?.colors?.primary}`,
                         },
                         root: {
                             [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                             [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -54,13 +45,13 @@ export default function Signup() {
                     styleOverrides: {
                         root: {
                             '&:before, &:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -69,13 +60,13 @@ export default function Signup() {
                     styleOverrides: {
                         root: {
                             '&:before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -86,7 +77,7 @@ export default function Signup() {
     const location = useLocation();
     const data = location?.state?.formData;
     const [formData, setFormData] = useState({ "phone_number": data?.phone_number })
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const signup_response = useSelector((state) => state.useSign_Up.data)
     const loading = useSelector((state) => state.useSign_Up.loading)
     const error = useSelector((state) => state.useSign_Up.error)
@@ -116,7 +107,6 @@ export default function Signup() {
                     if (item === 'User with this phone number already exists.') {
                         setFormErrors({ "phone_number": item })
                         setTimeout(() => {
-
                             navigate('/login', { state: { formData } })
                         }, 2000);
                     }
@@ -124,7 +114,7 @@ export default function Signup() {
                 setFormErrors({ 'phone_number': error.phone_number && error.phone_number[0] });
             }
         }
-           }, [signup_response, error]);
+    }, [signup_response,dispatch, error]);
 
     return (
         <div>
@@ -140,15 +130,14 @@ export default function Signup() {
                     <>
                         <Box px={2} py={4} my={5} mx={2} sx={{
                             borderRadius: "10px",
-                            backdropFilter: buttonStyles.child_backdropFilter,
-                            background: buttonStyles.child_bg,
-                            color: buttonStyles.child_div_text,
+                            background: styles?.colors?.secondary,
+                            color: styles?.colors?.heightlightText,
                         }}>
                             <Box px={2}>
                                 <Typography textAlign='left' fontSize={36} >Sign up</Typography>
                                 <Typography sx={{ opacity: '.7' }} fontSize={11} textAlign='left'>Don't have account &nbsp;
                                     <span className='ThemeColorYellow'>
-                                        <Link to='/signup' style={{ color: buttonStyles.icons_Color }}>Create Your Account</Link>&nbsp;
+                                        <Link to='/signup' style={{ color: styles?.colors?.primary }}>Create Your Account</Link>&nbsp;
                                     </span> it's takes less then 30 second's.
                                 </Typography>
                             </Box>
@@ -197,13 +186,13 @@ export default function Signup() {
 
                                             <Grid item xs={6} textAlign='left' >
 
-                                                <Link to="/login" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
+                                                <Link to="/login" style={{ cursor: 'pointer', fontSize: '12px', color:styles?.colors?.link }}>
                                                     Already Have Account Login?
                                                 </Link>
                                             </Grid>
 
                                             <Grid item xs={6} py={2} textAlign='right'>
-                                                <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Signup</Button>
+                                                <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: styles?.colors?.button, color: styles?.colors?.text }} >Signup</Button>
                                             </Grid>
                                         </Grid>
                                     </Box>
@@ -229,9 +218,8 @@ export default function Signup() {
                     <>
                         <Box px={10} py={5} my={5} mx={35} sx={{
                             borderRadius: "10px",
-                            backdropFilter: buttonStyles.child_backdropFilter,
-                            background: buttonStyles.child_bg,
-                            color: buttonStyles.child_div_text,
+                            background: styles?.colors?.secondary,
+                            color: styles?.colors?.heightlightText,
                         }}>
                             <Box mb={4}>
                                 <Typography textAlign='left' fontSize={46} >Sign up</Typography>
@@ -283,26 +271,16 @@ export default function Signup() {
                                                 </ThemeProvider>
                                             </Grid>
 
-                                            {/* <Grid item xs={6} textAlign='left' >
-                                                <Box sx={{ ml: -1.3, mt: -1.6 }}>
-                                                    <FormControlLabel sx={{ opacity: '.8' }} required control={<Checkbox />} label={<Typography fontSize={12}>Accept T&C</Typography>} />
-
-                                                </Box>
-                                            </Grid> */}
                                             <Grid item xs={6} textAlign='left' >
-                                                {/* <Box>
-                                                    <Link to="/forgot_pass" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
-                                                        Forgot Password ?
-                                                    </Link>
-                                                </Box> */}
+                                               
                                             </Grid>
                                             <Grid item xs={6} py={2} textAlign='left'>
-                                                <Link to="/login" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
+                                                <Link to="/login"  style={{ cursor: 'pointer', fontSize: '12px', color:styles?.colors?.link }}>
                                                     Already Have Account Login?
                                                 </Link>
                                             </Grid>
                                             <Grid item xs={12} py={2} textAlign='center'>
-                                                <Button id='BackgroundColorChangeOnly' variant='contained' size='large' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Signup</Button>
+                                                <Button id='BackgroundColorChangeOnly' variant='contained' size='large' type='submit' style={{ background: styles?.colors?.button, color: styles?.colors?.text }} >Signup</Button>
                                                 {/* <Button id='BackgroundColorChangeOnly' variant='contained' type='submit'>Signup</Button> */}
                                             </Grid>
                                         </Grid>

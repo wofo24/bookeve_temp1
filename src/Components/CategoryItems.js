@@ -11,7 +11,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import '../Css/Swiper.css';
 import { Card, Grid, Typography } from '@mui/material';
-import { show_this_category_package,  } from '../Redux/actions/actions';
+import { show_this_category_package, } from '../Redux/actions/actions';
 import { CardMedia } from '@mui/material';
 
 export default function CategoryItems() {
@@ -24,7 +24,7 @@ export default function CategoryItems() {
         navigate('/package-view')
     }
 
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const [swiperRef, setSwiperRef] = useState(5);
     const styleSwiper = {
         height: '160px',
@@ -48,7 +48,7 @@ export default function CategoryItems() {
                     <>
                         {matches.small && (
                             <>
-                                <Typography fontSize={'18px'} color={buttonStyles.icons_Color && 'black'}>Choose by category</Typography>
+                                <Typography fontSize={'18px'} color={styles?.colors?.primary && 'black'}>Choose by category</Typography>
                                 <Box
                                     sx={{
                                         overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' },
@@ -66,7 +66,7 @@ export default function CategoryItems() {
                                         return (
                                             <Box key={item.id} >
                                                 <Box sx={{
-                                                    color: buttonStyles.child_div_text,
+                                                    color: styles.child_div_text,
                                                     overflow: 'hidden',
                                                     height: '155px'
                                                 }} onClick={() => handle_click(item.id)}>
@@ -75,7 +75,7 @@ export default function CategoryItems() {
                                                         image={item.icon}
                                                         title="green iguana"
                                                     />
-                                                    <Typography variant='subtitle' mt={1} color={buttonStyles.icons_Color && 'black'}>{item.category}</Typography>
+                                                    <Typography variant='subtitle' mt={1} color={styles?.colors?.primary && 'black'}>{item.category}</Typography>
 
                                                 </Box>
 
@@ -92,7 +92,7 @@ export default function CategoryItems() {
                                 <Grid container>
                                     <Grid container mb={-6} mt={2}>
                                         <Grid item xs={6}>
-                                            <Typography fontSize={'25px'} color={buttonStyles.icons_Color && 'black'}>Choose by category</Typography>
+                                            <Typography fontSize={'25px'} color={styles?.colors?.primary && 'black'}>Choose by category</Typography>
                                         </Grid>
                                         <Grid item xs={6} textAlign='end'>
                                         </Grid>

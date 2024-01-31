@@ -15,7 +15,7 @@ import { useEffect } from 'react';
 export default function Navigation() {
 
     const cart_count = useSelector((state) => state.cart_count)
-    const buttonStyles = useSelector((state) => state?.all_theme)
+    const styles = useSelector((state) => state?.all_theme)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [path, setPath] = useState()
@@ -39,9 +39,29 @@ export default function Navigation() {
                     <BottomNavigation
                         showLabels
                     >
-                        <BottomNavigationAction onClick={() => navigate('/profile')} label="My Account" style={{ marginLeft: '0px', height: '50px', width: 'auto', borderRadius: '35px', color: path === '/profile' ? `${buttonStyles.icons_Color}` : `${buttonStyles.icons_Color}`, background: path === '/profile' ? `${buttonStyles.icons_Background}` : 'white' }} icon={<AccountBoxRoundedIcon style={{ color: path === '/profile' ? `${buttonStyles.icons_Color}` : `${buttonStyles.icons_Color}` }} />} />
+                        <BottomNavigationAction
+                            onClick={() => navigate('/profile')}
+                            label="My Account"
+                            style={{
+                                marginLeft: '0px',
+                                height: '50px', width: 'auto',
+                                borderRadius: '35px',
+                                color: path === '/profile'
+                                    ? `${styles?.colors?.primary}`
+                                    : `${styles?.colors?.primary}`,
+                                background: path === '/profile'
+                                    ? `${styles?.colors?.primaryLight}`
+                                    : 'white'
+                            }}
+                            icon={<AccountBoxRoundedIcon
+                                style={{
+                                    color: path === '/profile'
+                                        ?
+                                        `${styles?.colors?.primary}`
+                                        : `${styles?.colors?.primary}`
+                                }} />} />
 
-                        <BottomNavigationAction onClick={() => navigate('/')} label="Home" style={{ marginLeft: '0px', height: '50px', width: 'auto', borderRadius: '35px', color: path === '/' ? `${buttonStyles.icons_Color}` : `${buttonStyles.icons_Color}`, background: path === '/' ? `${buttonStyles.icons_Background}` : 'white' }} icon={<HomeRoundedIcon style={{ color: path === '/' ? `${buttonStyles.icons_Color}` : `${buttonStyles.icons_Color}` }} />} />
+                        <BottomNavigationAction onClick={() => navigate('/')} label="Home" style={{ marginLeft: '0px', height: '50px', width: 'auto', borderRadius: '35px', color: path === '/' ? `${styles?.colors?.primary}` : `${styles?.colors?.primary}`, background: path === '/' ? `${styles?.colors?.primaryLight}` : 'white' }} icon={<HomeRoundedIcon style={{ color: path === '/' ? `${styles?.colors?.primary}` : `${styles?.colors?.primary}` }} />} />
 
                         <BottomNavigationAction onClick={() => navigate('/cart')}
                             label="Cart"
@@ -51,18 +71,18 @@ export default function Navigation() {
                                 width: 'auto',
                                 borderRadius: '35px',
                                 color: path === '/cart'
-                                    ? `${buttonStyles.icons_Color}`
-                                    : `${buttonStyles.icons_Color}`,
+                                    ? `${styles?.colors?.primary}`
+                                    : `${styles?.colors?.primary}`,
                                 background: path === '/cart' ?
-                                    `${buttonStyles.icons_Background}`
+                                    `${styles?.colors?.primaryLight}`
                                     : 'white'
                             }} icon={
                                 <Badge label="Cart" badgeContent={cart_count} color="success">
                                     <ShoppingCartRoundedIcon
                                         style={{
                                             color: path === '/cart'
-                                                ? `${buttonStyles.icons_Color}` :
-                                                `${buttonStyles.icons_Color}`
+                                                ? `${styles?.colors?.primary}` :
+                                                `${styles?.colors?.primary}`
                                         }} />
                                 </Badge>
 

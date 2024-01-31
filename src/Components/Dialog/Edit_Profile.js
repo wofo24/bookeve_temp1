@@ -45,11 +45,11 @@ export default function Edit_Profile() {
                 MuiTextField: {
                     styleOverrides: {
                         root: {
-                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderHoverColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderFocusedColor': `${styles?.colors?.primary}`,
                             '& label.Mui-focused': {
-                                color: `${buttonStyles.icons_Color}`,
+                                color: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -57,14 +57,14 @@ export default function Edit_Profile() {
                 MuiOutlinedInput: {
                     styleOverrides: {
                         notchedOutline: {
-                            borderColor: `${buttonStyles.icons_Color}`,
+                            borderColor: `${styles?.colors?.primary}`,
                         },
                         root: {
                             [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                             [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -73,13 +73,13 @@ export default function Edit_Profile() {
                     styleOverrides: {
                         root: {
                             '&:before, &:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -88,13 +88,13 @@ export default function Edit_Profile() {
                     styleOverrides: {
                         root: {
                             '&:before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -104,12 +104,10 @@ export default function Edit_Profile() {
     const outerTheme = useTheme();
     const dispatch = useDispatch()
     const open = useSelector((state) => state.profile_edit);
-    const textStyle = useSelector((state) => state.all_theme)
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const get_my_profile_success_error1 = useSelector((state) => state.get_my_profile_update_success_error)
     const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
     const loading = useSelector((state) => state.get_my_profile_update_success_error?.loading)
-    // const error = useSelector((state) => state.get_my_profile_update_success_error?.error)
     const [formData, setFormData] = useState([])
 
 
@@ -140,9 +138,9 @@ export default function Edit_Profile() {
 
     const handleSubmit = () => {
         dispatch(update_my_profile(token, formData))
-       
+
     }
-       return (
+    return (
         <div>
             {loading && <Loading />}
             <Media queries={{
@@ -159,7 +157,7 @@ export default function Edit_Profile() {
                             PaperProps={{ style: { borderRadius: '15px' } }}
                         >
                             <DialogTitle sx={{ p: 2 }} id="customized-dialog-title">
-                                <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Edit profile</b></Typography>
+                                {/* <Typography variant='h5' sx={{ fontFamily: styles?.fontFamily }}><b>Edit profile</b></Typography> */}
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -186,7 +184,6 @@ export default function Edit_Profile() {
                                                         <TextField id="" defaultValue={get_my_profile_success_error?.email_id} onChange={handleChange} name='email_id' fullWidth label="Email *" variant="outlined" />
                                                     </Grid>
                                                     <Grid xs={6} mt={1} p={2} item>
-                                                        {/* <Grid item xs={12} mt={2} p={2}> */}
                                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                             <DemoContainer components={['DatePicker', 'DatePicker']}>
                                                                 <DatePicker label="DOB" onChange={Date1} defaultValue={dayjs('2022-04-17')} />
@@ -194,7 +191,7 @@ export default function Edit_Profile() {
                                                         </LocalizationProvider>
                                                     </Grid>
                                                     <Grid xs={12} mt={3} item>
-                                                        <Button fullWidth type='submit' onClick={handleSubmit} size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} > "Update"</Button>
+                                                        <Button fullWidth type='submit' onClick={handleSubmit} size='medium' variant='contained' style={{ background: styles?.colors?.button, color: styles?.color?.text }} > "Update"</Button>
                                                     </Grid>
                                                 </Grid>
                                             </ThemeProvider>
@@ -229,7 +226,7 @@ export default function Edit_Profile() {
 
                                 <Box>
                                     <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                        <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Edit profile</b></Typography>
+                                        {/* <Typography variant='h5' sx={{ fontFamily: styles?.fontFamily }}><b>Edit profile</b></Typography> */}
                                     </DialogTitle>
                                     <IconButton
                                         aria-label="close"
@@ -269,7 +266,7 @@ export default function Edit_Profile() {
                                         </Box>
                                     </DialogContent>
                                     <DialogActions >
-                                        <Button fullWidth size='large' onClick={handleSubmit} variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} > {loading ? <Loading /> : "Update"}</Button>
+                                        <Button fullWidth size='large' onClick={handleSubmit} variant='contained' style={{ background: styles?.colors?.primary }} > {loading ? <Loading /> : "Update"}</Button>
                                     </DialogActions>
                                 </Box>
                             }

@@ -49,7 +49,7 @@ const isBetween = (value, floor, ceil) => value >= floor && value <= ceil;
 export default function PackageView() {
     const posts = useSelector((state) => state.posts.data);
     const category_id_toShow = useSelector((state) => state.category_id_to_show_its_package);
-    const style = useSelector((state) => state.all_theme);
+    const styles = useSelector((state) => state.all_theme);
     const update_in_fetch = useSelector((state) => state.update_in_post);
     const [choice, setChoice] = useState(category_id_toShow);
     const [filtered_Array, setFiltered_Array] = useState([])
@@ -98,13 +98,19 @@ export default function PackageView() {
     const capitalize = (text) => text?.charAt(0)?.toUpperCase() + text?.substr(1);
 
     useEffect(() => {
-        const scrollToDiv = () => {
-            if (ref && ref.current) {
-                ref.current.scrollIntoView({ behavior: 'smooth', },);
+        const scrollToDiv = () => ref?.current?.scrollIntoView({ behavior: 'smooth' });
+
+        const mediaQuery = window.matchMedia('(max-width: 767px)');
+        const handleMediaQueryChange = () => {
+            if (!mediaQuery.matches) {
+                setTimeout(scrollToDiv, 300);
             }
         };
-        const scrollTimeout = setTimeout(scrollToDiv, 500);
-        return () => clearTimeout(scrollTimeout);
+
+        mediaQuery.addEventListener('change', handleMediaQueryChange);
+        handleMediaQueryChange();
+
+        return () => mediaQuery.removeEventListener('change', handleMediaQueryChange);
     }, [ref, capitalize]);
 
     useEffect(() => {
@@ -175,7 +181,14 @@ export default function PackageView() {
                                             <React.Fragment key={item?.id}>
                                                 {value && (
                                                     <Chip
-                                                        sx={{ height: 40, background: 'white', backgroundColor: choice === item.id ? '#e6cc67' : 'white' }}
+                                                        sx={{
+                                                            height: 40,
+                                                            background: 'white',
+                                                            backgroundColor: choice === item.id ? styles?.colors?.primary : 'white',
+                                                            '&:hover': {
+                                                                backgroundColor: choice === item.id ? styles?.colors?.primary : 'white', // Change color on hover if needed
+                                                            },
+                                                        }}
                                                         label={`${item.category}`}
                                                         onClick={() => {
                                                             setChoice(item.id);
@@ -225,9 +238,8 @@ export default function PackageView() {
                         {matches.large && (
                             <Box sx={{
                                 borderRadius: '10px', mt: -5,
-                                backdropFilter: style.child_backgroundFilter,
-                                background: style.child_bg,
-                                color: style.color, flexGrow: 1, display: 'flex', height: '100%', mb: 5
+                                background: styles?.colors?.secondary,
+                                color: styles?.color?.text, flexGrow: 1, display: 'flex', height: '100%', mb: 5
                             }}>
 
 
@@ -241,13 +253,13 @@ export default function PackageView() {
                                             {categories?.map((item, index) => {
                                                 return (
                                                     <Box key={index} sx={{
-                                                        borderRight: item === activeId && '2px solid  #ffc629;', my: 1, px: 2, py: .1, background: item === activeId && '#ffc629', background: item === activeId && 'linear-gradient(to right, white, #ffd45e)',
+                                                        borderRight: item === activeId && `2px solid ${styles?.colors?.primary}`, my: 1, px: 2, py: .1, background: item === activeId && styles?.colors?.primary, background: item === activeId && `linear-gradient(to right, white, ${styles?.colors?.primary})`,
                                                     }}>
                                                         <a
                                                             href={`#${item}`}
                                                             className={clsx("menu-link", item === activeId && "menu-link-active")}
                                                         >
-                                                            <Box sx={{ my: .4, display: 'flex', textTransform: 'capitalize', textAlign: 'left' }}>
+                                                            <Box sx={{ my: .4, display: 'flex', textTransform: 'capitalize', textAlign: 'left', color: styles?.colors?.primary }}>
                                                                 <Typography variant='h6' fontSize={'25px'} fontWeight={500}> {capitalize(item)}</Typography>
                                                             </Box>
                                                         </a>
@@ -257,7 +269,7 @@ export default function PackageView() {
                                         </Box>
                                     </Grid>
                                     <Grid item xs={5} alignItems={'center'} >
-                                        <Box sx={{ height: '700px', paddingBottom: '22rem', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }} ref={mainRef}>
+                                        <Box sx={{ height: '700px', paddingBottom: '35rem', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }} ref={mainRef}>
                                             {filtered_Array?.map((item, index) => {
                                                 return (
                                                     <section key={`section-${item.category}`} style={{ paddingTop: '25px' }} id={item.category} className="section">

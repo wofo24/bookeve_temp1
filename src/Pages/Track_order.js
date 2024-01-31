@@ -14,7 +14,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 export default function Track_order() {
     const data = useSelector(state => state.check_out_data)
-    const buttonStyles = useSelector((state) => state?.all_theme)
+    const styles = useSelector((state) => state?.all_theme)
     const loading = useSelector((state) => state.review.loading)
     const [will_map_data, setWill_map_data] = useState([])
     const review = useSelector((state) => state.review.post_review_success)
@@ -23,6 +23,7 @@ export default function Track_order() {
     const totalPackagePrice = []
     const dispatch = useDispatch()
     const navigate = useNavigate()
+
     useEffect(() => {
         dispatch(checked_out_get())
     }, [])
@@ -64,19 +65,17 @@ export default function Track_order() {
             mt: 0,
             my: { lg: 4, xs: 0 },
             borderRadius: '10px',
-            backdropFilter: buttonStyles.child_backdropFilter,
-            background: buttonStyles.child_bg,
-            color: buttonStyles.child_div_text,
+            background: styles?.colors?.secondary,
+            color: styles?.colors?.heighlightText,
         }} >
             <Box mx={1} mt={0}>
                 <Container sx={{
                     px: 0, py: 4, my: 2, borderRadius: '10px',
-                    backdropFilter: buttonStyles.child_backdropFilter,
-                    background: buttonStyles.child_bg,
-                    color: buttonStyles.color,
+                    background: styles?.colors?.secondary,
+                    color: styles?.colors?.heighlightText,
                 }}>
-                    <Card p={2} sx={{ borderRadius: '10px', background: 'white', color: 'black' }}>
-                        <Grid container my={1} >
+                    <Card sx={{ borderRadius: '10px', background: styles?.colors?.white, color: styles?.colors?.heighlightText, py: 1 }}>
+                        <Grid container>
                             <Grid xs={6}>
                                 <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center', }}>
                                     <Typography><ArrowBackRoundedIcon sx={{ mt: .5, ml: 1 }} onClick={() => navigate('/')} fontSize='medium' /></Typography>
@@ -96,18 +95,18 @@ export default function Track_order() {
                     <Box m={'auto'}>
                         <Grid container >
                             <Grid lg={7} xl={7} md={7} xs={12} pt={3} px={1}>
-                                <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                <Card sx={{ background: styles?.colors?.white, color: styles?.colors?.heighlightText, borderRadius: '10px', p: 2 }} >
                                     <Typography fontSize={'18px'} > <b>Service Cart</b></Typography>
                                     <Grid container mt={1} ml={1} >
                                         <Grid xs={4}>
-                                            <Typography sx={{ color: buttonStyles.buttonColor, opacity: .7 }} fontSize={'14px'}>Package name
+                                            <Typography sx={{ color: styles?.colors?.primary, opacity: .7 }} fontSize={'14px'}>Package name
                                             </Typography>
                                         </Grid>
                                         <Grid xs={4}>
-                                            <Typography sx={{ color: buttonStyles.buttonColor, opacity: .7 }} fontSize={'14px'} textAlign={'center'}>Quantity</Typography>
+                                            <Typography sx={{ color: styles?.colors?.primary, opacity: .7 }} fontSize={'14px'} textAlign={'center'}>Quantity</Typography>
                                         </Grid>
 
-                                        <Grid xs={4} ><Typography sx={{ color: buttonStyles.buttonColor, opacity: .7 }} fontSize={'14px'} textAlign={'end'} mx={2}>
+                                        <Grid xs={4} ><Typography sx={{ color: styles?.colors?.primary, opacity: .7 }} fontSize={'14px'} textAlign={'end'} mx={2}>
                                             Price
                                         </Typography> </Grid>
                                     </Grid>
@@ -143,11 +142,11 @@ export default function Track_order() {
                                         </Grid>
                                         <Grid container>
                                             <Grid xs={6}>Item discount</Grid>
-                                            <Grid xs={6} textAlign={'end'}>&#8377; --</Grid>
+                                            <Grid xs={6} textAlign={'end'}>&#8377; 0</Grid>
                                         </Grid>
                                         <Grid container>
                                             <Grid xs={6}>Tax and fee</Grid>
-                                            <Grid xs={6} textAlign={'end'}>&#8377; --</Grid>
+                                            <Grid xs={6} textAlign={'end'}>&#8377; 0</Grid>
                                         </Grid>
                                         <hr />
                                         <Grid container>
@@ -156,7 +155,7 @@ export default function Track_order() {
                                         </Grid>
                                     </Box>
                                 </Card>
-                                <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2, mt: 4, textAlign: 'center' }}>
+                                <Card sx={{ background: styles?.colors?.white, color: styles?.colors?.heighlightText, borderRadius: '10px', p: 2, mt: 4, textAlign: 'center' }}>
 
                                     <Box>
                                         <Typography variant='h6' component="legend" mb={.8}>Rate your experience</Typography>
@@ -170,8 +169,8 @@ export default function Track_order() {
                                                 value={data_.rating}
                                                 onChange={HandleFeedback}
                                             /><br />
-                                            <textarea value={data_?.comment} required name='comment' onChange={HandleFeedback} placeholder='Type something...' style={{ minHeight: '3rem', width: '30rem', height: 'auto', borderRadius: '5px', padding: '5px' }} /><br />
-                                            <Button type='submit' sx={{ border: `1px solid ${buttonStyles.buttonColor}`, color: `${buttonStyles.buttonColor}`, px: 4, my: 2 }}>Submit</Button>
+                                            <textarea value={data_?.comment} required name='comment' onChange={HandleFeedback} placeholder='Type something...' style={{ minHeight: '3rem', height: 'auto', borderRadius: '5px', padding: '5px' }} /><br />
+                                            <Button type='submit' sx={{ border: `1px solid ${styles?.colors?.primary}`, color: `${styles?.colors?.primary}`, px: 4, my: 2 }}>Submit</Button>
                                         </form>
                                     </Box>
                                     {loading ?
@@ -183,7 +182,7 @@ export default function Track_order() {
                                 </Card>
                             </Grid>
                             <Grid lg={5} md={5} textAlign={'start'} px={1} pt={3} >
-                                <Card sx={{ background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                <Card sx={{ background: styles?.colors?.white, color: styles?.colors?.heighlightText, borderRadius: '10px', p: 2 }} >
                                     <Typography mb={1}>Booking Details</Typography>
                                     <Grid container my={2}>
                                         <Grid xs={9}>
@@ -197,7 +196,7 @@ export default function Track_order() {
                                     </Grid>
                                     <Grid container my={2}>
                                         <Grid xs={1}>   <FmdGoodIcon /></Grid>
-                                        <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}>--- No initiated</Grid>
+                                        <Grid xs={11} textAlign={'start'} display={'flex'} alignItems={'center'}>{lastOrder?.map((item) => (item?.address))}</Grid>
                                     </Grid>
                                     <Grid container>
                                         <Grid xs={1}>    <AccessTimeFilledIcon /></Grid>
@@ -205,20 +204,36 @@ export default function Track_order() {
                                     </Grid>
                                     <Grid container mt={3} >
                                         <Grid xs={6} textAlign={'end'} p={2}>
-                                            <Button variant='outlined' style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: `${buttonStyles.buttonColor}` }} fullWidth
-                                                onClick={() => {
-                                                    console.log("lastOrder:", lastOrder);
-                                                    const data = { reschedule: true, title: "Select reschedule" }
-                                                    const firstOrderId = lastOrder?.map((item) => item.id)
-                                                    dispatch(open_schedule_dialog(firstOrderId, data));
-                                                }}>
-                                                Reschedule
-                                            </Button>
+                                            {will_map_data ? will_map_data?.order_stage === "cancelled"
+                                                ?
+                                                <Button variant='outlined'
+                                                    disabled
+                                                    fullWidth
+                                                >
+                                                    Reschedule
+                                                </Button> :
+                                                <Button variant='outlined'
+                                                    style={{ border: `1px solid ${styles?.colors?.button}`, color: `${styles?.colors?.button}` }}
+                                                    fullWidth
+                                                    onClick={() => {
+                                                        const data = { reschedule: true, title: "Select reschedule" }
+                                                        const firstOrderId = [will_map_data?.id]
+                                                        dispatch(open_schedule_dialog(firstOrderId, data));
+                                                    }}
+                                                >
+                                                    Reschedule
+                                                </Button>
+                                                : ''}
+
 
                                         </Grid>
                                         <Grid xs={6} p={2}>
-                                            <Button onClick={() => dispatch(booking_cancel(lastOrder?.map((item) => item.id)))} color='error' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} fullWidth>
-                                                Cancel
+                                            <Button color='error'
+                                                variant='contained'
+                                                disabled={will_map_data ? will_map_data?.order_stage === 'cancelled' ? true : false : 'true'}
+                                                fullWidth
+                                                onClick={() => dispatch(booking_cancel([will_map_data?.id]))}>
+                                                {will_map_data?.order_stage === 'cancelled' ? 'Cancelled' : 'Cancel'}
                                             </Button>
                                         </Grid>
                                     </Grid>
@@ -226,7 +241,7 @@ export default function Track_order() {
                                 </Card>
 
 
-                                <Card sx={{ my: 4, background: 'white', color: 'black', borderRadius: '10px', p: 2 }} >
+                                <Card sx={{ my: 4, background: styles?.colors?.white, color: styles?.colors?.heighlightText, borderRadius: '10px', p: 2 }} >
                                     <Typography mb={2}> <b>Cancellation & Research policy </b></Typography>
                                     <span style={{ fontSize: '12px' }}>
                                         The corresponding author must inform about the withdrawal ( Cancellation ) of the article before the acceptance from the International Journal of Medical Research and Review and the withdrawal ( Cancellation )</span>
@@ -236,10 +251,6 @@ export default function Track_order() {
                         </Grid>
                     </Box>
                 </Container>
-
-
-
-                {/* <hr style={{ border: '1px solid', marginTop: '30px' }} /> */}
             </Box>
 
         </Container>

@@ -10,7 +10,7 @@ import { openDelete_Address, closeDelete_Address, delete_address } from '../../R
 export default function Open_delete() {
   const open = useSelector((state) => state.delete_open)
 
-  const buttonStyles = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
   const address_id = useSelector((state) => state.address_id)
   const dispatch = useDispatch()
   const handleDelete = () => {
@@ -40,7 +40,7 @@ export default function Open_delete() {
         </DialogContent>
         <DialogActions sx={{ m: 1 }}>
           <Button onClick={handleClose}>No</Button>
-          <Button size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} onClick={handleDelete} >yes</Button>
+          <Button size='medium' variant='contained' style={{ background: styles?.colors?.button, color: styles?.colors?.text }} onClick={handleDelete} >yes</Button>
         </DialogActions>
       </Dialog>
     </div>

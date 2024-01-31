@@ -58,7 +58,9 @@ const initialState = {
     check_out_fail: [],
     check_out_get_list_success: [],
     cancel_booking_check_out_get_list_success: [],
+    cancel_booking_check_out_get_list_error:[],
     reschedule_check_out_get_list_success: [],
+    reschedule_check_out_get_list_error:[],
     check_out_get_list_fail: [],
   },
   search_item: {
@@ -421,11 +423,11 @@ const rootReducer = (state = initialState, action) => {
       }
     case type.EMPTY_RESCHEDULE_BOOKING_DATA_SUCCESSFULLY:
       return {
-        ...state, check_out_data: { ...state.check_out_data, loading: false, reschedule_check_out_get_list_success: null, check_out_get_list_fail: null }
+        ...state, check_out_data: { ...state.check_out_data, loading: false, reschedule_check_out_get_list_success: null, check_out_get_list_fail: null, cancel_booking_check_out_get_list_success:null,cancel_booking_check_out_get_list_error:null  }
       }
     case type.RESCHEDULE_BOOKING_DATA_FAIL:
       return {
-        ...state, check_out_data: { ...state.check_out_data, loading: false, check_out_get_list_fail: action.payload }
+        ...state, check_out_data: { ...state.check_out_data, loading: false, reschedule_check_out_get_list_error: action.payload }
       }
 
     // ====== Cancel from checkout  =====================================>
@@ -440,7 +442,7 @@ const rootReducer = (state = initialState, action) => {
       }
     case type.CANCEL_BOOKING_FAIL:
       return {
-        ...state, check_out_data: { ...state.check_out_data, check_out_get_list_fail: action.payload, loading: false }
+        ...state, check_out_data: { ...state.check_out_data, cancel_booking_check_out_get_list_error: action.payload, loading: false }
       }
 
     // ====== Search  ===================================================>

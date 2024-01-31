@@ -26,13 +26,12 @@ export default function Header() {
     const openD = useSelector((state) => state.view_open);
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const card_data = useSelector((state) => state.card_data.data)
     const cart_count = useSelector((state) => state.cart_count)
     const [anchorEl, setAnchorEl] = React.useState(null);
     const public_info = useSelector((state) => state?.public_information?.data?.data)
     const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
-    // const active_user = useSelector((state) => state.active_user)
     const token = Cookies.get('token')
     const open = Boolean(anchorEl);
 
@@ -73,8 +72,8 @@ export default function Header() {
                 {(item) => item.large && (
                     <AppBar sx={{
                         position: 'sticky',
-                        backdropFilter: buttonStyles.child_backdropFilter,
-                        background: buttonStyles.child_bg,
+                        backdropFilter: styles.child_backdropFilter,
+                        background: styles?.colors?.background?styles?.colors?.background:'white',
                     }}>
                         <Container maxWidth="xl">
                             <Toolbar disableGutters sx={{ m: 'auto' }}>
@@ -97,7 +96,7 @@ export default function Header() {
                                                     )}
                                                     {!public_info.company_logo && !public_info.is_text && (
                                                         <StoreRoundedIcon
-                                                            style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }}
+                                                            style={{ color: styles?.colors?.primary, height: '40px', width: '40px' }}
                                                             onClick={() => navigate('/')}
                                                             sx={{ mr: 1 }}
                                                         />
@@ -117,17 +116,17 @@ export default function Header() {
                                         mr: 2,
                                         display: { xs: 'flex', md: 'none' },
                                         flexGrow: 1,
-                                        fontFamily: buttonStyles.fontFamily,
+                                        fontFamily: styles?.typography?.fontFamily,
                                         fontWeight: 700,
                                         letterSpacing: '.1rem',
-                                        color: buttonStyles.Company_Name_title,
+                                        color: styles?.colorss?.primary,
                                         textDecoration: 'none',
 
                                     }}
                                 >
                                     {public_info?.business_name}
                                 </Typography>
-                                <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: buttonStyles.icons_Color }}>
+                                <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: styles.color?.primary }}>
                                 </Box>
                                 <Box sx={{ px: 17, flexGrow: 1, justifyContent: 'right', display: { xs: 'none', md: 'flex' } }}>
                                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -147,7 +146,7 @@ export default function Header() {
                                                             )}
                                                             {!public_info.company_logo && !public_info.is_text && (
                                                                 <StoreRoundedIcon
-                                                                    style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }}
+                                                                    style={{ color: styles.color?.primary, height: '40px', width: '40px' }}
                                                                     onClick={() => navigate('/')}
                                                                     sx={{ mr: 1 }}
                                                                 />
@@ -166,9 +165,9 @@ export default function Header() {
                                             sx={{
                                                 mr: 2,
                                                 display: { xs: 'none', md: 'flex' },
-                                                fontFamily: buttonStyles.fontFamily,
+                                                fontFamily: styles?.typography?.fontFamily,
                                                 fontWeight: 700,
-                                                color: buttonStyles.color,
+                                                color: styles?.colors?.primary,
                                                 letterSpacing: '.1rem',
                                                 color: 'inherit',
                                                 textDecoration: 'none',
@@ -186,7 +185,7 @@ export default function Header() {
                                         >
                                             <Button
                                                 onClick={handleCloseNavMenu}
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/search' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize', alignItems: 'center' }}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/search' ? styles?.colors?.button : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize', alignItems: 'center' }}
                                             >
                                                 <SearchRoundedIcon fontSize='large' sx={{ mx: 1 }} /> Search
                                             </Button>
@@ -197,7 +196,7 @@ export default function Header() {
                                         >
                                             <Button
                                                 onClick={handleCloseNavMenu}
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize', alignItems: 'center' }}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/' ? styles?.colors?.button : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize', alignItems: 'center' }}
                                             >
                                                 <HouseRoundedIcon fontSize='large' sx={{ mx: 1 }} />
                                                 Home
@@ -213,7 +212,7 @@ export default function Header() {
                                                 aria-expanded={open ? 'true' : undefined}
                                                 onClick={handleClick}
 
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/profile' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/profile' ? styles?.colors?.button : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
                                             >
                                                 <AccountCircleOutlinedIcon fontSize='large' sx={{ mx: 1 }} />{get_my_profile_success_error?.name}
                                             </Button>
@@ -225,7 +224,7 @@ export default function Header() {
                                                     <Button
                                                         id="basic-button"
 
-                                                        sx={{ mx: 3, my: 2, color: window.location.pathname === '/login' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
+                                                        sx={{ mx: 3, my: 2, color: window.location.pathname === '/login' ? styles?.colors?.button : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
                                                     >
                                                         <AccountCircleOutlinedIcon fontSize='large' sx={{ mx: 1 }} />  Login
                                                     </Button>
@@ -238,7 +237,7 @@ export default function Header() {
                                         >
                                             <Button
                                                 onClick={handleCloseNavMenu}
-                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/cart' ? buttonStyles.icons_Color : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
+                                                sx={{ mx: 3, my: 2, color: window.location.pathname === '/cart' ? styles?.colors?.button : 'black', display: 'flex', fontSize: '22px', textTransform: 'capitalize' }}
                                             >
                                                 <Badge badgeContent={cart_count} color="success">
                                                     <LocalMallOutlinedIcon fontSize='large' sx={{ mx: 1, mt: .2 }} />  Cart
@@ -261,7 +260,7 @@ export default function Header() {
                                         }}
 
                                     >
-                                        <Box sx={{ width: 200 }}>
+                                        <Box sx={{ width: 200 , zIndex:'inherit'}}>
                                             <Link to='/profile' style={{
                                                 textDecoration: 'none', color: 'inherit',
                                             }}> <MenuItem onClick={handleClose} style={{ fontSize: '20px', fontWeight: 500 }}  >Profile</MenuItem></Link>
@@ -287,10 +286,10 @@ export default function Header() {
             >
                 {(item) => item.small && (window.location.pathname !== '/search' && window.location.pathname !== '/package-view') && (
                     <AppBar sx={{
-                        position: !openD?'sticky':'',
-                        backdropFilter: buttonStyles.child_backdropFilter,
-                        background: buttonStyles.child_bg,
-                      
+                        position: !openD ? 'sticky' : '',
+                        backdropFilter: styles.child_backdropFilter,
+                        background: styles?.colors?.background?styles?.colors?.background:'white',
+
 
                     }}>
                         <Container maxWidth="xl">
@@ -299,7 +298,7 @@ export default function Header() {
                                     {public_info && public_info?.company_logo ? (<img src={public_info.company_logo} style={{ height: '40px', width: '40px', marginRight: '9px' }} />) :
                                         (
                                             <>
-                                                <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                                                <StoreRoundedIcon style={{ color: styles.color?.button, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
 
                                             </>
                                         )}
@@ -313,17 +312,17 @@ export default function Header() {
                                         mr: 2,
                                         display: { xs: 'flex', md: 'none' },
                                         flexGrow: 1,
-                                        fontFamily: buttonStyles.fontFamily,
+                                        fontFamily: styles?.typography?.fontFamily,
                                         fontWeight: 700,
                                         letterSpacing: '.1rem',
-                                        color: buttonStyles.Company_Name_title,
+                                        color: styles?.Company_Name_title,
                                         textDecoration: 'none',
 
                                     }}
                                 >
                                     {public_info?.business_name}
                                 </Typography>
-                                <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: buttonStyles.icons_Color }}>
+                                <Box sx={{ flexGrow: 0, display: { xs: 'flex', md: 'none' }, color: styles?.colors?.button }}>
 
 
                                 </Box>
@@ -333,7 +332,7 @@ export default function Header() {
                                             {public_info && public_info.company_logo ? (<img src={public_info.company_logo} style={{ height: '50px', width: '50px', marginRight: '9px' }} />) :
                                                 (
                                                     <>
-                                                        <StoreRoundedIcon style={{ color: buttonStyles.icons_Color, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                                                        <StoreRoundedIcon style={{ color: styles?.colors?.button, height: '40px', width: '40px' }} onClick={() => navigate('/')} sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
 
                                                     </>
                                                 )}
@@ -347,9 +346,9 @@ export default function Header() {
                                             sx={{
                                                 mr: 2,
                                                 display: { xs: 'none', md: 'flex' },
-                                                fontFamily: buttonStyles.fontFamily,
+                                                fontFamily: styles?.typography?.fontFamily,
                                                 fontWeight: 700,
-                                                color: buttonStyles.color,
+                                                color: styles?.colors?.secondary,
                                                 letterSpacing: '.1rem',
                                                 color: 'inherit',
                                                 textDecoration: 'none',
@@ -359,9 +358,9 @@ export default function Header() {
 
                                         </Typography>
                                     </Box>
-                                    
+
                                 </Box>
-                              
+
                             </Toolbar>
                         </Container>
                     </AppBar >

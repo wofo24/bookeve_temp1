@@ -19,6 +19,9 @@ export default function Payment() {
   const selected_date_time_var = useSelector(state => state.selected_date_time)
   const check_out_data = useSelector(state => state.check_out_data)
   const loading = useSelector(state => state.check_out_data.loading)
+  
+  const styles = useSelector((state) => state.all_theme)
+
   const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
   const [data, setData] = React.useState()
   const dispatch = useDispatch()
@@ -40,12 +43,12 @@ export default function Payment() {
 
   React.useEffect(() => {
     window.history.replaceState(null, '/', window.location.href);
-}, []);
+  }, []);
 
   React.useEffect(() => {
-    navigate( { state: null });
-}, []);
-  
+    navigate({ state: null });
+  }, []);
+
   React.useEffect(() => {
     if (check_out_data?.check_out_success.success) {
       dispatch(clear_all_cart_data())
@@ -64,102 +67,101 @@ export default function Payment() {
     setSelectedIndex(index);
   };
 
-  const buttonStyles = useSelector((state) => state.apply_new_theme)
-
   return (
     <>
-    {loading?<Loading/>:
-    <>
-   
+      {loading
+        ?
+        <Loading />
+        :
+        <>
+          <Media
+            queries={{
+              small: '(max-width: 768px)',
+              medium: '(min-width: 769px) and (max-width: 1024px)',
+              large: '(min-width: 1025px)',
+            }}>
+            {(item) => (
+              item.large && (
+                <Container sx={{ my: 15 }}>
+                  <Box sx={{ width: '50%', bgcolor: 'background.paper', margin: 'auto', borderRadius: '10px', color: 'black', p: 2 }}>
+                    <Typography variant='h5' mb={2}>Select Payment method</Typography>
+                    <List component="nav" aria-label="main mailbox folders">
+                      <ListItemButton
+                        selected={selectedIndex === 0}
+                        onClick={(event) => handleListItemClick(event, 0)}
+                      >
+                        <ListItemIcon>
+                          <CurrencyRupeeTwoToneIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Cash" />
+                      </ListItemButton>
+                      <ListItemButton
+                        selected={selectedIndex === 1}
+                        onClick={(event) => handleListItemClick(event, 1)}
+                      >
+                        <ListItemIcon>
+                          <PaymentTwoToneIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Online Payment" />
+                      </ListItemButton>
+                    </List>
+                    <Divider />
+                    <Box sx={{ p: 3 }}>
+                      <Button fullWidth style={{ background: styles?.colors?.button, color: styles?.colors?.text }} variant='contained' onClick={() => navigate('/successful')}>Proceed</Button>
+                    </Box>
+                  </Box>
+                </Container>
+              )
+            )}
+          </Media>
+          <Media
+            queries={{
+              small: '(max-width: 768px)',
+              medium: '(min-width: 769px) and (max-width: 1024px)',
+              large: '(min-width: 1025px)',
+            }}>
+            {(item) => (
+              item.small && (
+                <Container>
+                  <Box sx={{
+                    width: '100%', bgcolor: 'background.paper', my: 5, borderRadius: '10px',
+                    backdropFilter: styles.child_backdropFilter,
+                    background: styles?.colors?.secondary,
+                    color: styles?.colors?.heighlightText,
+                  }}>
+                    <List component="nav" aria-label="main mailbox folders">
+                      <ListItemButton
+                        selected={selectedIndex === 0}
+                        onClick={(event) => handleListItemClick(event, 0)}
+                      >
+                        <ListItemIcon>
+                          <CurrencyRupeeTwoToneIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Cash" />
+                      </ListItemButton>
+                      <ListItemButton
+                        selected={selectedIndex === 1}
+                        onClick={(event) => handleListItemClick(event, 1)}
+                      >
+                        <ListItemIcon>
+                          <PaymentTwoToneIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Online Payment" />
+                      </ListItemButton>
+                    </List>
+                    <Divider />
+                    <Box sx={{ p: 3 }}>
+                      <Button fullWidth style={{ background: styles?.colors?.button, color: styles?.colors?.white }} variant='contained' onClick={submitData}>Proceed</Button>
+                    </Box>
+                  </Box>
+                </Container>
+              )
+            )}
 
-      <Media
-        queries={{
-          small: '(max-width: 768px)',
-          medium: '(min-width: 769px) and (max-width: 1024px)',
-          large: '(min-width: 1025px)',
-        }}>
-        {(item) => (
-          item.large && (
-            <Container sx={{ my: 15 }}>
-              <Box sx={{ width: '50%', bgcolor: 'background.paper', margin: 'auto', borderRadius: '10px', color: 'black', p: 2 }}>
-                <Typography variant='h5' mb={2}>Select Payment method</Typography>
-                <List component="nav" aria-label="main mailbox folders">
-                  <ListItemButton
-                    selected={selectedIndex === 0}
-                    onClick={(event) => handleListItemClick(event, 0)}
-                  >
-                    <ListItemIcon>
-                      <CurrencyRupeeTwoToneIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Cash" />
-                  </ListItemButton>
-                  <ListItemButton
-                    selected={selectedIndex === 1}
-                    onClick={(event) => handleListItemClick(event, 1)}
-                  >
-                    <ListItemIcon>
-                      <PaymentTwoToneIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Online Payment" />
-                  </ListItemButton>
-                </List>
-                <Divider />
-                <Box sx={{ p: 3 }}>
-                  <Button fullWidth style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' onClick={() => navigate('/successful')}>Proceed</Button>
-                </Box>
-              </Box>
-            </Container>
-          )
-        )}
-      </Media>
-      <Media
-        queries={{
-          small: '(max-width: 768px)',
-          medium: '(min-width: 769px) and (max-width: 1024px)',
-          large: '(min-width: 1025px)',
-        }}>
-        {(item) => (
-          item.small && (
-            <Container>
-              <Box sx={{
-                width: '100%', bgcolor: 'background.paper', my: 5, borderRadius: '10px',
-                backdropFilter: buttonStyles.child_backdropFilter,
-                background: buttonStyles.child_bg,
-                color: buttonStyles.child_div_text,
-              }}>
-                <List component="nav" aria-label="main mailbox folders">
-                  <ListItemButton
-                    selected={selectedIndex === 0}
-                    onClick={(event) => handleListItemClick(event, 0)}
-                  >
-                    <ListItemIcon>
-                      <CurrencyRupeeTwoToneIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Cash" />
-                  </ListItemButton>
-                  <ListItemButton
-                    selected={selectedIndex === 1}
-                    onClick={(event) => handleListItemClick(event, 1)}
-                  >
-                    <ListItemIcon>
-                      <PaymentTwoToneIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Online Payment" />
-                  </ListItemButton>
-                </List>
-                <Divider />
-                <Box sx={{ p: 3 }}>
-                  <Button fullWidth style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' onClick={submitData}>Proceed</Button>
-                </Box>
-              </Box>
-            </Container>
-          )
-        )}
 
-
-      </Media>
-</>
-}
+          </Media>
+        </>
+      }
     </>
   );
 }

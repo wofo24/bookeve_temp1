@@ -19,11 +19,11 @@ export default function Otp() {
                 MuiTextField: {
                     styleOverrides: {
                         root: {
-                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderHoverColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderFocusedColor': `${styles?.colors?.primary}`,
                             '& label.Mui-focused': {
-                                color: `${buttonStyles.icons_Color}`,
+                                color: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -31,14 +31,14 @@ export default function Otp() {
                 MuiOutlinedInput: {
                     styleOverrides: {
                         notchedOutline: {
-                            borderColor: `${buttonStyles.icons_Color}`,
+                            borderColor: `${styles?.colors?.primary}`,
                         },
                         root: {
                             [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                             [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -47,13 +47,13 @@ export default function Otp() {
                     styleOverrides: {
                         root: {
                             '&:before, &:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -62,13 +62,13 @@ export default function Otp() {
                     styleOverrides: {
                         root: {
                             '&:before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -76,7 +76,7 @@ export default function Otp() {
             },
         });
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const error = useSelector((state) => state.active_user.error)
     const user_id = useSelector((state) => state.user_id)
     const active_user_Response = useSelector((state) => state.active_user.data)
@@ -150,7 +150,7 @@ export default function Otp() {
             window.location.href = '/login';
         }, 1000);
     };
-    
+
 
     return (
         <div>
@@ -168,9 +168,9 @@ export default function Otp() {
                 {(item) => (item.small && (
                     <Box px={3} py={5} my={5} mx={3} sx={{
                         borderRadius: "10px",
-                        backdropFilter: buttonStyles.child_backdropFilter,
-                        background: buttonStyles.child_bg,
-                        color: buttonStyles.child_div_text,
+
+                        background: styles?.colors?.secondary,
+                        color: styles?.colors?.heightlightText,
                         overflow: 'hidden'
                     }}>
                         <Box>
@@ -217,12 +217,12 @@ export default function Otp() {
                                         </Grid>
                                         <Grid item xs={12} textAlign='center' mt={-3} >
                                             <Box sx={{ display: 'grid', placeContent: 'center' }}>
-                                                <Typography variant='subtitle' fontSize={'13px'} textAlign={'center'}>Not received your code? {counter < 1 ? <span style={{ color: "blue", cursor: 'pointer', fontSize: '15px' }} onClick={handleReSendOTP}>Resend code</span> : `${counter} sec`}</Typography>
+                                                <Typography variant='subtitle' fontSize={'13px'} textAlign={'center'}>Not received your code? {counter < 1 ? <span style={{ cursor: 'pointer', fontSize: '12px', color:styles?.colors?.link }} onClick={handleReSendOTP}>Resend code</span> : `${counter} sec`}</Typography>
                                             </Box>
                                         </Grid>
 
                                         <Grid item xs={12} py={0} textAlign='center'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText, textTransform: "capitalize" }} >Verify</Button>
+                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: styles?.colors?.button, color: styles?.colors?.text, textTransform: "capitalize" }} >Verify</Button>
                                         </Grid>
 
                                     </Grid>
@@ -244,9 +244,8 @@ export default function Otp() {
                     // <Box px={10} py={5} my={5} mx={35} sx={{
                     <Box px={10} py={5} my={5} mx={35} sx={{
                         borderRadius: "10px",
-                        backdropFilter: buttonStyles.child_backdropFilter,
-                        background: buttonStyles.child_bg,
-                        color: buttonStyles.child_div_text,
+                        background: styles?.colors?.secondary,
+                        color: styles?.colors?.heightlightText,
                     }}>
                         <Box>
                             <Typography textAlign='left' fontSize={46}>OTP</Typography>
@@ -281,17 +280,16 @@ export default function Otp() {
                                             </ThemeProvider>
                                             <Box pt={1} >
                                                 <Typography textAlign={"center"} fontSize={'13px'} sx={{ color: 'green', textAlign: 'center' }} variant='subtitle'>{otp_resend_response?.data?.message}.</Typography>
-
                                             </Box>
                                         </Grid>
                                         <Grid item xs={12} textAlign='center' mt={-3} >
                                             <Box sx={{ display: 'grid', placeContent: 'center' }}>
-                                                <Typography variant='subtitle' fontSize={'13px'} textAlign={'center'}>Not received your code? {counter < 1 ? <span style={{ color: "blue", cursor: 'pointer', fontSize: '15px' }} onClick={handleReSendOTP}>Resend code</span> : `${counter} sec`}</Typography>
+                                                <Typography variant='subtitle' fontSize={'13px'} textAlign={'center'}>Not received your code? {counter < 1 ? <span style={{ cursor: 'pointer', fontSize: '12px', color:styles?.colors?.link }} onClick={handleReSendOTP}>Resend code</span> : `${counter} sec`}</Typography>
                                             </Box>
                                         </Grid>
 
                                         <Grid item xs={12} py={0} textAlign='center'>
-                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText, textTransform: "capitalize" }} >Verify</Button>
+                                            <Button id='BackgroundColorChangeOnly' variant='contained' type='submit' style={{ background: styles?.colors?.button, color: styles?.colors?.text, textTransform: "capitalize" }} >Verify</Button>
                                         </Grid>
 
                                     </Grid>

@@ -317,7 +317,7 @@ export const reschedule_booking_date = (id, data) => {
       const response = await axios(config);
       dispatch({ type: type.RESCHEDULE_BOOKING_DATA_SUCCESSFULLY, payload: response?.data });
     } catch (error) {
-      dispatch({ type: type.RESCHEDULE_BOOKING_DATA_FAIL, payload: error.response.data });
+      dispatch({ type: type.RESCHEDULE_BOOKING_DATA_FAIL, payload: error?.response?.data });
     }
 
   };

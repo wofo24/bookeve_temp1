@@ -18,7 +18,7 @@ export default function Proceed_to_pay() {
     const all_address = useSelector((state) => state.all_address_dialog)
     const card_data = useSelector((state) => state.card_data.data)
     const open_schedule = useSelector((state) => state.open_schedule)
-    const buttonStyles = useSelector((state) => state?.all_theme)
+    const styles = useSelector((state) => state?.all_theme)
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
     const dateObject = new Date(selected_date_time_var);
@@ -53,10 +53,9 @@ export default function Proceed_to_pay() {
                 <div>
                     {selected_address && (!open_schedule && !all_address) && (
                         <Paper Paper sx={{
-                            backdropFilter: buttonStyles.child_backdropFilter,
-                            background: buttonStyles.child_bg,
-                            color: buttonStyles.child_div_text,
-
+                            background: styles?.colors?.background,
+                            color: styles?.colors?.heighlightText,
+                            zIndex:'9',
                             position: 'fixed', bottom: 64, left: 0, right: 0, px: 3, py: 1,
                         }} elevation={3}>
                             <Box sx={{
@@ -77,7 +76,10 @@ export default function Proceed_to_pay() {
                                 </Grid>) : ''}
 
                                 <hr style={{ marginBottom: '15px', marginTop: '-3px' }} />
-                                <Button size="large" style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth onClick={handleClose}>
+                                <Button size="large" style={{
+                                    background: styles?.colors?.button, color: styles?.colors?.text
+
+                                }} variant='contained' fullWidth onClick={handleClose}>
                                     {selected_address ? formattedDate ? "Proceed To Pay" : 'Select a slot' : 'Select address'}
                                 </Button>
                             </Box>
