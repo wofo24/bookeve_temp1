@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AlertDialogSlide() {
   const open = useSelector((state) => state.agree_box)
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
 
   const handleClose = () => {
     dispatch(close_agree_dialog())
@@ -25,7 +25,6 @@ export default function AlertDialogSlide() {
     <React.Fragment>
       <Dialog
         open={open}
-
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
@@ -38,8 +37,8 @@ export default function AlertDialogSlide() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} size='medium' variant='outlined' style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} >Disagree</Button>
-          <Button onClick={handleClose} size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Agree</Button>
+          <Button onClick={handleClose} size='medium' variant='outlined' style={{ border: `1px solid ${styles?.colors?.primary}`, color: styles?.colors?.primary }} >Disagree</Button>
+          <Button onClick={handleClose} size='medium' variant='contained' style={{ background: styles?.colors?.primary}} >Agree</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

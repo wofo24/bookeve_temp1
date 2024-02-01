@@ -8,13 +8,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { get_search_item, empty_quarry } from '../../Redux/actions/actions';
 import TextField from '@mui/material/TextField';
 import Media from 'react-media';
-import FilledInput from '@mui/material/FilledInput';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import IconButton from '@mui/material/IconButton';
 import { useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import { alpha, styled } from '@mui/material/styles';
-import { createTheme, ThemeProvider, Theme, useTheme } from '@mui/material/styles';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 export default function Search(props) {
@@ -22,7 +18,7 @@ export default function Search(props) {
     const dispatch = useDispatch();
     const searched_quarry = useSelector((state) => state.searched_quarry)
     const inputRef = useRef(null);
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const [queries, setQueries] = useState(props.queries_Recent ? props.queries_Recent : searched_quarry)
     const navigate = useNavigate()
 
@@ -64,11 +60,11 @@ export default function Search(props) {
                 MuiTextField: {
                     styleOverrides: {
                         root: {
-                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderHoverColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderFocusedColor': `${styles?.colors?.primary}`,
                             '& label.Mui-focused': {
-                                color: `${buttonStyles.icons_Color}`,
+                                color: `${styles?.colors?.primary}`,
                             },
                             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // Add this line for box shadow
                             borderRadius: '15px',
@@ -83,10 +79,10 @@ export default function Search(props) {
                         },
                         root: {
                             [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                             [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -95,13 +91,13 @@ export default function Search(props) {
                     styleOverrides: {
                         root: {
                             '&:before, &:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -143,13 +139,13 @@ export default function Search(props) {
                                         InputProps={{
                                             endAdornment: (
                                                 <InputAdornment position="start">
-                                                    {queries ? <CloseIcon onClick={handleDelete} sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} /> : <SearchRoundedIcon sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} />}
+                                                    {queries ? <CloseIcon onClick={handleDelete} sx={{ ml: -.5, width: 30, height: 30, color: styles?.colors?.primary }} /> : <SearchRoundedIcon sx={{ ml: -.5, width: 30, height: 30, color: styles?.colors?.primary }} />}
                                                 </InputAdornment>
                                             ),
                                             startAdornment: (
                                                 <InputAdornment position="start">
                                                     {window.location.pathname === '/package-view' &&
-                                                        <ChevronLeftRoundedIcon onClick={() => navigate('/search')} sx={{ ml: -1.5, width: 40, height: 40, color: buttonStyles.icons_Color }} />
+                                                        <ChevronLeftRoundedIcon onClick={() => navigate('/search')} sx={{ ml: -1.5, width: 40, height: 40, color: styles?.colors?.primary }} />
                                                     }
                                                 </InputAdornment>
                                             ),
@@ -193,13 +189,13 @@ export default function Search(props) {
                                         InputProps={{
                                             endAdornment: (
                                                 <InputAdornment position="start">
-                                                    {queries ? <CloseIcon onClick={handleDelete} sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} /> : <SearchRoundedIcon sx={{ ml: -.5, width: 30, height: 30, color: buttonStyles.icons_Color }} />}
+                                                    {queries ? <CloseIcon onClick={handleDelete} sx={{ ml: -.5, width: 30, height: 30, color: styles?.colors?.primary }} /> : <SearchRoundedIcon sx={{ ml: -.5, width: 30, height: 30, color: styles?.colors?.primary }} />}
                                                 </InputAdornment>
                                             ),
                                             startAdornment: (
                                                 <InputAdornment position="start">
                                                     {window.location.pathname === '/package-view' &&
-                                                        <ChevronLeftRoundedIcon onClick={() => navigate('/search')} sx={{ ml: -1.5, width: 40, height: 40, color: buttonStyles.icons_Color }} />
+                                                        <ChevronLeftRoundedIcon onClick={() => navigate('/search')} sx={{ ml: -1.5, width: 40, height: 40, color: styles?.colors?.primary }} />
                                                     }
                                                 </InputAdornment>
                                             ),

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Media from 'react-media';
 import Small_Cart from './Small_Cart';
-import { fetchPosts, show_this_category_package } from '../Redux/actions/actions';
+import { fetchPosts } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
 import { useLayoutEffect, useRef } from "react";
 import Search from './Search/Search';
@@ -42,24 +42,24 @@ TabPanel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 
-const capitalize = (text) => text?.charAt(0)?.toUpperCase() + text?.substr(1);
+
 const clamp = (value) => Math.max(0, value);
 const isBetween = (value, floor, ceil) => value >= floor && value <= ceil;
 
 export default function PackageView() {
     const posts = useSelector((state) => state.posts.data);
     const category_id_toShow = useSelector((state) => state.category_id_to_show_its_package);
-    const style = useSelector((state) => state.all_theme);
+    const styles = useSelector((state) => state.all_theme);
     const update_in_fetch = useSelector((state) => state.update_in_post);
     const [choice, setChoice] = useState(category_id_toShow);
     const [filtered_Array, setFiltered_Array] = useState([])
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const [queries_Recent, setQueries_Recent] = useState('')
     const filteredNames = posts.filter(name => name?.id == category_id_toShow);
     const [activeId, setActiveId] = useState('Bridal Makeup');
     const [categories, setCategories] = useState([]);
     const [value, setValue] = useState(false);
+    const ref = useRef()
 
     const useScrollspy = (ids, offset = 0) => {
         const mainRef = useRef(null);
@@ -95,13 +95,30 @@ export default function PackageView() {
 
         return { activeId, mainRef };
     };
+    const capitalize = (text) => text?.charAt(0)?.toUpperCase() + text?.substr(1);
+
+    useEffect(() => {
+        const scrollToDiv = () => ref?.current?.scrollIntoView({ behavior: 'smooth' });
+
+        const mediaQuery = window.matchMedia('(max-width: 767px)');
+        const handleMediaQueryChange = () => {
+            if (!mediaQuery.matches) {
+                setTimeout(scrollToDiv, 300);
+            }
+        };
+
+        mediaQuery.addEventListener('change', handleMediaQueryChange);
+        handleMediaQueryChange();
+
+        return () => mediaQuery.removeEventListener('change', handleMediaQueryChange);
+    }, [ref, capitalize]);
 
     useEffect(() => {
         const ItemName = filteredNames.map((item) => item.category);
         setActiveId(ItemName[0]);
     }, [category_id_toShow])
 
-    
+
 
     const Show_allCate = (array) => {
         const searchCategory = filteredNames.length > 0 ? filteredNames[0] : category_id_toShow;
@@ -112,8 +129,6 @@ export default function PackageView() {
             setFiltered_Array(array);
         }
     }
-
-
 
     useEffect(() => {
         dispatch(fetchPosts());
@@ -133,7 +148,8 @@ export default function PackageView() {
 
 
     return (
-        <div>
+        <div  >
+
             <Media
                 queries={{
                     small: '(max-width: 768px)',
@@ -155,7 +171,7 @@ export default function PackageView() {
                                     </Box>
                                     <Box px={2.5} py={1} pb={2} sx={{}}>
                                         <Box py={.1} onClick={() => navigate('/search')}>
-                                            <Search queries_Recent={queries_Recent} />
+                                            <Search />
                                         </Box>
                                     </Box>
                                 </Box>
@@ -165,7 +181,14 @@ export default function PackageView() {
                                             <React.Fragment key={item?.id}>
                                                 {value && (
                                                     <Chip
-                                                        sx={{ height: 40, background: 'white', backgroundColor: choice === item.id ? '#e6cc67' : 'white' }}
+                                                        sx={{
+                                                            height: 40,
+                                                            background: 'white',
+                                                            backgroundColor: choice === item.id ? styles?.colors?.primary : 'white',
+                                                            '&:hover': {
+                                                                backgroundColor: choice === item.id ? styles?.colors?.primary : 'white', // Change color on hover if needed
+                                                            },
+                                                        }}
                                                         label={`${item.category}`}
                                                         onClick={() => {
                                                             setChoice(item.id);
@@ -210,29 +233,33 @@ export default function PackageView() {
             >
                 {(matches) => (
                     <div>
+                        {/* Important div */}
+                        <Box ref={ref} sx={{ height: '10rem', width: '50rem', mt: -5 }}></Box>
                         {matches.large && (
                             <Box sx={{
-                                borderRadius: '10px',
-                                backdropFilter: style.child_backgroundFilter,
-                                background: style.child_bg,
-                                color: style.color, flexGrow: 1, display: 'flex', height: '100%', my: 5
+                                borderRadius: '10px', mt: -5,
+                                background: styles?.colors?.secondary,
+                                color: styles?.color?.text, flexGrow: 1, display: 'flex', height: '100%', mb: 5
                             }}>
+
+
 
                                 <Grid container
 
+                                // sx={{border:'2px solid red'}}
                                 >
                                     <Grid item xs={3} px={4} py={2} >
                                         <Box sx={{ margin: 'auto' }}>
                                             {categories?.map((item, index) => {
                                                 return (
                                                     <Box key={index} sx={{
-                                                        borderRight: item === activeId && '2px solid  #ffc629;', my: 1, px: 2, py: .1, background: item === activeId && '#ffc629', background: item === activeId && 'linear-gradient(to right, white, #ffd45e)',
+                                                        borderRight: item === activeId && `2px solid ${styles?.colors?.primary}`, my: 1, px: 2, py: .1, background: item === activeId && styles?.colors?.primary, background: item === activeId && `linear-gradient(to right, white, ${styles?.colors?.primary})`,
                                                     }}>
                                                         <a
                                                             href={`#${item}`}
                                                             className={clsx("menu-link", item === activeId && "menu-link-active")}
                                                         >
-                                                            <Box sx={{ my: .4, display: 'flex', textTransform: 'capitalize', textAlign: 'left' }}>
+                                                            <Box sx={{ my: .4, display: 'flex', textTransform: 'capitalize', textAlign: 'left', color: styles?.colors?.primary }}>
                                                                 <Typography variant='h6' fontSize={'25px'} fontWeight={500}> {capitalize(item)}</Typography>
                                                             </Box>
                                                         </a>
@@ -242,7 +269,7 @@ export default function PackageView() {
                                         </Box>
                                     </Grid>
                                     <Grid item xs={5} alignItems={'center'} >
-                                        <Box sx={{ height: '700px', paddingBottom: '22rem', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }} ref={mainRef}>
+                                        <Box sx={{ height: '700px', paddingBottom: '35rem', overflow: 'scroll', '::-webkit-scrollbar': { display: 'none' } }} ref={mainRef}>
                                             {filtered_Array?.map((item, index) => {
                                                 return (
                                                     <section key={`section-${item.category}`} style={{ paddingTop: '25px' }} id={item.category} className="section">

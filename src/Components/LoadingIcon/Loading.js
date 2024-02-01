@@ -1,11 +1,13 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import { useSelector } from 'react-redux';
 import CircularProgress, {
     circularProgressClasses,
 } from '@mui/material/CircularProgress';
 import { Container } from '@mui/material';
 
 function FacebookCircularProgress(props) {
+    const styles = useSelector((state) => state.all_theme)
     return (
         <Box sx={{ position: 'relative' }}>
             <CircularProgress
@@ -23,7 +25,7 @@ function FacebookCircularProgress(props) {
                 variant="indeterminate"
                 disableShrink
                 sx={{
-                    color: (theme) => (theme.palette.mode === 'light' ? '#1a90ff' : '#308fe8'),
+                    color: styles?.colors?.loading,
                     animationDuration: '550ms',
                     position: 'absolute',
                     left: 0,

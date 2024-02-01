@@ -30,8 +30,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function Help() {
     const dispatch = useDispatch()
     const open = useSelector((state) => state.help_dialog)
-    const textStyle = useSelector((state) => state.all_theme)
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
+    // const styles = useSelector((state) => state.all_theme)
     const handleClose = () => {
         dispatch(close_help())
     };
@@ -52,7 +52,7 @@ export default function Help() {
                             PaperProps={{ style: { borderRadius: '15px' } }}
                         >
                             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Help page</b></Typography>
+                                <Typography variant='h5' sx={{ fontFamily: styles?.typography?.fontFamily }}><b>Help page</b></Typography>
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -85,7 +85,7 @@ export default function Help() {
                                 </Box>
                             </DialogContent>
                             <DialogActions sx={{ m: 1 }}>
-                                <Button fullWidth size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Save</Button>
+                                {/* <Button fullWidth size='medium' variant='contained' style={{ background: styles?.buttonColor, color: styles?.buttonText }} >Save</Button> */}
                             </DialogActions>
                         </BootstrapDialog>
 
@@ -109,7 +109,7 @@ export default function Help() {
                             TransitionComponent={Transition}
                         >
                             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                <Typography variant='h5' sx={{ fontFamily: textStyle.fontFamily }}><b>Help page</b></Typography>
+                                <Typography variant='h5' sx={{ fontFamily: styles?.typography?.fontFamily }}><b>Help page</b></Typography>
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -142,7 +142,7 @@ export default function Help() {
                                 </Box>
                             </DialogContent>
                             <DialogActions>
-                                <Button fullWidth size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Save</Button>
+                                {/* <Button fullWidth size='medium' variant='contained' style={{ background: styles?.buttonColor, color: styles?.buttonText }} >Save</Button> */}
                             </DialogActions>
                         </Dialog>
 

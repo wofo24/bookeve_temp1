@@ -20,15 +20,13 @@ import Loading from '../Components/LoadingIcon/Loading';
 export default function Address(props) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const all_address = useSelector((state) => state.all_address)
     const [selectedAddress, setSelectedAddress] = useState('');
     const loading = useSelector((state) => state.all_address.loading)
     const handleClickOpen = (data) => {
         dispatch(openAdd_Address(data))
     };
-    const handleClose = () => {
-    }
     useEffect(() => {
         dispatch(get_all_address())
     }, [all_address.posted_address_result, all_address.delete_address_result, all_address.update_address_result])
@@ -36,7 +34,6 @@ export default function Address(props) {
     const handle_Delete_Dialog = (id) => {
         dispatch(openDelete_Address(id))
     }
-
     const handleChange = (event) => {
         setSelectedAddress(event.target.value);
     };
@@ -49,9 +46,7 @@ export default function Address(props) {
             }}>
                 {(item) => item.large && (
                     <Box my={4}>
-
                         <Grid container>
-
                             <Grid xs={6} textAlign={'left'}>
                                 <Box sx={{ display: 'flex', justifyContent: 'left', alignItems: 'center' }}>
                                     <Typography onClick={() => navigate('/profile')}><ArrowBackRoundedIcon sx={{ mt: .5, mr: 2 }} fontSize='large' /></Typography>
@@ -59,8 +54,7 @@ export default function Address(props) {
                                 </Box>
                             </Grid>
                             <Grid xs={6} textAlign={'end'}>
-                                <Button variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
-
+                                <Button  style={{ background: styles?.colors?.button, color: styles?.colors?.white }} variant='outlined' onClick={() => dispatch(open_help())}> <b>Help</b></Button>
                             </Grid>
                         </Grid>
                         <hr />
@@ -91,15 +85,15 @@ export default function Address(props) {
 
                                             <Grid xs={1} >
 
-                                                <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: buttonStyles.buttonColor}} />
-                                                {/* <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: buttonStyles.buttonColor, marginTop: '20px' }} /> */}
+                                                <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: styles?.colors?.primary }} />
+                                                {/* <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: styles?.colors?.primary, marginTop: '20px' }} /> */}
 
 
                                             </Grid>
                                             <Grid xs={1} >
 
-                                                {/* <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: buttonStyles.buttonColor }} /> */}
-                                                <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: buttonStyles.buttonColor}} />
+                                                {/* <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: styles?.colors?.primary }} /> */}
+                                                <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: styles?.colors?.primary }} />
 
 
                                             </Grid>
@@ -108,10 +102,10 @@ export default function Address(props) {
                                 ))}
 
                                 <Box mx={10}>
-                                    <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} fullWidth onClick={handleClickOpen} variant='outlined' sx={{ my: 1 }}>Add Address <AddIcon /> </Button>
+                                    <Button style={{ border: `1px solid ${styles?.colors?.button}`, color: styles?.colors?.button }} fullWidth onClick={handleClickOpen} variant='outlined' sx={{ my: 1 }}>Add Address <AddIcon /> </Button>
                                 </Box>
                                 {props.from && (
-                                    <Button fullWidth onClick={() => navigate('/schedule')} variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Proceed</Button>
+                                    <Button fullWidth onClick={() => navigate('/schedule')} variant='contained' style={{ background: styles?.colors?.button, color: styles?.white }} >Proceed</Button>
 
                                 )}
 
@@ -138,7 +132,7 @@ export default function Address(props) {
                                 </Box>
                             </Grid>
                             <Grid xs={6} textAlign={'end'}>
-                                <Button variant='outlined'> <b>Help</b></Button>
+                                <Button variant='outlined'  style={{ background: styles?.colors?.button, color: styles?.colors?.white }}> <b>Help</b></Button>
 
                             </Grid>
                         </Grid>
@@ -170,8 +164,8 @@ export default function Address(props) {
 
                                             <Grid xs={2} p={1} >
 
-                                                <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: buttonStyles.buttonColor }} />
-                                                <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: buttonStyles.buttonColor, marginTop: '20px' }} />
+                                                <DeleteIcon onClick={() => handle_Delete_Dialog(item.id)} style={{ color: styles?.colors?.primary }} />
+                                                <EditIcon autoFocus onClick={() => handleClickOpen(item)} style={{ color: styles?.colors?.primary, marginTop: '20px' }} />
 
 
                                             </Grid>
@@ -179,9 +173,9 @@ export default function Address(props) {
                                     </Card>
                                 ))}
                                 <Box mx={10}>
-                                    <Button style={{ border: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }} fullWidth onClick={handleClickOpen} variant='outlined' sx={{ my: 1 }}>Add Address <AddIcon /> </Button>
+                                    <Button style={{ border: `1px solid ${styles?.colors?.button}`, color: styles?.colors?.button }} fullWidth onClick={handleClickOpen} variant='outlined' sx={{ my: 1 }}>Add Address <AddIcon /> </Button>
                                 </Box>
-                                <Button fullWidth onClick={() => navigate('/schedule')} variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Proceed</Button>
+                                <Button fullWidth onClick={() => navigate('/schedule')} variant='contained' style={{ background: styles?.colors?.button, color: styles?.white }} >Proceed</Button>
 
                             </Container>
                         }

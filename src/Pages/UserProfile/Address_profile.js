@@ -13,15 +13,14 @@ import { Card } from '@mui/material';
 import { useSelector, useDispatch } from 'react-redux';
 import { openAdd_Address, closeAdd_Address, openDelete_Address } from '../../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
-// import Open_delete from '../Components/Dialog/Open_delete';
+
 export default function Address_profile() {
+    const styles = useSelector((state) => state.all_theme)
     const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     const handleClickOpen = (data) => {
         dispatch(openAdd_Address(data))
     };
-    const buttonStyles = useSelector((state) => state.all_theme)
 
     const handle_Delete_Dialog = () => {
         dispatch(openDelete_Address())
@@ -53,7 +52,7 @@ export default function Address_profile() {
                                 <Typography fontWeight={600}>Address Type: </Typography>
                             </Box>
                         </FormLabel>
-                    </Grid> 
+                    </Grid>
 
                     <Grid xs={4} p={2} >
                         <Button onClick={handle_Delete_Dialog} variant="contained" startIcon={<DeleteIcon />} >
@@ -66,7 +65,7 @@ export default function Address_profile() {
                 </Grid>
             </Card>
 
-            <Button fullWidth onClick={handleClickOpen} variant='outlined' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Add Address <AddIcon /> </Button>
+            <Button fullWidth onClick={handleClickOpen} variant='outlined' style={{ background: styles?.colors?.primary, color: styles?.colors?.white }} >Add Address <AddIcon /> </Button>
 
         </Container >
     )

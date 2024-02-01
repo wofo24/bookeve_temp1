@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { open_sign_out_dialog, close_sign_out_dialog } from '../../Redux/actions/actions';
+import { close_sign_out_dialog } from '../../Redux/actions/actions';
 import Cookies from 'js-cookie';
 export default function Logout() {
   const open = useSelector((state) => state.sign_out)
@@ -36,9 +36,6 @@ export default function Logout() {
 
   return (
     <React.Fragment>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button> */}
       <Dialog
         open={open}
         onClose={handleClose}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
+import {Typography } from '@mui/material';
 
 const Theme_Heading = ({ fontFamily, textColor, label }) => {
     const buttonStyle = {

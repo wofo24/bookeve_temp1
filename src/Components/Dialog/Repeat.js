@@ -5,18 +5,17 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { openRepeat,show_message, closeRepeat, openDialog, incrementPackageCount } from '../../Redux/actions/actions';
+import { show_message, closeRepeat, openDialog, incrementPackageCount } from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 export default function Repeat() {
   const open_r = useSelector((state) => state.repeat_open);
   const data = useSelector((state) => state.repeat_data);
-  
-  const buttonStyles = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
   const dispatch = useDispatch()
   const handleClose = () => {
     dispatch(closeRepeat())
   };
-  
+
   const willChose = () => {
     dispatch(closeRepeat())
     dispatch(openDialog(data))
@@ -44,10 +43,10 @@ export default function Repeat() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          
+
           <Button onClick={willChose}>No, I'll Choose.</Button>
-         
-          <Button onClick={RepeatLast}  size='medium' variant='contained' style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} >Repeat last</Button>
+
+          <Button onClick={RepeatLast} size='medium' variant='contained' style={{ background: styles?.color?.button, color: styles?.color?.text }} >Repeat last</Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -3,11 +3,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Grid, Paper } from '@mui/material';
 import CardMedia from '@mui/material/CardMedia';
-import { get_all_ordered_data, get_all_ordered_data_error } from '../../Redux/actions/actions';
+import { get_all_ordered_data} from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 export default function All_order() {
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
   const all_orders = useSelector((state) => state.all_orders)
   const error = useSelector((state) => state.error)
   React.useEffect(() => {
@@ -15,11 +15,10 @@ export default function All_order() {
   }, [])
   return (
     <Box sx={{ minWidth: 275 }} >
-      <Typography variant='h5' textAlign='center' my={2} sx={{fontFamily:buttonStyles.fontFamily}}>All orders</Typography>
-      {/* <Card variant="outlined" evevation={23}>{card}</Card> */}
-      {[1, 2, 3].map((item) => {
+      <Typography variant='h5' textAlign='center' my={2} sx={{ fontFamily: styles?.typography?.fontFamily }}>All orders</Typography>
+      {[1, 2, 3].map((item, index) => {
         return (
-          <Box p={2}>
+          <Box p={2} key={index}>
             <Paper elevation={6}>
               <CardMedia
                 sx={{ height: 140 }}

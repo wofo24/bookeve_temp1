@@ -7,12 +7,9 @@ import Paper from '@mui/material/Paper';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { show_this_category_package, fetchPosts } from '../../Redux/actions/actions';
-import { get_search_item, empty_quarry } from '../../Redux/actions/actions';
-// import img from '../images/SampleIMage.jpg'
-import img from '../../images/imagesSampleIMage.png'
+import { get_search_item } from '../../Redux/actions/actions';
 import WestRoundedIcon from '@mui/icons-material/WestRounded';
 import Chip from '@mui/material/Chip';
-import { Container } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
@@ -45,7 +42,7 @@ CustomTabPanel.propTypes = {
 };
 
 export default function Search_page() {
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const navigate = useNavigate()
     const query = useSelector((state) => state?.search_item.data);
     const loading = useSelector((state) => state?.search_item.loading);
@@ -75,17 +72,17 @@ export default function Search_page() {
     const recentSearch = [
         'Hair', 'Hair wash', 'Nail', 'Bridal makeup'
     ]
-    
+
     const style = {
         borderRadius: '10px',
-        backgroundColor: 'transparent',
-        backdropFilter: buttonStyles.child_backdropFilter,
-        border: `1 px solid ${buttonStyles.child_bg}`,
-        color: buttonStyles.child_div_text,
+        backgroundColor: styles?.colors?.secondary,
+        border: `1 px solid ${styles?.colors?.secondary}`,
+        color: styles?.colors?.text,
         boxShadow: `rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;`,
         "&:hover": {
-            backgroundColor:buttonStyles.child_bg},
-        cursor:'pointer',
+            backgroundColor: styles?.colors?.secondary
+        },
+        cursor: 'pointer',
     }
 
 
@@ -102,7 +99,7 @@ export default function Search_page() {
                     item.large && (
 
                         <Box sx={{ px: 15 }}>
-                            <Box sx={{ background: '#ffff', position: 'sticky', top: 83, zIndex: 99999, }}>
+                            <Box sx={{ background: '#ffff', position: 'sticky', top: 83, zIndex: 99, }}>
 
                                 <Box>
                                     <Search queries_Recent={queries_Recent} />
@@ -116,7 +113,7 @@ export default function Search_page() {
                                             {query !== undefined && query?.category?.length !== undefined && query.category.length !== 0 || query?.package?.length !== undefined && query.package.length !== 0 ?
                                                 <Box sx={{ mt: 1, overflow: 'hidden', pb: 4, pt: 2, px: 2, borderRadius: '15px' }}>
                                                     {query?.category?.map((item) => {
-                                                        console.log(item)
+                                                        // console.log(item)
                                                         return (
                                                             <Grid mt={2} id={'Searched-Categories'} container key={item.id} sx={style} onClick={() => handle_click(item.id)}>
 
@@ -180,7 +177,7 @@ export default function Search_page() {
                                                 </Box> :
                                                 <>
                                                     {/* {query && query.category.length !== 0 && query.package.length !== 0 && <h1>no mathc</h1>} */}
-                                                    {/* <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: buttonStyles.child_bg, pb: 4, pt: 2, borderRadius: '15px' }}>
+                                                    {/* <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: styles?.colors?.secondary, pb: 4, pt: 2, borderRadius: '15px' }}>
                                                 <Box textAlign={'left'} color={'gray'} >
                                                     <Typography>Recent Search</Typography>
                                                     <Box
@@ -217,7 +214,7 @@ export default function Search_page() {
 
                                                 </Box>
                                             </Box>
-                                            <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: buttonStyles.child_bg, pb: 4, pt: 2, borderRadius: '15px' }}>
+                                            <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: styles?.colors?.secondary, pb: 4, pt: 2, borderRadius: '15px' }}>
                                                 <Box textAlign={'left'} color={'gray'} >
                                                     <Typography>Trending Search</Typography>
                                                     <Box
@@ -279,11 +276,10 @@ export default function Search_page() {
                     item.small && (
                         <>
                             <Box sx={{ background: '#ffff', position: 'sticky', top: 0, width: '100%', zIndex: 99999, }}>
-
                                 <Box px={3} py={1}>
                                     <Grid container>
-                                        <Grid item xs={2} onClick={() => navigate('/')}> <WestRoundedIcon sx={{ color: 'gray' }} /></Grid>
-                                        <Grid item xs={10} sx={{ color: 'gray' }}> <Typography mt={.4} fontSize={'15px'}>Search for best package and categories</Typography></Grid>
+                                        <Grid item xs={2} onClick={() => navigate('/')}> <WestRoundedIcon sx={{ color: styles?.colors?.primary }} /></Grid>
+                                        <Grid item xs={10} sx={{ color: styles?.colors?.heighlightText }}> <Typography mt={.4} fontSize={'15px'}>Search for best package and categories</Typography></Grid>
                                     </Grid>
                                 </Box>
                                 <Box px={2.5} py={1} pb={2} sx={{}}>
@@ -295,16 +291,14 @@ export default function Search_page() {
                             <Box mb={3} mt={2}>
                                 <Box >
                                     {query !== undefined && query?.category?.length !== undefined && query.category.length !== 0 || query?.package?.length !== undefined && query.package.length !== 0 ?
-                                        <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: buttonStyles.child_bg, pb: 4, pt: 2, px: 2, mx: 1, borderRadius: '15px' }}>
+                                        <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: styles?.colors?.secondary, pb: 4, pt: 2, px: 2, mx: 1, borderRadius: '15px' }}>
                                             {query?.category?.map((item) => {
                                                 console.log(item)
                                                 return (
                                                     <Grid mt={2} container key={item.id} sx={{
                                                         borderRadius: '10px',
-                                                        backgroundColor: 'transparent',
-                                                        backdropFilter: buttonStyles.child_backdropFilter,
-                                                        background: buttonStyles.child_bg,
-                                                        color: buttonStyles.child_div_text,
+                                                        background: styles?.colors?.secondary,
+                                                        color: styles?.colors?.heighlightText,
                                                         boxShadow: `rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;`
                                                     }} onClick={() => handle_click(item.id)}>
 
@@ -344,10 +338,8 @@ export default function Search_page() {
                                                             container
                                                             sx={{
                                                                 borderRadius: '10px',
-                                                                backgroundColor: 'transparent',
-                                                                backdropFilter: buttonStyles.child_backdropFilter,
-                                                                background: buttonStyles.child_bg,
-                                                                color: buttonStyles.child_div_text,
+                                                                background: styles?.colors?.secondary,
+                                                                color: styles?.colors?.text,
                                                                 boxShadow: `rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;`,
                                                             }}
                                                             onClick={() => handle_click(item.id)}
@@ -376,9 +368,9 @@ export default function Search_page() {
                                         </Box> :
                                         <>
                                             {/* {query && query.category.length !== 0 && query.package.length !== 0 && <h1>no mathc</h1>} */}
-                                            <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: buttonStyles.child_bg, pb: 4, pt: 2, px: 2, mx: 2, borderRadius: '15px' }}>
+                                            <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: styles?.colors?.secondary, pb: 4, pt: 2, px: 2, mx: 2, borderRadius: '15px' }}>
                                                 <Box textAlign={'left'} color={'gray'} >
-                                                    <Typography>Recent Search</Typography>
+                                                    <Typography color={styles?.colors?.heighlightText}>Recent Search</Typography>
                                                     <Box
                                                         textAlign={'left'}
                                                         color={'gray'}
@@ -413,9 +405,9 @@ export default function Search_page() {
 
                                                 </Box>
                                             </Box>
-                                            <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: buttonStyles.child_bg, pb: 4, pt: 2, px: 2, mx: 2, borderRadius: '15px' }}>
-                                                <Box textAlign={'left'} color={'gray'} >
-                                                    <Typography>Trending Search</Typography>
+                                            <Box sx={{ mt: 1, overflow: 'hidden', bgcolor: styles?.colors?.secondary, pb: 4, pt: 2, px: 2, mx: 2, borderRadius: '15px' }}>
+                                                <Box textAlign={'left'} color={styles?.colors?.secondary} >
+                                                    <Typography color={styles?.colors?.heighlightText}>Recent Search</Typography>
                                                     <Box
                                                         textAlign={'left'}
                                                         color={'gray'}

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
 import { Box, Typography } from '@mui/material';
 import { Grid } from '@mui/material';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -10,7 +9,7 @@ import { proceed_to_pay_close, open_schedule_dialog, proceed_to_pay_open, show_a
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import { Paper } from '@mui/material';
 import Cookies from 'js-cookie';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Proceed_to_pay() {
     const navigate = useNavigate()
@@ -19,12 +18,9 @@ export default function Proceed_to_pay() {
     const all_address = useSelector((state) => state.all_address_dialog)
     const card_data = useSelector((state) => state.card_data.data)
     const open_schedule = useSelector((state) => state.open_schedule)
-    const buttonStyles = useSelector((state) => state?.all_theme)
+    const styles = useSelector((state) => state?.all_theme)
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(proceed_to_pay_open())
-    }, [selected_address, selected_date_time_var])
     const dateObject = new Date(selected_date_time_var);
     const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
     const formattedDate = dateObject.toLocaleDateString('en-US', options);
@@ -32,6 +28,9 @@ export default function Proceed_to_pay() {
     const handleEditSchedule = () => {
         dispatch(open_schedule_dialog())
     }
+    useEffect(() => {
+        dispatch(proceed_to_pay_open())
+    }, [selected_address, selected_date_time_var])
     const handleClose = () => {
         dispatch(proceed_to_pay_close())
         navigate('/payment')
@@ -54,10 +53,9 @@ export default function Proceed_to_pay() {
                 <div>
                     {selected_address && (!open_schedule && !all_address) && (
                         <Paper Paper sx={{
-                            backdropFilter: buttonStyles.child_backdropFilter,
-                            background: buttonStyles.child_bg,
-                            color: buttonStyles.child_div_text,
-
+                            background: styles?.colors?.background,
+                            color: styles?.colors?.heighlightText,
+                            zIndex:'9',
                             position: 'fixed', bottom: 64, left: 0, right: 0, px: 3, py: 1,
                         }} elevation={3}>
                             <Box sx={{
@@ -78,7 +76,10 @@ export default function Proceed_to_pay() {
                                 </Grid>) : ''}
 
                                 <hr style={{ marginBottom: '15px', marginTop: '-3px' }} />
-                                <Button size="large" style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} variant='contained' fullWidth onClick={handleClose}>
+                                <Button size="large" style={{
+                                    background: styles?.colors?.button, color: styles?.colors?.text
+
+                                }} variant='contained' fullWidth onClick={handleClose}>
                                     {selected_address ? formattedDate ? "Proceed To Pay" : 'Select a slot' : 'Select address'}
                                 </Button>
                             </Box>

@@ -1,22 +1,15 @@
 import React from 'react'
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import ListIcon from '@mui/icons-material/List';
-import { useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-// import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
-import Theme_Button from '../../Components/Theme/Theme_Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { Card, Grid } from '@mui/material';
 import Bookings from '../../Components/Bookings';
@@ -24,7 +17,6 @@ import Address from '../../Pages/Address'
 import { get_my_profile, open_profile_dialog, open_sign_out_dialog } from '../../Redux/actions/actions';
 import Media from 'react-media';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import Loading from '../../Components/LoadingIcon/Loading';
 
@@ -63,11 +55,9 @@ function a11yProps(index) {
 }
 
 export default function Profile() {
-  const buttonStyles = useSelector((state) => state.all_theme)
-  const get_my_profile_success_error1 = useSelector((state) => state.get_my_profile_update_success_error)
+  const styles = useSelector((state) => state.all_theme)
   const get_my_profile_success_error = useSelector((state) => state.get_my_profile_success_error?.data?.data)
   const loading = useSelector((state) => state.get_my_profile_success_error?.data?.loading)
-  const error = useSelector((state) => state.get_my_profile_success_error?.data?.error)
   const loading1 = useSelector((state) => state.get_my_profile_success_error?.data?.loading)
   const pages = ['Orders', 'Address',];
   const style = { textDecoration: 'none', color: 'black', ':hover': { color: 'red' } }
@@ -80,8 +70,6 @@ export default function Profile() {
   };
   const handleChangeD = () => {
     dispatch(open_profile_dialog())
-
-
   }
 
   useEffect(() => {
@@ -104,9 +92,9 @@ export default function Profile() {
         <Container sx={{
           p: 3, my: 6,
           borderRadius: '10px',
-          backdropFilter: buttonStyles.child_backdropFilter,
-          background: buttonStyles.child_bg,
-          color: buttonStyles.child_div_text,
+
+          background: styles?.colors?.secondary,
+          color: styles?.colors?.heighlightText,
         }}>
           <Grid container>
             <Grid xs={6}>
@@ -120,7 +108,6 @@ export default function Profile() {
           <Box my={3}
             sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: '100%', background: 'white', color: 'black', p: 5, borderRadius: '10px' }}
           >
-
             <Tabs
               value={value}
               orientation="vertical"
@@ -140,7 +127,13 @@ export default function Profile() {
 
 
 
-                }} label={<Box sx={{ display: 'flex', textTransform: 'capitalize', textAlign: 'left', }}> <Typography sx={{ fontSize: '20px' }}>{item}</Typography> </Box>}  {...a11yProps(0)} />))}
+                }} label={<Box sx={{
+                  display: 'flex',
+                  textTransform: 'capitalize',
+                  textAlign: 'left',
+                }}>
+                  <Typography sx={{ fontSize: '20px' }}>{item}</Typography>
+                </Box>}  {...a11yProps(0)} />))}
 
             </Tabs>
             <Box sx={{ background: '', width: '100%' }}>
@@ -174,9 +167,8 @@ export default function Profile() {
           <Card sx={{
             p: 2,
             borderRadius: '10px',
-            backdropFilter: buttonStyles.child_backdropFilter,
-            background: buttonStyles.child_bg,
-            color: buttonStyles.child_div_text,
+            background: styles?.colors?.secondary,
+            color: styles?.colors?.heighlightText,
             m: 3
           }}>
 

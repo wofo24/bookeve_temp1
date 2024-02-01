@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,10 +12,9 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControl from '@mui/material/FormControl';
-import { get_all_package_all_review, show_message, closeView } from '../../Redux/actions/actions';
+import { get_all_package_all_review, closeView } from '../../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import FormControlLabel from '@mui/material/FormControlLabel';
-// import Theme_Button from '../Theme/Theme_Button';
 import Checkbox from '@mui/material/Checkbox';
 import Media from 'react-media';
 import Loading from '../LoadingIcon/Loading'
@@ -47,7 +45,7 @@ export default function ViewDialog() {
     const view_data = useSelector((state) => state.view_data);
     const package_review = useSelector((state) => state.package_review);
     const loading = useSelector((state) => state.package_review.loading);
-    const textStyle = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
 
     const handleClose = () => {
         dispatch(closeView())
@@ -70,9 +68,6 @@ export default function ViewDialog() {
         });
     };
 
-    console.log(package_review?.data)
-
-
     return (
         <div>
             <Media queries={{
@@ -89,7 +84,7 @@ export default function ViewDialog() {
                             PaperProps={{ style: { borderRadius: '15px' } }}
                         >
                             <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                <Typography sx={{ fontFamily: textStyle.fontFamily }}><b>About package</b></Typography>
+                                <Typography sx={{ fontFamily: styles?.typography?.fontFamily }}><b>About package</b></Typography>
                             </DialogTitle>
                             <IconButton
                                 aria-label="close"
@@ -223,14 +218,14 @@ export default function ViewDialog() {
                                         </Container>
                                     }
                                     <Box sx={{ flexGrow: 1 }} width={550} >
-                                        <FormControl fullWidth>
+                                        <FormControl >
                                             <RadioGroup
                                                 aria-labelledby="demo-radio-buttons-group-label"
                                                 defaultValue={0}
                                                 name="radio-buttons-group"
                                                 value={selectedValue}
                                             >
-                                                <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
+                                                <Typography variant='h6' sx={{ fontFamily: styles?.typography?.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
                                                 <Grid container my={2} px={2}>
                                                     {view_data?.variants?.map((item, index) => (
                                                         <Grid item xs={12} key={index}>
@@ -277,7 +272,7 @@ export default function ViewDialog() {
 
 
                                 <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                    <Typography sx={{ fontFamily: textStyle.fontFamily }}><b>Details</b></Typography>
+                                    <Typography sx={{ fontFamily: styles?.typography?.fontFamily }}><b>Details</b></Typography>
                                 </DialogTitle>
                                 <IconButton
                                     aria-label="close"
@@ -426,14 +421,14 @@ export default function ViewDialog() {
 
 
                                     <Box sx={{ flexGrow: 1 }}>
-                                        <FormControl fullWidth>
+                                        <FormControl >
                                             <RadioGroup
                                                 aria-labelledby="demo-radio-buttons-group-label"
                                                 defaultValue={0}
                                                 name="radio-buttons-group"
                                                 value={selectedValue}
                                             >
-                                                <Typography variant='h6' sx={{ fontFamily: textStyle.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
+                                                <Typography variant='h6' sx={{ fontFamily: styles?.typography?.fontFamily }}>{!view_data?.variants == [] && ('Addons:')}</Typography>
                                                 <Grid container my={2} px={2}>
                                                     {view_data?.variants?.map((item, index) => (
                                                         <Grid item xs={12} key={index}>

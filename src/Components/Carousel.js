@@ -1,5 +1,4 @@
-import React, { useRef, useState } from 'react';
-// Import Swiper React components
+import React, { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectFade } from 'swiper/modules';
 import Media from 'react-media';
@@ -9,8 +8,6 @@ import 'swiper/css/navigation';
 import '../Css/App.css';
 import 'swiper/css/effect-fade';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import { Link } from 'react-router-dom';
-
 export default function Carousel() {
     const progressCircle = useRef(null);
     const progressContent = useRef(null);
@@ -19,9 +16,6 @@ export default function Carousel() {
         progressContent.current.textContent = `${Math.ceil(time / 1000)}s`;
     };
 
-    const click = () => {
-        console.log('click image')
-    }
     return (
         <>
             <Media
@@ -54,7 +48,7 @@ export default function Carousel() {
                                     <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
                                 </SwiperSlide>
 
-                                <SwiperSlide onClick={click}>
+                                <SwiperSlide >
                                     <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
                                 </SwiperSlide>
 

@@ -8,7 +8,6 @@ import Media from 'react-media';
 import { login } from '../Redux/actions/actions';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { styled } from '@mui/system';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import Loading from '../Components/LoadingIcon/Loading';
@@ -21,7 +20,7 @@ export default function Login() {
         "phone_number": data?.phone_number
     });
     const outerTheme = useTheme();
-    const buttonStyles = useSelector((state) => state.all_theme)
+    const styles = useSelector((state) => state.all_theme)
     const positive_response = useSelector((state) => state.useLogged_in.data)
     const error = useSelector((state) => state.useLogged_in.error)
     const loading = useSelector((state) => state.useLogged_in.loading)
@@ -46,11 +45,11 @@ export default function Login() {
                 MuiTextField: {
                     styleOverrides: {
                         root: {
-                            '--TextField-brandBorderColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderHoverColor': `${buttonStyles.icons_Color}`,
-                            '--TextField-brandBorderFocusedColor': `${buttonStyles.icons_Color}`,
+                            '--TextField-brandBorderColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderHoverColor': `${styles?.colors?.primary}`,
+                            '--TextField-brandBorderFocusedColor': `${styles?.colors?.primary}`,
                             '& label.Mui-focused': {
-                                color: `${buttonStyles.icons_Color}`,
+                                color: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -58,14 +57,14 @@ export default function Login() {
                 MuiOutlinedInput: {
                     styleOverrides: {
                         notchedOutline: {
-                            borderColor: `${buttonStyles.icons_Color}`,
+                            borderColor: `${styles?.colors?.primary}`,
                         },
                         root: {
                             [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                             [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
-                                borderColor: `${buttonStyles.icons_Color}`,
+                                borderColor: `${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -74,13 +73,13 @@ export default function Login() {
                     styleOverrides: {
                         root: {
                             '&:before, &:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -89,13 +88,13 @@ export default function Login() {
                     styleOverrides: {
                         root: {
                             '&:before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&:hover:not(.Mui-disabled, .Mui-error):before': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                             '&.Mui-focused:after': {
-                                borderBottom: `2px solid ${buttonStyles.icons_Color}`,
+                                borderBottom: `2px solid ${styles?.colors?.primary}`,
                             },
                         },
                     },
@@ -126,8 +125,6 @@ export default function Login() {
         }
     }, [positive_response, error, hasNavigated]);
 
-    console.log(error?.phone_number)
-
     return (
         <div>
             {loading && <Loading />}
@@ -141,9 +138,8 @@ export default function Login() {
                 {(item) => (item.small && (
                     <Box px={3} py={5} my={5} mx={2} sx={{
                         borderRadius: "10px",
-                        backdropFilter: buttonStyles.child_backdropFilter,
-                        background: buttonStyles.child_bg,
-                        color: buttonStyles.child_div_text,
+                        background: styles?.colors?.secondary,
+                        color: styles?.colors?.heightlightText,
                     }}>
 
                         <Box>
@@ -185,7 +181,7 @@ export default function Login() {
                                         <Grid item xs={12} textAlign='left' >
                                             <Box>
                                                 <Typography style={{ cursor: 'pointer', fontSize: '12px' }} variant='paragraph'> Don't Have an account ? </Typography>
-                                                <Link to="/signup" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
+                                                <Link to="/signup" style={{ cursor: 'pointer', fontSize: '12px', color:styles?.colors?.link }}>
                                                     Sign up
                                                 </Link>
                                             </Box>
@@ -199,8 +195,8 @@ export default function Login() {
                                         </Grid> */}
 
                                         <Grid item xs={12} py={2} textAlign='center'>
-                                            {/* <Button style={{ brder: `1px solid ${buttonStyles.buttonColor}`, color: buttonStyles.buttonColor }}>No</Button> */}
-                                            <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
+                                            {/* <Button style={{ brder: `1px solid ${styles?.colors?.button}`, color: styles?.colors?.button }}>No</Button> */}
+                                            <Button style={{ background: styles?.colors?.button, color: styles?.colors?.white }} id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>
@@ -222,9 +218,8 @@ export default function Login() {
 
                     <Box px={10} py={5} my={5} mx={35} sx={{
                         borderRadius: "10px",
-                        backdropFilter: buttonStyles.child_backdropFilter,
-                        background: buttonStyles.child_bg,
-                        color: buttonStyles.child_div_text,
+                        background: styles?.colors?.secondary,
+                        color: styles?.colors?.heightlightText,
                     }}>
 
                         <Box>
@@ -273,12 +268,12 @@ export default function Login() {
                                             </Box> */}
                                         </Grid>
                                         <Grid item xs={6} py={2} textAlign='left'>
-                                            <Link to="/signup" color="primary" style={{ cursor: 'pointer', fontSize: '12px' }}>
+                                            <Link to="/signup"  style={{ cursor: 'pointer', fontSize: '12px', color:styles?.colors?.link }}>
                                                 Don't Have Account ?
                                             </Link>
                                         </Grid>
                                         <Grid item xs={6} py={2} textAlign='right'>
-                                            <Button style={{ background: buttonStyles.buttonColor, color: buttonStyles.buttonText }} id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
+                                            <Button style={{ background: styles?.colors?.button, color: styles.buttonText }} id='BackgroundColorChangeOnly' variant='contained' type='submit'>Login</Button>
                                         </Grid>
                                     </Grid>
                                 </Box>

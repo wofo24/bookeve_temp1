@@ -7,7 +7,7 @@ import img from '../images/imagesSampleIMage.png'
 import StarsRoundedIcon from '@mui/icons-material/StarsRounded';
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { add_package, add_fetch_post, increment_in_bag, decrement_in_bag, fetchPosts, show_message, incrementPackageCount, decrementPackageCount, openDialog, openRepeat, openView } from '../Redux/actions/actions';
+import { add_package, add_fetch_post, clear_cart_data_message, increment_in_bag, decrement_in_bag, show_message, incrementPackageCount, openDialog, openRepeat, openView } from '../Redux/actions/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -15,9 +15,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 export default function Package({ item }) {
   const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.all_theme)
+  const styles = useSelector((state) => state.all_theme)
   const loading_post = useSelector((state) => state?.posts?.loading);
-  const loading = useSelector((state) => state.card_data.loading)
   const card_data = useSelector((state) => state.card_data)
   const [show_btn, setShow_btn] = useState(false)
   const [id, setId] = useState()
@@ -47,11 +46,24 @@ export default function Package({ item }) {
 
 
   useEffect(() => {
-    dispatch(show_message(true, 'Package added successfully!', 'success'))
-  }, [card_data.snack_update_increment])
+    if (card_data.snack_update_increment !== null) {
+      if (card_data.snack_update_increment.success) {
+        dispatch(show_message(true, 'Package added successfully!', 'success'))
+        dispatch(clear_cart_data_message())
+      }
+
+    }
+  }, [dispatch, card_data.snack_update_increment])
+
   useEffect(() => {
-    dispatch(show_message(true, 'Package removed!', 'warning'))
-  }, [card_data.snack_update_decrement])
+    if (card_data.snack_update_decrement !== null) {
+      if (card_data.snack_update_decrement.success) {
+        dispatch(show_message(true, 'Package removed!', 'warning'))
+        dispatch(clear_cart_data_message())
+      }
+    }
+
+  }, [dispatch, card_data.snack_update_decrement])
 
   useEffect(() => {
     if (item?.quanitity >= 1 || item?.quanitity === 0) {
@@ -65,13 +77,10 @@ export default function Package({ item }) {
 
 
   return (
-    <Box my={1.5} sx={{ backgroundColor: 'transparent' }}>
+    <Box my={1.5}>
       <Card sx={{
-        backgroundColor: 'transparent',
-        background: buttonStyles.child_bg,
-        backdropFilter: buttonStyles.child_backdropFilter,
-        color: buttonStyles.child_div_text,
-        border: '1px solid #ececec',
+        background: styles?.colors?.secondary,
+        color: styles?.colors?.heighlightText,
         borderRadius: '10px',
         maxHeight: '190px',
         minHeightL: '150px',
@@ -86,11 +95,11 @@ export default function Package({ item }) {
               <Typography component="div" sx={{ color: 'black', }} >
                 {item?.package_name}
               </Typography>
-              <Typography component="div" sx={{ color: 'black', fontSize: '13px', color: 'gray', py: .4 }} >
+              <Box component="div" sx={{ color: 'black', fontSize: '14px', color: 'gray', py: .4 }} >
                 <Box sx={{ borderBottom: '1px dotted', width: 135, }}>
                   <StarsRoundedIcon sx={{ mt: -.5, fontSize: '18px' }} /> {item.avg_star_rating} ({item.reviews_count} reviews)
                 </Box>
-              </Typography>
+              </Box>
               <Typography variant="subtitle1" fontSize={'14px'} component="div">
                 &#8377;{parseFloat(item?.original_price)} &#x2666; {item.duration} min
               </Typography>
@@ -101,10 +110,8 @@ export default function Package({ item }) {
               <Typography color="text.secondary" sx={{ fontSize: '12px' }}>
                 {item?.package_detail.split(' ').slice(0, 4).join(' ')} ...
               </Typography>
-              <Typography color="text.secondary" sx={{ fontSize: '12px', }}>
-              </Typography>
               <Box pt={1}>
-                <Typography sx={{ textTransform: 'capitalize', color: buttonStyles.icons_Color }} variant='text' onClick={() => dispatch(openView(item))}>View details</Typography>
+                <Typography sx={{ textTransform: 'capitalize', color: styles?.colors?.primary }} variant='text' onClick={() => dispatch(openView(item))}>View details</Typography>
               </Box>
             </Box>
           </Grid>
@@ -118,12 +125,13 @@ export default function Package({ item }) {
               />
             </Box>
             <Box mt={-1}>
-              <Button sx={{ color: '#fff3d0' }}>
+              <Box sx={{ mt: 2, ml: .9, }}>
                 {show_btn ?
                   <>
                     < Grid container sx={{
+                      float: "right",
                       display: 'flex', justifyContent: 'center',
-                      alignContent: 'center', mt: -5, ml: 2.5, color: buttonStyles.icons_Color,
+                      alignContent: 'center', mt: -5, mr: 2.9, color: styles?.colors?.primary,
                       backgroundColor: 'white', width: '80px', height: '35px',
                       borderRadius: '10px',
                       overflow: 'hidden'
@@ -131,7 +139,7 @@ export default function Package({ item }) {
 
                       {loading_post && id === item?.id && id === item?.id ? (
                         <Box sx={{ width: '100%', px: 1 }}>
-                          <LinearProgress fourColor sx={{ mt: 3.9, borderBottomRightRadius: '30px', borderBottomLeftRadius: '30px', mx: -.7, height: '5px' }} />
+                          <LinearProgress sx={{ background: styles?.colors?.success,mt: 3.9, borderBottomRightRadius: '30px', borderBottomLeftRadius: '30px', mx: -.7, height: '5px' }} />
                         </Box>
                       ) :
                         <>
@@ -149,7 +157,7 @@ export default function Package({ item }) {
                             display: 'flex', justifyContent: 'center',
                             alignContent: 'center',
                           }}>
-                            <Box sx={{ background: buttonStyles.child_bg, height: '35px', width: '30px', pt: .3, fontWeight: 600, fontSize: '17px' }}>
+                            <Box sx={{ background: styles?.colors?.secondary, height: '35px', width: '30px', pt: .3, fontWeight: 600, fontSize: '17px' }}>
                               {item.quanitity === null ? 0 : item.quanitity}
                             </Box>
                           </Grid>
@@ -164,18 +172,17 @@ export default function Package({ item }) {
                           </Grid>
                         </>
                       }
-
-
                     </Grid>
                   </>
                   :
                   (<Button sx={{
                     overflow: 'hidden',
-                    borderRadius: '10px', mt: -5, ml: 2.3, width: 83, height: '35px', textColor: '#ffc219',
-                    background: 'white', background: buttonStyles.buttonColor,
-                    color: buttonStyles.buttonText,
+                    float: "right",
+                    borderRadius: '10px', mt: -5, mr: 2.9, width: 83, height: '35px', textColor: '#ffc219',
+                    background: styles?.colors?.primary,
+                    color: styles?.colors?.text,
                     '&:hover, &:active': {
-                      background: buttonStyles.buttonColor,
+                      background: styles?.colors?.primary,
                       textColor: '#ffc219',
                     },
                   }} width={'80px'} onClick={() => {
@@ -183,12 +190,12 @@ export default function Package({ item }) {
                   }} >
                     {loading_post && id === item?.id ?
                       <Box sx={{ width: '100%' }}>
-                        <LinearProgress fourColor sx={{ mt: 3.9, background: buttonStyles.buttonColor, borderBottomRightRadius: '30px', borderBottomLeftRadius: '30px', mx: -1, height: '5px' }} />
+                        <LinearProgress fourColor sx={{ mt: 3.9, background: styles?.colors?.success, borderBottomRightRadius: '30px', borderBottomLeftRadius: '30px', mx: -1, height: '5px' }} />
                       </Box>
                       : 'Add'}
                   </Button>)
                 }
-              </Button>
+              </Box>
             </Box>
           </Grid>
         </Grid>

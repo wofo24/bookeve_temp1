@@ -5,9 +5,8 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { Card } from '@mui/material';
 import CircularProgress from '@mui/material-next/CircularProgress';
-import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { add_fetch_post, increment_in_bag, clear_all_cart_data, store_pathname, get_all_cart_data, decrement_in_bag, store_data_for_check_out, show_message, click_to_apply_coupon, open_coupon_dialog, show_all_address, hide_all_address, open_schedule_dialog } from '../Redux/actions/actions';
+import { add_fetch_post, increment_in_bag, clear_all_cart_data, store_pathname, get_all_cart_data, decrement_in_bag, store_data_for_check_out, click_to_apply_coupon, open_coupon_dialog } from '../Redux/actions/actions';
 import Media from 'react-media';
 import empty_cart from '../images/empty_cart.png';
 import { CardMedia } from '@mui/material';
@@ -17,15 +16,11 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import Cookies from 'js-cookie';
 import { Link } from 'react-router-dom'
 export default function Small_Cart(props) {
-    const navigate = useNavigate()
     const dispatch = useDispatch()
     const card_data = useSelector((state) => state.card_data.data)
-    const buttonStyles = useSelector((state) => state.all_theme)
-    const Coupon_Code_value = useSelector((state) => state.apply_onClick_coupon)
+    const styles = useSelector((state) => state.all_theme)
     const coupons = useSelector((state) => state.coupons)
     const update_in_post = useSelector((state) => state.update_in_post)
-    const loading = useSelector((state) => state.coupons.loading)
-    // const card_data = useSelector((state) => state?.card_data?.data)
     const posts = useSelector((state) => state?.posts);
     const [disable, setDisable] = React.useState(true)
     const [Load, setLoad] = useState(false)
@@ -63,17 +58,6 @@ export default function Small_Cart(props) {
     }, [dispatch, posts, update_in_post])
 
     useEffect(() => {
-        if (Coupon_Code_value) {
-            dispatch(show_message(true, 'Coupon applied successful!', 'success'))
-        }
-        else {
-            dispatch(show_message(true, 'Coupon removed!', 'warning'))
-
-        }
-    }, [Coupon_Code_value])
-
-
-    useEffect(() => {
         const ready_for_check_out = Array.isArray(card_data) && card_data.length > 0 ? card_data?.map((item) => ({ "id": item.package_id, "quantity": item.quantity })) : []
         dispatch(store_data_for_check_out(ready_for_check_out))
     }, [card_data])
@@ -84,7 +68,7 @@ export default function Small_Cart(props) {
         }
 
     }, [card_data])
-   
+
     return (
         <Media
             queries={{
@@ -102,9 +86,8 @@ export default function Small_Cart(props) {
                                 <Box mx={1}>
                                     <Card sx={{
                                         borderRadius: '10px',
-                                        backdropFilter: buttonStyles.child_backdropFilter,
-                                        background: buttonStyles.child_bg,
-                                        color: buttonStyles.child_div_text, p: 2
+                                        background: styles?.colors?.secondary,
+                                        color: styles?.colors?.heighlightText, p: 2
                                     }} >
                                         <Grid container mt={1}>
                                             <Grid xs={7}>
@@ -142,7 +125,7 @@ export default function Small_Cart(props) {
                                                                 {Load && id === item.package_id
                                                                     ?
                                                                     <Grid xs={6} textAlign={'end'}>
-                                                                        <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
+                                                                        <Button sx={{ color: styles?.colors?.primary, backgroundColor: styles?.colors?.secondary, width: '80px', borderRadius: '10px' }}>
                                                                             <CircularProgress
                                                                                 color="tertiary"
                                                                                 variant="indeterminate"
@@ -155,7 +138,7 @@ export default function Small_Cart(props) {
                                                                     </Grid>
                                                                     :
                                                                     <Grid xs={6} textAlign={'end'}>
-                                                                        <Button sx={{ color: buttonStyles.icons_Color, backgroundColor: 'white', width: '80px', borderRadius: '10px' }}>
+                                                                        <Button sx={{ color: styles?.colors?.primary, backgroundColor: styles?.colors?.secondary, width: '80px', borderRadius: '10px', border:`.5px solid ${styles?.colors?.primary}` }}>
                                                                             {item?.quantity <= 1 ? (
                                                                                 <DeleteIcon sx={{ mx: 1 }} onClick={() => handelDecrease(item.package_id)} />
                                                                             ) : (
@@ -185,15 +168,15 @@ export default function Small_Cart(props) {
                                             )}
                                         </Box>
                                         {props.discount !== undefined && props.discount > 0 ?
-                                            <Grid sx={{ background: '#22bb33', mt: 2, mx: -3 }}>
-                                                <Typography sx={{ color: 'white', textAlign: 'center', py: 1 }}>Congratulation &#8377;{props.discount} saved so far!
+                                            <Grid sx={{ background: styles?.colors?.success, mt: 2, mx: -3 }}>
+                                                <Typography sx={{ color:'white', textAlign: 'center', py: 1 }}>Congratulation &#8377;{props.discount} saved so far!
                                                 </Typography>
                                             </Grid> : ''
                                         }
 
 
                                         {Array.isArray(card_data) && card_data.length > 0 &&
-                                            <Box p={1} py={1.3} mt={2} style={{ display: 'flex', background: buttonStyles.buttonColor, color: buttonStyles.buttonText, borderRadius: '10px' }} >
+                                            <Box p={1} py={1.3} mt={2} style={{ display: 'flex', background: styles?.colors?.primary, color: styles.buttonText, borderRadius: '10px' }} >
                                                 <Grid container >
                                                     <Grid xs={6}>
                                                         <Box sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center', height: '100%' }}>
@@ -227,7 +210,7 @@ export default function Small_Cart(props) {
                                                 }}  >
                                                     <Grid container p={0}>
                                                         <Grid item xs={1} pt={.1}>
-                                                            <CheckCircleRoundedIcon fontSize='small' sx={{ color: '#00E311' }} />
+                                                            <CheckCircleRoundedIcon fontSize='small' sx={{ color: styles?.colors?.success }} />
                                                         </Grid>
                                                         <Grid item xs={9}>
                                                             <Box sx={{ color: 'black' }}>
@@ -253,9 +236,9 @@ export default function Small_Cart(props) {
                                                 <Card sx={{
                                                     my: 2, mx: 0,
                                                     borderRadius: '10px',
-                                                    backdropFilter: buttonStyles.child_backdropFilter,
+                                                    backdropFilter: styles.child_backdropFilter,
                                                     background: 'WHITE',
-                                                    color: buttonStyles.child_div_text,
+                                                    color: styles?.colors?.heightlightText,
 
                                                 }} elevation={2} onClick={handleOpen}  >
                                                     <Grid container sx={{ p: 1 }}>
@@ -292,7 +275,7 @@ export default function Small_Cart(props) {
                                             </Grid>
                                             <Grid container>
                                                 <Grid xs={6}>Tax and fee</Grid>
-                                                <Grid xs={6} textAlign={'end'}> &#8377; --</Grid>
+                                                <Grid xs={6} textAlign={'end'}> &#8377;0</Grid>
                                             </Grid>
                                             <hr />
                                             <Grid container>

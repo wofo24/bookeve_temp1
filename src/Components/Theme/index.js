@@ -1,52 +1,52 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useState } from 'react';
-import { theme_change, get_all_theme, apply_new_theme } from '../../Redux/actions/actions';
-import { Box, Container, Paper, Typography } from '@mui/material';
+import React from 'react'
+// import { useDispatch, } from 'react-redux'
+// import { useState } from 'react';
+// import {  get_all_theme, apply_new_theme } from '../../Redux/actions/actions';
+import { Box, Container,Typography } from '@mui/material';
 
 export default function Index() {
-  const dispatch = useDispatch()
-  const buttonStyles = useSelector((state) => state.button_style)
-  const themes = useSelector((state) => state.all_theme)
-  const New_themes = useSelector((state) => state.all_theme)
-  const theme = [themes?.theme_configuration]
+  // const dispatch = useDispatch()
+  // const buttonStyles = useSelector((state) => state.button_style)
+  // const themes = useSelector((state) => state.all_theme)
+  // const New_themes = useSelector((state) => state.all_theme)
+  // const theme = [themes?.theme_configuration]
 
-  const [buttonStyle, setButtonStyle] = useState({
-    color: 'black',
-    fontFamily: 'Arial, sans-serif',
-    textColor: 'white',
-    background: 'green',
-  });
-  const [active, setActive] = useState(null)
-  const activate_paper = {
-    border: '1px solid green'
-    //  backgroundColor:''
-  }
-  useEffect(() => {
-    dispatch(get_all_theme())
-  }, [])
+  // const [buttonStyle, setButtonStyle] = useState({
+  //   color: 'black',
+  //   fontFamily: 'Arial, sans-serif',
+  //   textColor: 'white',
+  //   background: 'green',
+  // });
+  // const [active, setActive] = useState(null)
+  // const activate_paper = {
+  //   border: '1px solid green'
+  //   //  backgroundColor:''
+  // }
+  // useEffect(() => {
+  //   dispatch(get_all_theme())
+  // }, [])
 
-  const [heading_Style, setHeading_Style] = useState({
-    color: 'blue',
-    fontFamily: 'Arial, sans-serif',
-  });
-  const handleSettingsChange = (newSettings) => {
-    setButtonStyle(newSettings);
-  };
+  // const [heading_Style, setHeading_Style] = useState({
+  //   color: 'blue',
+  //   fontFamily: 'Arial, sans-serif',
+  // });
+  // const handleSettingsChange = (newSettings) => {
+  //   setButtonStyle(newSettings);
+  // };
 
-  useEffect(() => {
-    dispatch(theme_change(buttonStyle))
-  }, [buttonStyle])
+  // useEffect(() => {
+  //   dispatch(theme_change(buttonStyle))
+  // }, [buttonStyle])
 
-  const handleHeadingSettingsChange = (newSettings) => {
-    setHeading_Style(newSettings);
-  };
+  // const handleHeadingSettingsChange = (newSettings) => {
+  //   setHeading_Style(newSettings);
+  // };
 
-  const handleActivate = (item, index) => {
-    setActive(index)
-    dispatch(apply_new_theme(item))
-    window.location.reload(true)
-  }
+  // const handleActivate = (item, index) => {
+  //   setActive(index)
+  //   dispatch(apply_new_theme(item))
+  //   window.location.reload(true)
+  // }
 
   return (
     <Container>
